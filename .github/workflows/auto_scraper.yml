@@ -34,8 +34,28 @@ jobs:
         git commit -m "Aggiornamento automatico database notizie [Skip CI]" || exit 0
         git push
 
-    - name: Invia i dati aggiornati a Glide automaticamente
+    - name: Invia i dati aggiornati a Glide
+      env:
+        GLIDE_APP_ID: ${{ secrets.GLIDE_APP_ID }}
+        GLIDE_API_TOKEN: ${{ secrets.GLIDE_API_TOKEN }}
       run: |
-        curl -X POST "https://glideapp.io{{ secrets.GLIDE_APP_ID }}/tables/news/add-rows" \
-        -H "Content-Type: application/json" \
-        -d '{"rows": []}' || echo "Sincronizzazione completata"
+        python -c "
+        import pandas as pd
+        import requests
+        import json
+        import os
+
+        df = pd.read_csv('Database_Notizie.csv')
+        # Prende le ultime notizie o quelle caricate oggi
+        rows = df.tail(10).to_dict(orient='records')
+        
+        payload = {'rows': rows}
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {os.environ[\"GLIDE_API_TOKEN\"]}'
+        }
+        url = f'https://glideapp.io{os.environ[\"GLIDE_APP_ID\"]}/tables/news/add-rows'
+        
+        response = requests.post(url, headers=headers, data=json.dumps(payload))
+        print('Risposta Glide:', response.status_code, response.text)
+        "
