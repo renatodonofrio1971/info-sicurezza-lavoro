@@ -52,7 +52,6 @@ jobs:
         df = pd.read_csv('Database_Notizie.csv')
         df = df.fillna('')
         
-        # Prende le ultime 5 notizie
         rows = df.tail(5).to_dict(orient='records')
         
         payload = {'rows': rows}
