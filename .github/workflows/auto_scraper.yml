@@ -45,9 +45,15 @@ jobs:
         import json
         import os
 
+        if not os.path.exists('Database_Notizie.csv'):
+            print('File CSV non trovato!')
+            exit(0)
+
         df = pd.read_csv('Database_Notizie.csv')
-        # Prende le ultime notizie o quelle caricate oggi
-        rows = df.tail(10).to_dict(orient='records')
+        df = df.fillna('')
+        
+        # Prende le ultime 5 notizie
+        rows = df.tail(5).to_dict(orient='records')
         
         payload = {'rows': rows}
         headers = {
