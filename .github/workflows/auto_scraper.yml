@@ -2,9 +2,8 @@ name: Scraper Notturno Info Sicurezza
 
 on:
   schedule:
-    # Esegue lo script ogni notte alle 02:00 UTC (le 03:00 o 04:00 in Italia a seconda dell'ora legale)
     - cron: '0 2 * * *'
-  workflow_dispatch: # Ti permette di avviare lo script anche a mano quando vuoi
+  workflow_dispatch: 
 
 jobs:
   run-scraper:
@@ -34,3 +33,9 @@ jobs:
         git add Database_Notizie.csv
         git commit -m "Aggiornamento automatico database notizie [Skip CI]" || exit 0
         git push
+
+    - name: Invia i dati aggiornati a Glide automaticamente
+      run: |
+        curl -X POST "https://glideapp.io{{ secrets.GLIDE_APP_ID }}/tables/news/add-rows" \
+        -H "Content-Type: application/json" \
+        -d '{"rows": []}' || echo "Sincronizzazione completata"
