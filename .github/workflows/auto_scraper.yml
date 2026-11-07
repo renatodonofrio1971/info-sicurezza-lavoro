@@ -1,0 +1,36 @@
+name: Scraper Notturno Info Sicurezza
+
+on:
+  schedule:
+    # Esegue lo script ogni notte alle 02:00 UTC (le 03:00 o 04:00 in Italia a seconda dell'ora legale)
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Ti permette di avviare lo script anche a mano quando vuoi
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Accedi al codice del repository
+      uses: actions/checkout@v4
+
+    - name: Configura Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Installa le librerie necessarie
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests beautifulsoup4 pandas
+
+    - name: Esegui lo Scraper
+      run: python scraper.py
+
+    - name: Salva e aggiorna il Database CSV su GitHub
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "actions@github.com"
+        git add Database_Notizie.csv
+        git commit -m "Aggiornamento automatico database notizie [Skip CI]" || exit 0
+        git push
