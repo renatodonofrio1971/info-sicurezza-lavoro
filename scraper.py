@@ -78,6 +78,7 @@ def aggiungi_riga_locale(riga):
     with open(FILE_LOCALE, mode='a', newline='', encoding='utf-8-sig') as f:
         writer = csv.writer(f, delimiter=';')
         writer.writerow(riga_pulita)
+
 def scrape_inail():
     print("🕵️‍♂️ 1/7 - Estrazione da INAIL Nazionale...")
     url = "https://inail.it"
@@ -182,11 +183,10 @@ def scrape_ministero_lavoro():
         print(f"✅ Ministero del Lavoro completato: aggiunte {contatore} notizie.")
     except Exception as e:
         print(f"❌ Errore Ministero del Lavoro: {e}")
-        
+
 def scrape_normattiva():
     print("🕵️‍♂️ 5/7 - Estrazione da Normattiva (Leggi vigenti)...")
-    # URL corretto con lo slash finale richiesto dai server IPZS
-    url = "https://www.normattiva.it/"
+    url = "https://normattiva.it"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
@@ -199,7 +199,7 @@ def scrape_normattiva():
             if len(titolo) > 20 and ("d.lgs" in titolo.lower() or "legge" in titolo.lower() or "decreto" in titolo.lower()):
                 link_parziale = link.get('href', '')
                 if not link_parziale: continue
-                link_ufficiale = f"https://www.normattiva.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
+                link_ufficiale = f"https://normattiva.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
                 
                 riga = [f"NORMATTIVA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Normattiva", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
                 aggiungi_riga_locale(riga)
@@ -211,8 +211,7 @@ def scrape_normattiva():
 
 def scrape_gazzetta_ufficiale():
     print("🕵️‍♂️ 6/7 - Estrazione da Gazzetta Ufficiale...")
-    # URL corretto con lo slash finale richiesto dai server IPZS
-    url = "https://www.gazzettaufficiale.it/"
+    url = "https://gazzettaufficiale.it"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
@@ -226,7 +225,7 @@ def scrape_gazzetta_ufficiale():
             titolo = link_tag.get_text(strip=True)
             if len(titolo) < 15: continue
             link_parziale = link_tag.get('href', '')
-            link_ufficiale = f"https://www.gazzettaufficiale.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
+            link_ufficiale = f"https://gazzettaufficiale.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
             
             riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
             aggiungi_riga_locale(riga)
@@ -262,15 +261,19 @@ def scrape_garante_privacy():
         print(f"❌ Errore Garante Privacy: {e}")
 
 def spingi_dati_a_glide():
-    print("🚀 --- INIZIO SINCRONIZZAZIONE AUTOMATICA GLIDE --- 🚀")
-    app_id = os.environ.get("GLIDE_APP_ID")
-    api_token = os.environ.get("GLIDE_API_TOKEN")
+    print("🚀 --- INIZIO SINCRONIZZAZIONE DIRETTA DATABASE GLIDE (SQL) --- 🚀")
+    db_url = os.environ.get("GLIDE_DB_URL")
     
-    if not app_id or not api_token:
-        print("⚠️ Credenziali GLIDE mancanti nei repository Secrets!")
+    if not db_url:
+        print("⚠️ Stringa di connessione GLIDE_DB_URL mancante nei repository Secrets!")
         return
 
+    if db_url.startswith("postgresql://"):
+        db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+
     if os.path.exists(FILE_LOCALE):
+        from sqlalchemy import create_engine
+        
         df = pd.read_csv(FILE_LOCALE, sep=';')
         df = df.fillna('')
         
@@ -283,34 +286,18 @@ def spingi_dati_a_glide():
         df_glide['category'] = df['Categoria']
         df_glide['importance'] = df['Importanza']
         
-        rows = df_glide.tail(10).to_dict(orient='records')
-        payload = {'rows': rows}
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': f'Bearer {api_token}'
-        }
-        url = f'https://glideapp.io{app_id}/tables/news/add-rows'
+        df_da_caricare = df_glide.tail(10)
+        
         try:
-            response = requests.post(url, headers=headers, data=json.dumps(payload))
-            print(f'Risposta API Glide - Stato: {response.status_code} - Dettagli: {response.text}')
+            engine = create_engine(db_url)
+            df_da_caricare.to_sql('news', con=engine, if_exists='append', index=False)
+            print("✅ Sincronizzazione SQL completata: 10 righe inserite con successo!")
         except Exception as e:
-            print('Errore durante la connessione a Glide:', e)
+            print('❌ Errore durante l\'inserimento nel database Glide:', e)
     else:
         print('File Database_Notizie.csv non trovato per Glide!')
 
 if __name__ == "__main__":
-    # Eseguiamo la sincronizzazione come primissima operazione preventiva!
-    print("🔄 Avvio sincronizzazione preventiva delle vecchie notizie su Glide...")
-    spingi_dati_a_glide()
-    print("-" * 50)
-
-    if os.path.exists(FILE_LOCALE):
-        try:
-            os.remove(FILE_LOCALE)
-            print("🧹 Vecchio file rimosso per pulizia codifica.")
-        except Exception:
-            print("⚠️ Chiudi Excel prima di avviare lo script!")
-            
     inizializza_database_locale()
     
     print("🚀 --- AVVIO SUPER-MOTORE MULTI-FONTE ESTESO (7 FONTI) --- 🚀\n")
@@ -329,3 +316,6 @@ if __name__ == "__main__":
     scrape_garante_privacy()
     print("\n🎉 SUPER ARCHIVIO GENERATO CON SUCCESSO LOCALE!")
     print("-" * 50)
+    
+    spingi_dati_a_glide()
+
