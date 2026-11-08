@@ -197,7 +197,7 @@ def scrape_normattiva():
             if len(titolo) > 20 and ("d.lgs" in titolo.lower() or "legge" in titolo.lower() or "decreto" in titolo.lower()):
                 link_parziale = link.get('href', '')
                 if not link_parziale: continue
-                link_ufficiale = f"https://normattiva.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
+                link_ufficiale = f"https://www.normattiva.it/" if link_parziale.startswith('/') else link_parziale
                 
                 riga = [f"NORMATTIVA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Normattiva", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
                 aggiungi_riga_locale(riga)
@@ -223,7 +223,7 @@ def scrape_gazzetta_ufficiale():
             titolo = link_tag.get_text(strip=True)
             if len(titolo) < 15: continue
             link_parziale = link_tag.get('href', '')
-            link_ufficiale = f"https://gazzettaufficiale.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
+            link_ufficiale = f"https://www.gazzettaufficiale.it" if link_parziale.startswith('/') else link_parziale
             
             riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
             aggiungi_riga_locale(riga)
