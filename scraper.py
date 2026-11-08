@@ -261,7 +261,7 @@ def scrape_garante_privacy():
         print(f"❌ Errore Garante Privacy: {e}")
 
 def spingi_dati_a_glide():
-    print("🚀 --- INIZIO SINCRONIZZAZIONE DIRETTA DATABASE GLIDE (SQL) --- 🚀")
+    print("🚀 --- INIZIO ISPEZIONE E SINCRONIZZAZIONE DIRETTA DATABASE --- 🚀")
     db_url = os.environ.get("GLIDE_DB_URL")
     
     if not db_url:
@@ -271,34 +271,41 @@ def spingi_dati_a_glide():
     if db_url.startswith("postgresql://"):
         db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-    if os.path.exists(FILE_LOCALE):
-        from sqlalchemy import create_engine
+    from sqlalchemy import create_engine, inspect
+    try:
+        engine = create_engine(db_url)
+        isruttore = inspect(engine)
         
-        df = pd.read_csv(FILE_LOCALE, sep=';')
-        df = df.fillna('')
+        # 1. SCOPRIAMO I VERI NOMI DELLE TABELLE
+        tabelle = isruttore.get_table_names()
+        print(f"🔍 Tabelle realmente presenti nel database: {tabelle}")
         
-        df_glide = pd.DataFrame()
-        df_glide['id'] = df['ID']
-        df_glide['title'] = df['Titolo']
-        df_glide['source'] = df['Fonte']
-        df_glide['date'] = df['Data']
-        df_glide['link'] = df['Link_Ufficiale']
-        df_glide['category'] = df['Categoria']
-        df_glide['importance'] = df['Importanza']
-        
-        df_da_caricare = df_glide.tail(10)
-        
-        # PROVA DI INSERIMENTO SU ENTRAMBE LE VARIANTI DI NOME PER SICUREZZA
-        for nome_tabella in ['news', 'News']:
-            try:
-                engine = create_engine(db_url)
-                # Il parametro con le virgolette doppie forza il rispetto del nome esatto su Postgres
-                df_da_caricare.to_sql(nome_tabella, con=engine, if_exists='append', index=False)
-                print(f"✅ Tentativo su tabella '{nome_tabella}' inviato con successo!")
-            except Exception as e:
-                print(f"ℹ️ Nota su tabella '{nome_tabella}': {e}")
-    else:
-        print('File Database_Notizie.csv non trovato per Glide!')
+        # 2. SE TROVIAMO ALMENO UNA TABELLA, ANALIZZIAMO LE SUE COLONNE
+        for t in tabelle:
+            colonne = [c['name'] for c in isruttore.get_columns(t)]
+            print(f"📋 Colonne della tabella '{t}': {colonne}")
+            
+        # 3. PROVIAMO A EFFETTUARE LA SCRITTURA SE IL FILE ESISTE
+        if os.path.exists(FILE_LOCALE) and tabelle:
+            df = pd.read_csv(FILE_LOCALE, sep=';').fillna('')
+            df_glide = pd.DataFrame()
+            df_glide['id'] = df['ID']
+            df_glide['title'] = df['Titolo']
+            df_glide['source'] = df['Fonte']
+            df_glide['date'] = df['Data']
+            df_glide['link'] = df['Link_Ufficiale']
+            df_glide['category'] = df['Categoria']
+            df_glide['importance'] = df['Importanza']
+            
+            df_da_caricare = df_glide.tail(10)
+            
+            # Scriviamo sul primo nome di tabella reale trovato dal database
+            tabella_target = tabelle[0]
+            df_da_caricare.to_sql(tabella_target, con=engine, if_exists='append', index=False)
+            print(f"✅ Dati inseriti forzatamente nella tabella rilevata: '{tabella_target}'")
+            
+    except Exception as e:
+        print("❌ Errore durante l'ispezione SQL:", e)
 
 if __name__ == "__main__":
     inizializza_database_locale()
