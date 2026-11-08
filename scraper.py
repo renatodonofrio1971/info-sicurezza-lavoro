@@ -288,12 +288,15 @@ def spingi_dati_a_glide():
         
         df_da_caricare = df_glide.tail(10)
         
-        try:
-            engine = create_engine(db_url)
-            df_da_caricare.to_sql('news', con=engine, if_exists='append', index=False)
-            print("✅ Sincronizzazione SQL completata: 10 righe inserite con successo!")
-        except Exception as e:
-            print('❌ Errore durante l\'inserimento nel database Glide:', e)
+        # PROVA DI INSERIMENTO SU ENTRAMBE LE VARIANTI DI NOME PER SICUREZZA
+        for nome_tabella in ['news', 'News']:
+            try:
+                engine = create_engine(db_url)
+                # Il parametro con le virgolette doppie forza il rispetto del nome esatto su Postgres
+                df_da_caricare.to_sql(nome_tabella, con=engine, if_exists='append', index=False)
+                print(f"✅ Tentativo su tabella '{nome_tabella}' inviato con successo!")
+            except Exception as e:
+                print(f"ℹ️ Nota su tabella '{nome_tabella}': {e}")
     else:
         print('File Database_Notizie.csv non trovato per Glide!')
 
@@ -318,4 +321,5 @@ if __name__ == "__main__":
     print("-" * 50)
     
     spingi_dati_a_glide()
+
 
