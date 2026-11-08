@@ -186,7 +186,7 @@ def scrape_ministero_lavoro():
 
 def scrape_normattiva():
     print("🕵️‍♂️ 5/7 - Estrazione da Normattiva (Leggi vigenti)...")
-    url = "https://www.normattiva.it/"
+    url = "https://normattiva.it"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
@@ -199,7 +199,7 @@ def scrape_normattiva():
             if len(titolo) > 20 and ("d.lgs" in titolo.lower() or "legge" in titolo.lower() or "decreto" in titolo.lower()):
                 link_parziale = link.get('href', '')
                 if not link_parziale: continue
-                link_ufficiale = f"https://www.normattiva.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
+                link_ufficiale = f"https://normattiva.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
                 
                 riga = [f"NORMATTIVA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Normattiva", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
                 aggiungi_riga_locale(riga)
@@ -211,7 +211,7 @@ def scrape_normattiva():
 
 def scrape_gazzetta_ufficiale():
     print("🕵️‍♂️ 6/7 - Estrazione da Gazzetta Ufficiale...")
-    url = "https://www.gazzettaufficiale.it/"
+    url = "https://gazzettaufficiale.it"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
@@ -225,7 +225,7 @@ def scrape_gazzetta_ufficiale():
             titolo = link_tag.get_text(strip=True)
             if len(titolo) < 15: continue
             link_parziale = link_tag.get('href', '')
-            link_ufficiale = f"https://www.gazzettaufficiale.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
+            link_ufficiale = f"https://gazzettaufficiale.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
             
             riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
             aggiungi_riga_locale(riga)
@@ -288,16 +288,16 @@ def spingi_dati_a_glide():
         df_glide['date'] = df['Data']
         df_glide['official_link'] = df['Link_Ufficiale']
         df_glide['category'] = df['Categoria']
-        
-        # TRADUZIONE AL VOLO: Trasformiamo l'importanza nei termini inglesi richiesti dal vincolo SQL
         df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
         
-        df_da_caricare = df_glide.tail(10)
+        # RIMOSSO IL BLOCCO .tail(10): Ora df_da_caricare prende TUTTE le righe trovate!
+        df_da_caricare = df_glide
+        totale_notizie = len(df_da_caricare)
         
         try:
             engine = create_engine(db_url)
             df_da_caricare.to_sql('news', con=engine, if_exists='append', index=False)
-            print("✅ Sincronizzazione SQL completata con successo: 10 notizie inserite nella tabella 'news'!")
+            print(f"✅ Sincronizzazione SQL completata: inserite tutte le {totale_notizie} notizie reali nella tabella 'news'!")
         except Exception as e:
             print('❌ Errore durante l\'inserimento nel database Glide:', e)
     else:
