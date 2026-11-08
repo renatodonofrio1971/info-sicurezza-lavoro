@@ -31,8 +31,9 @@ jobs:
         git config --global user.name "GitHub Action"
         git config --global user.email "actions@github.com"
         git add Database_Notizie.csv
+        git pull --rebase origin main
         git commit -m "Aggiornamento automatico database notizie [Skip CI]" || exit 0
-        git push
+        git push origin main
 
     - name: Invia i dati aggiornati a Glide
       env:
