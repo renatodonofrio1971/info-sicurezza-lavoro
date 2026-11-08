@@ -323,33 +323,9 @@ def assegna_macro_area_e_tag(titolo):
         sub = "#Ambiente" if "RIFIUTI" in titolo_up or "MUD" in titolo_up else "#Chimico"
     else:
         macro = "Sicurezza Generale"
-        import os
-import requests
-import json
-import pandas as pd
-
-# CODICE PER L'INVIO AUTOMATICO A GLIDE
-def invia_a_glide():
-    if os.path.exists('Database_Notizie.csv'):
-        df = pd.read_csv('Database_Notizie.csv')
-        df = df.fillna('')
-        rows = df.tail(5).to_dict(orient='records')
-        payload = {'rows': rows}
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer GHSAT0AAAAAAEPLFULQT6XTJTB46EJSPZGM2XPMKCA' # Il tuo token di sicurezza
-        }
-        url = 'https://glideapp.io'
-        try:
-            response = requests.post(url, headers=headers, data=json.dumps(payload))
-            print('Risposta Glide:', response.status_code, response.text)
-        except Exception as e:
-            print('Errore invio Glide:', e)
-
-invia_a_glide()
 
 
-# --- BLOCCO AGGIORNAMENTO DIRETTO GLIDE ---
+# --- BLOCCO AGGIORNAMENTO DIRETTO GLIDE DEFINITIVO ---
 import os
 import requests
 import json
@@ -367,6 +343,7 @@ def spingi_dati_a_glide():
             'Content-Type': 'application/json',
             'Authorization': 'Bearer GHSAT0AAAAAAEPLFULQT6XTJTB46EJSPZGM2XPMKCA'
         }
+        # URL corretto e specifico per la tua applicazione
         url = 'https://glideapp.io'
         try:
             response = requests.post(url, headers=headers, data=json.dumps(payload))
@@ -378,7 +355,3 @@ def spingi_dati_a_glide():
 
 spingi_dati_a_glide()
 
-
-        sub = "#Generale"
-        
-    return macro, sub
