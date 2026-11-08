@@ -182,9 +182,11 @@ def scrape_ministero_lavoro():
         print(f"✅ Ministero del Lavoro completato: aggiunte {contatore} notizie.")
     except Exception as e:
         print(f"❌ Errore Ministero del Lavoro: {e}")
+        
 def scrape_normattiva():
     print("🕵️‍♂️ 5/7 - Estrazione da Normattiva (Leggi vigenti)...")
-    url = "https://normattiva.it"
+    # URL corretto con lo slash finale richiesto dai server IPZS
+    url = "https://www.normattiva.it/"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
@@ -209,7 +211,8 @@ def scrape_normattiva():
 
 def scrape_gazzetta_ufficiale():
     print("🕵️‍♂️ 6/7 - Estrazione da Gazzetta Ufficiale...")
-    url = "https://gazzettaufficiale.it"
+    # URL corretto con lo slash finale richiesto dai server IPZS
+    url = "https://www.gazzettaufficiale.it/"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
