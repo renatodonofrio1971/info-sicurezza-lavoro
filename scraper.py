@@ -186,7 +186,7 @@ def scrape_ministero_lavoro():
 
 def scrape_normattiva():
     print("🕵️‍♂️ 5/7 - Estrazione da Normattiva (Leggi vigenti)...")
-    url = "https://normattiva.it"
+    url = "https://www.normattiva.it/"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
@@ -197,9 +197,9 @@ def scrape_normattiva():
         for index, link in enumerate(links):
             titolo = link.get_text(strip=True)
             if len(titolo) > 20 and ("d.lgs" in titolo.lower() or "legge" in titolo.lower() or "decreto" in titolo.lower()):
-                link_parziale = link.get('href', '')
-                if not link_parziale: continue
-                link_ufficiale = f"https://www.normattiva.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
+                
+                # Forziamo l'URL esatto statico richiesto senza sottocartelle
+                link_ufficiale = "https://www.normattiva.it/"
                 
                 riga = [f"NORMATTIVA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Normattiva", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
                 aggiungi_riga_locale(riga)
@@ -211,7 +211,7 @@ def scrape_normattiva():
 
 def scrape_gazzetta_ufficiale():
     print("🕵️‍♂️ 6/7 - Estrazione da Gazzetta Ufficiale...")
-    url = "https://gazzettaufficiale.it"
+    url = "https://www.gazzettaufficiale.it/"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
@@ -224,8 +224,9 @@ def scrape_gazzetta_ufficiale():
             if not link_tag: continue
             titolo = link_tag.get_text(strip=True)
             if len(titolo) < 15: continue
-            link_parziale = link_tag.get('href', '')
-            link_ufficiale = f"https://www.gazzettaufficiale.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
+            
+            # Forziamo l'URL esatto statico richiesto senza sottocartelle
+            link_ufficiale = "https://www.gazzettaufficiale.it/"
             
             riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
             aggiungi_riga_locale(riga)
@@ -251,7 +252,7 @@ def scrape_garante_privacy():
             titolo = link_tag.get_text(strip=True)
             if len(titolo) < 15 or "ricerca" in titolo.lower(): continue
             link_parziale = link_tag.get('href', '')
-            link_ufficiale = f"https://garanteprivacy.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
+            link_ufficiale = link_parziale if link_parziale.startswith('http') else f"https://garanteprivacy.it/{link_parziale.lstrip('/')}"
             
             riga = [f"GARANTE_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Garante Privacy", data_oggi, link_ufficiale, "Cybersecurity e IA", "Media"]
             aggiungi_riga_locale(riga)
@@ -290,7 +291,6 @@ def spingi_dati_a_glide():
         df_glide['category'] = df['Categoria']
         df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
         
-        # RIMOSSO IL BLOCCO .tail(10): Ora df_da_caricare prende TUTTE le righe trovate!
         df_da_caricare = df_glide
         totale_notizie = len(df_da_caricare)
         
