@@ -3,6 +3,8 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import json
+import pandas as pd
 
 # Configurazione file locale
 FILE_LOCALE = "Database_Notizie.csv"
@@ -32,9 +34,6 @@ def inizializza_database_locale():
             writer.writerow(COLONNE)
         print(f"📁 Creato nuovo database locale: {FILE_LOCALE}")
 
-# =====================================================================
-# MOTORE DI CATALOGAZIONE AUTOMATICA (Smart Tagging)
-# =====================================================================
 def assegna_macro_area_e_tag(titolo):
     """Analizza il titolo della notizia e assegna Macro-Area e Sotto-Area (Tag)"""
     titolo_up = titolo.upper()
@@ -64,32 +63,21 @@ def assegna_macro_area_e_tag(titolo):
     return macro, sub
 
 def aggiungi_riga_locale(riga):
-    """Intercetta la riga, applica la classificazione intelligente e scrive su CSV"""
-    # Riconosciamo gli elementi inviati dagli scraper
     id_notizia = riga[0]
     titolo_originale = riga[1]
     fonte = riga[2]
     data = riga[3]
     link_ufficiale = riga[4]
     
-    # Applichiamo l'AI locale di classificazione
     macro_area, sotto_tag = assegna_macro_area_e_tag(titolo_originale)
-    
-    # Assegniamo l'importanza: Alta se contiene parole chiave critiche o se impostata dallo scraper
     importanza = "Alta" if any(p in titolo_originale.upper() for p in ["URGENTI", "OBBLIGO", "D.LGS", "DECRETO"]) or riga[6] == "Alta" else "Media"
-    
-    # Modifichiamo il titolo per mostrare il tag visivo nell'applicazione
     titolo_con_tag = f"{titolo_originale} {sotto_tag}"
     
-    # Ricostruiamo la riga finale ordinata secondo le colonne del CSV
     riga_finale = [id_notizia, titolo_con_tag, fonte, data, link_ufficiale, macro_area, importanza]
-    
-    # Pulizia del testo e scrittura finale
     riga_pulita = [pulisci_testo(str(item)) for item in riga_finale]
     with open(FILE_LOCALE, mode='a', newline='', encoding='utf-8-sig') as f:
         writer = csv.writer(f, delimiter=';')
         writer.writerow(riga_pulita)
-
 def scrape_inail():
     print("🕵️‍♂️ 1/7 - Estrazione da INAIL Nazionale...")
     url = "https://inail.it"
@@ -133,10 +121,10 @@ def scrape_anfos():
             titolo = link_tag.get_text(strip=True)
             link_ufficiale = link_tag.get('href', '')
             
-            importanza = "Alta" if "scadenza" in titolo.lower() or "obbligo" in titolo.lower() else "Media"
+            importance_flag = "Alta" if "scadenza" in titolo.lower() or "obbligo" in titolo.lower() else "Media"
             categoria = "Scadenze e Norme" if "scadenza" in titolo.lower() else "Aggiornamenti"
             
-            riga = [f"ANFOS_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "ANFOS", data_oggi, link_ufficiale, categoria, importanza]
+            riga = [f"ANFOS_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "ANFOS", data_oggi, link_ufficiale, categoria, importance_flag]
             aggiungi_riga_locale(riga)
             contatore += 1
         print(f"✅ ANFOS completato: aggiunte {contatore} notizie.")
@@ -196,8 +184,7 @@ def scrape_ministero_lavoro():
         print(f"❌ Errore Ministero del Lavoro: {e}")
 def scrape_normattiva():
     print("🕵️‍♂️ 5/7 - Estrazione da Normattiva (Leggi vigenti)...")
-    # Aggiunto il prefisso www. richiesto dai server IPZS
-    url = "https://www.normattiva.it/"
+    url = "https://normattiva.it"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
@@ -218,11 +205,11 @@ def scrape_normattiva():
                 if contatore >= 5: break
         print(f"✅ Normattiva completato: aggiunte {contatore} novità legislative.")
     except Exception as e:
-        print(f"⚠️ Nota: Normattiva non raggiungibile sulla rete locale (omesso).")
+        print(f"⚠️ Nota: Normattiva non raggiungibile ({e})")
 
 def scrape_gazzetta_ufficiale():
     print("🕵️‍♂️ 6/7 - Estrazione da Gazzetta Ufficiale...")
-    url = "https://www.gazzettaufficiale.it/"
+    url = "https://gazzettaufficiale.it"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
@@ -243,7 +230,7 @@ def scrape_gazzetta_ufficiale():
             contatore += 1
         print(f"✅ Gazzetta Ufficiale completato: aggiunte {contatore} atti ufficiali.")
     except Exception as e:
-        print(f"⚠️ Nota: Gazzetta Ufficiale non raggiungibile sulla rete locale (omesso).")
+        print(f"⚠️ Nota: Gazzetta Ufficiale non raggiungibile ({e})")
 
 def scrape_garante_privacy():
     print("🕵️‍♂️ 7/7 - Estrazione da Garante Privacy (Cybersecurity e IA)...")
@@ -271,6 +258,43 @@ def scrape_garante_privacy():
     except Exception as e:
         print(f"❌ Errore Garante Privacy: {e}")
 
+def spingi_dati_a_glide():
+    print("🚀 --- INIZIO SINCRONIZZAZIONE AUTOMATICA GLIDE --- 🚀")
+    app_id = os.environ.get("GLIDE_APP_ID")
+    api_token = os.environ.get("GLIDE_API_TOKEN")
+    
+    if not app_id or not api_token:
+        print("⚠️ Credenziali GLIDE mancanti nei repository Secrets!")
+        return
+
+    if os.path.exists(FILE_LOCALE):
+        df = pd.read_csv(FILE_LOCALE, sep=';')
+        df = df.fillna('')
+        
+        df_glide = pd.DataFrame()
+        df_glide['id'] = df['ID']
+        df_glide['title'] = df['Titolo']
+        df_glide['source'] = df['Fonte']
+        df_glide['date'] = df['Data']
+        df_glide['link'] = df['Link_Ufficiale']
+        df_glide['category'] = df['Categoria']
+        df_glide['importance'] = df['Importanza']
+        
+        rows = df_glide.tail(10).to_dict(orient='records')
+        payload = {'rows': rows}
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {api_token}'
+        }
+        url = f'https://glideapp.io{app_id}/tables/news/add-rows'
+        try:
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+            print(f'Risposta API Glide - Stato: {response.status_code} - Dettagli: {response.text}')
+        except Exception as e:
+            print('Errore durante la connessione a Glide:', e)
+    else:
+        print('File Database_Notizie.csv non trovato per Glide!')
+
 if __name__ == "__main__":
     if os.path.exists(FILE_LOCALE):
         try:
@@ -295,63 +319,7 @@ if __name__ == "__main__":
     scrape_gazzetta_ufficiale()
     print("-" * 50)
     scrape_garante_privacy()
-    print("\n🎉 SUPER ARCHIVIO AGGIORNATO AL 100%! Carica il nuovo file .csv su Google Fogli.")
-# =====================================================================
-# BLOCCO DA AGGIUNGERE: MOTORE DI CATALOGAZIONE AUTOMATICA
-# =====================================================================
-def assegna_macro_area_e_tag(titolo):
-    """Analizza il titolo della notizia e assegna Macro-Area e Sotto-Area (Tag)"""
-    titolo_up = titolo.upper()
+    print("\n🎉 SUPER ARCHIVIO GENERATO CON SUCCESSO LOCALE!")
+    print("-" * 50)
     
-    if any(p in titolo_up for p in ["ATTREZZATUR", "MACCHIN", "DPI", "SEGNALETICA", "LUOGHI DI LAVORO", "APPALT", "DUVRI"]):
-        macro = "Sicurezza Generale"
-        sub = "#Attrezzature" if "MACCHIN" in titolo_up or "ATTREZZATUR" in titolo_up else "#DPI" if "DPI" in titolo_up else "#Segnaletica" if "SEGNALETICA" in titolo_up else "#Generale"
-    elif any(p in titolo_up for p in ["MEDICO", "SORVEGLIANZA SANITARIA", "VISIT", "RUMORE", "VIBRAZION", "ERGONOMIA", "VDT", "BIOLOGIC"]):
-        macro = "Salute & Medicina"
-        sub = "#Sorveglianza" if "MEDICO" in titolo_up or "VISIT" in titolo_up else "#RischiFisici" if "RUMORE" in titolo_up or "VIBRAZION" in titolo_up else "#Ergonomia"
-    elif any(p in titolo_up for p in ["CANTIERE", "EDILIZIA", "POS", "PSC", "PONTEGGI", "QUOTA", "PATENTE A CREDITI"]):
-        macro = "Edilizia & Cantieri"
-        sub = "#PatenteACrediti" if "PATENTE" in titolo_up else "#LavoriInQuota" if "QUOTA" in titolo_up or "PONTEGGI" in titolo_up else "#Cantieristica"
-    elif any(p in titolo_up for p in ["INCENDI", "ANTINCENDIO", "EVACUAZION", "EMERGENZ", "ESTINTORE", "SOCCORSO"]):
-        macro = "Antincendio & Emergenze"
-        sub = "#Presidi" if "ESTINTORE" in titolo_up or "MANUTENZ" in titolo_up else "#Antincendio"
-    elif any(p in titolo_up for p in ["FORMAZION", "CORSO", "CORSI", "ADDESTRASMENTO", "AGGIORNAMENTO RSPP", "RLS", "PREPOSTO", "PATENTIN"]):
-        macro = "Formazione & Ruoli"
-        sub = "#Abilitazioni" if "PATENTIN" in titolo_up else "#Corsi"
-    elif any(p in titolo_up for p in ["CHIMICO", "REACH", "CLP", "SDS", "ATEX", "RIFIUTI", "MUD", "AUA", "AMBIENT"]):
-        macro = "Rischio Chimico & Ambiente"
-        sub = "#Ambiente" if "RIFIUTI" in titolo_up or "MUD" in titolo_up else "#Chimico"
-    else:
-        macro = "Sicurezza Generale"
-
-
-# --- BLOCCO AGGIORNAMENTO DIRETTO GLIDE DEFINITIVO ---
-import os
-import requests
-import json
-import pandas as pd
-
-def spingi_dati_a_glide():
-    print("--- INIZIO SINCRONIZZAZIONE AUTOMATICA GLIDE ---")
-    if os.path.exists('Database_Notizie.csv'):
-        df = pd.read_csv('Database_Notizie.csv')
-        df = df.fillna('')
-        # Prende le ultime 10 notizie salvate
-        rows = df.tail(10).to_dict(orient='records')
-        payload = {'rows': rows}
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer GHSAT0AAAAAAEPLFULQT6XTJTB46EJSPZGM2XPMKCA'
-        }
-        # URL corretto e specifico per la tua applicazione
-        url = 'https://glideapp.io'
-        try:
-            response = requests.post(url, headers=headers, data=json.dumps(payload))
-            print(f'Risposta API Glide - Stato: {response.status_code} - Dettagli: {response.text}')
-        except Exception as e:
-            print('Errore durante la connessione a Glide:', e)
-    else:
-        print('File Database_Notizie.csv non trovato per Glide!')
-
-spingi_dati_a_glide()
-
+    spingi_dati_a_glide()
