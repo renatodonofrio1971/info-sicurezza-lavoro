@@ -278,7 +278,6 @@ def spingi_dati_a_glide():
         df = pd.read_csv(FILE_LOCALE, sep=';')
         df = df.fillna('')
         
-        # MAPPATURA ALLINEATA: Generiamo ID numerici sequenziali (bigint) basati sul tempo per accettazione SQL
         df_glide = pd.DataFrame()
         
         timestamp_base = int(time.time())
@@ -289,14 +288,16 @@ def spingi_dati_a_glide():
         df_glide['date'] = df['Data']
         df_glide['official_link'] = df['Link_Ufficiale']
         df_glide['category'] = df['Categoria']
-        df_glide['importance'] = df['Importanza']
+        
+        # TRADUZIONE AL VOLO: Trasformiamo l'importanza nei termini inglesi richiesti dal vincolo SQL
+        df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
         
         df_da_caricare = df_glide.tail(10)
         
         try:
             engine = create_engine(db_url)
             df_da_caricare.to_sql('news', con=engine, if_exists='append', index=False)
-            print("✅ Sincronizzazione SQL completata con successo: 10 notizie inserite nella tabella 'news' con ID validati!")
+            print("✅ Sincronizzazione SQL completata con successo: 10 notizie inserite nella tabella 'news'!")
         except Exception as e:
             print('❌ Errore durante l\'inserimento nel database Glide:', e)
     else:
