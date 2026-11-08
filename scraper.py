@@ -348,6 +348,37 @@ def invia_a_glide():
 
 invia_a_glide()
 
+
+# --- BLOCCO AGGIORNAMENTO DIRETTO GLIDE ---
+import os
+import requests
+import json
+import pandas as pd
+
+def spingi_dati_a_glide():
+    print("--- INIZIO SINCRONIZZAZIONE AUTOMATICA GLIDE ---")
+    if os.path.exists('Database_Notizie.csv'):
+        df = pd.read_csv('Database_Notizie.csv')
+        df = df.fillna('')
+        # Prende le ultime 10 notizie salvate
+        rows = df.tail(10).to_dict(orient='records')
+        payload = {'rows': rows}
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer GHSAT0AAAAAAEPLFULQT6XTJTB46EJSPZGM2XPMKCA'
+        }
+        url = 'https://glideapp.io'
+        try:
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+            print(f'Risposta API Glide - Stato: {response.status_code} - Dettagli: {response.text}')
+        except Exception as e:
+            print('Errore durante la connessione a Glide:', e)
+    else:
+        print('File Database_Notizie.csv non trovato per Glide!')
+
+spingi_dati_a_glide()
+
+
         sub = "#Generale"
         
     return macro, sub
