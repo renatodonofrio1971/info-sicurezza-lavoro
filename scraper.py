@@ -186,7 +186,6 @@ def scrape_ministero_lavoro():
 
 def scrape_normattiva():
     print("🕵️‍♂️ 5/7 - Estrazione da Normattiva (Leggi vigenti)...")
-    # URL esatto comprensivo di barra finale richiesta da IPZS
     url = "https://www.normattiva.it/"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
@@ -212,7 +211,6 @@ def scrape_normattiva():
 
 def scrape_gazzetta_ufficiale():
     print("🕵️‍♂️ 6/7 - Estrazione da Gazzetta Ufficiale...")
-    # URL esatto comprensivo di barra finale richiesta da IPZS
     url = "https://www.gazzettaufficiale.it/"
     try:
         response = requests.get(url, headers=HEADERS, timeout=15)
@@ -232,7 +230,7 @@ def scrape_gazzetta_ufficiale():
             riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
             aggiungi_riga_locale(riga)
             contatore += 1
-        print(f"✅ Gazzetta Ufficiale completato: aggiunte {contatore} atti ufficiali.")
+        print(f"✅ Gazzetta Ufficiale completato: aggregati {contatore} atti ufficiali.")
     except Exception as e:
         print(f"⚠️ Nota: Gazzetta Ufficiale non raggiungibile ({e})")
 
@@ -263,7 +261,7 @@ def scrape_garante_privacy():
         print(f"❌ Errore Garante Privacy: {e}")
 
 def spingi_dati_a_glide():
-    print("🚀 --- INIZIO ISPEZIONE E SINCRONIZZAZIONE DIRETTA DATABASE --- 🚀")
+    print("🚀 --- INIZIO SINCRONIZZAZIONE DIRETTA DATABASE GLIDE (SQL) --- 🚀")
     db_url = os.environ.get("GLIDE_DB_URL")
     
     if not db_url:
@@ -273,38 +271,33 @@ def spingi_dati_a_glide():
     if db_url.startswith("postgresql://"):
         db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-    from sqlalchemy import create_engine, inspect
-    try:
-        engine = create_engine(db_url)
-        isruttore = inspect(engine)
+    if os.path.exists(FILE_LOCALE):
+        from sqlalchemy import create_engine
         
-        tabelle = isruttore.get_table_names()
-        print(f"🔍 Tabelle realmente presenti nel database: {tabelle}")
+        df = pd.read_csv(FILE_LOCALE, sep=';')
+        df = df.fillna('')
         
-        for t in tabelle:
-            colonne = [c['name'] for c in isruttore.get_columns(t)]
-            print(f"📋 Colonne della tabella '{t}': {colonne}")
-            
-        if os.path.exists(FILE_LOCALE) and tabelle:
-            df = pd.read_csv(FILE_LOCALE, sep=';').fillna('')
-            df_glide = pd.DataFrame()
-            df_glide['id'] = df['ID']
-            df_glide['title'] = df['Titolo']
-            df_glide['source'] = df['Fonte']
-            df_glide['date'] = df['Data']
-            df_glide['link'] = df['Link_Ufficiale']
-            df_glide['category'] = df['Categoria']
-            df_glide['importance'] = df['Importanza']
-            
-            df_da_caricare = df_glide.tail(10)
-            
-            # Utilizza la prima tabella effettiva trovata dall'ispezione
-            tabella_target = tabelle[0]
-            df_da_caricare.to_sql(tabella_target, con=engine, if_exists='append', index=False)
-            print(f"✅ Dati inseriti forzatamente nella tabella rilevata: '{tabella_target}'")
-            
-    except Exception as e:
-        print("❌ Errore durante l'ispezione SQL:", e)
+        # MAPPATURA ALLINEATA ALL'ISPETTORE: 'official_link' sostituisce 'link'
+        df_glide = pd.DataFrame()
+        df_glide['id'] = df['ID']
+        df_glide['title'] = df['Titolo']
+        df_glide['source'] = df['Fonte']
+        df_glide['date'] = df['Data']
+        df_glide['official_link'] = df['Link_Ufficiale']
+        df_glide['category'] = df['Categoria']
+        df_glide['importance'] = df['Importanza']
+        
+        df_da_caricare = df_glide.tail(10)
+        
+        try:
+            engine = create_engine(db_url)
+            # Scrittura diretta sulla tabella 'news' validata
+            df_da_caricare.to_sql('news', con=engine, if_exists='append', index=False)
+            print("✅ Sincronizzazione SQL completata: 10 notizie inserite con successo nella tabella 'news'!")
+        except Exception as e:
+            print('❌ Errore durante l\'inserimento nel database Glide:', e)
+    else:
+        print('File Database_Notizie.csv non trovato per Glide!')
 
 if __name__ == "__main__":
     inizializza_database_locale()
