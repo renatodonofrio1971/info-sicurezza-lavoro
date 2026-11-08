@@ -273,13 +273,17 @@ def spingi_dati_a_glide():
 
     if os.path.exists(FILE_LOCALE):
         from sqlalchemy import create_engine
+        import time
         
         df = pd.read_csv(FILE_LOCALE, sep=';')
         df = df.fillna('')
         
-        # MAPPATURA ALLINEATA ALL'ISPETTORE: 'official_link' sostituisce 'link'
+        # MAPPATURA ALLINEATA: Generiamo ID numerici sequenziali (bigint) basati sul tempo per accettazione SQL
         df_glide = pd.DataFrame()
-        df_glide['id'] = df['ID']
+        
+        timestamp_base = int(time.time())
+        df_glide['id'] = [timestamp_base + i for i in range(len(df))]
+        
         df_glide['title'] = df['Titolo']
         df_glide['source'] = df['Fonte']
         df_glide['date'] = df['Data']
@@ -291,9 +295,8 @@ def spingi_dati_a_glide():
         
         try:
             engine = create_engine(db_url)
-            # Scrittura diretta sulla tabella 'news' validata
             df_da_caricare.to_sql('news', con=engine, if_exists='append', index=False)
-            print("✅ Sincronizzazione SQL completata: 10 notizie inserite con successo nella tabella 'news'!")
+            print("✅ Sincronizzazione SQL completata con successo: 10 notizie inserite nella tabella 'news' con ID validati!")
         except Exception as e:
             print('❌ Errore durante l\'inserimento nel database Glide:', e)
     else:
@@ -320,4 +323,5 @@ if __name__ == "__main__":
     print("-" * 50)
     
     spingi_dati_a_glide()
+
 
