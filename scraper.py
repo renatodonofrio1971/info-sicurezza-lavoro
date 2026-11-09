@@ -313,27 +313,35 @@ def spingi_dati_a_glide():
         
         # 3. ENGINE NOTIFICHE INCROCIATE ANONIME A NORMA GDPR
         print("📢 Rilevamento preferenze per smistamento notifiche Push...")
-        try:
-            utenti_df = pd.read_sql_table('Users', con=engine)
-            if not utenti_df.empty:
-                for idx, notizia in df_glide.iterrows():
-                    cat = notizia['category']
-                    titolo = notizia['title']
-                    
-                    colonna_spunta = 'notify_general'
-                    if cat == 'Salute & Medicina':
-                        colonna_spunta = 'notify_health'
-                    elif cat == 'Edilizia & Cantieri':
-                        colonna_spunta = 'notify_construction'
-                    
+        
+        # PROVA ENTRAMBE LE VARIANTI DI COSTRUTTO SU POSTGRES PER SICUREZZA
+        utenti_df = pd.DataFrame()
+        for t_name in ['users', 'Users']:
+            try:
+                utenti_df = pd.read_sql_table(t_name, con=engine)
+                print(f"🔍 Tabella utenti agganciata correttamente con il nome: '{t_name}'")
+                break
+            except:
+                continue
+
+        if not utenti_df.empty:
+            print(f"ℹ️ Sistema notifiche pronto. Rilevati {len(utenti_df)} dispositivi anonimi registrati.")
+            for idx, notizia in df_glide.iterrows():
+                cat = notizia['category']
+                titolo = notizia['title']
+                
+                colonna_spunta = 'notify_general'
+                if cat == 'Salute & Medicina':
+                    colonna_spunta = 'notify_health'
+                elif cat == 'Edilizia & Cantieri':
+                    colonna_spunta = 'notify_construction'
+                
+                if colonna_spunta in utenti_df.columns:
                     target_dispositivi = utenti_df[utenti_df[colonna_spunta] == True]['id'].tolist()
-                    
                     if target_dispositivi:
                         print(f"🔔 Notifica preparata per {len(target_dispositivi)} dispositivi anonimi su area '{cat}': {titolo[:40]}...")
-            else:
-                print("ℹ️ Coda notifiche vuota: nessun dispositivo ancora registrato nell'app.")
-        except Exception as ue:
-            print(f"⚠️ Nota logica notifiche: tabella transiti non popolata ({ue})")
+        else:
+            print("ℹ️ Coda notifiche in transito: nessun dispositivo ancora registrato nell'app.")
                 
     except Exception as e:
         print('❌ Errore durante l\'inserimento nel database Glide:', e)
