@@ -198,7 +198,7 @@ def scrape_normattiva():
             titolo = item.get_text(strip=True).replace('"', '')
             if len(titolo) > 10:
                 
-                # LINK ESATTO E STATICO RICHIESTO
+                # LINK ANCORATO E BLINDATO COME RICHIESTO
                 link_ufficiale = "https://www.normattiva.it/"
                 
                 riga = [f"NORMATTIVA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Normattiva", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
@@ -223,7 +223,7 @@ def scrape_gazzetta_ufficiale():
             titolo = item.get_text(strip=True)
             if len(titolo) > 25 and any(p in titolo.lower() for p in ["decreto", "legge", "l.", "d.l.", "attuazione", "misure"]):
                 
-                # LINK ESATTO E STATICO RICHIESTO
+                # LINK ANCORATO E BLINDATO COME RICHIESTO
                 link_ufficiale = "https://www.gazzettaufficiale.it/"
                 
                 riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
@@ -291,7 +291,7 @@ def spingi_dati_a_glide():
             df_glide.to_sql('news', con=engine, if_exists='append', index=False)
             print(f"✅ SQL News completato: inserite {len(df_glide)} notizie.")
 
-        # 2. GENERAZIONE E INVIO DELLE SCADENZE (Tabella 'deadlines')
+        # 2. INVIO DELLE SCADENZE (Tabella 'deadlines')
         print("⏳ Generazione scadenze di conformità correnti...")
         scadenze_dati = [
             {"title": "Aggiornamento DVR - Analisi dei Rischi Annuale", "due_date": "2026-12-15", "notes": "Verifica conformità e aggiornamento signatures del RLS."},
@@ -311,13 +311,30 @@ def spingi_dati_a_glide():
         df_scadenze_glide.to_sql('deadlines', con=engine, if_exists='append', index=False)
         print(f"✅ SQL Deadlines completato: inserite {len(df_scadenze_glide)} scadenze istituzionali attive!")
         
-        # 3. VERIFICA DISPOSITIVI ANONIMI GDPR
+        # 3. ENGINE NOTIFICHE INCROCIATE ANONIME A NORMA GDPR
+        print("📢 Rilevamento preferenze per smistamento notifiche Push...")
         try:
             utenti_df = pd.read_sql_table('Users', con=engine)
-            print(f"ℹ️ Sistema notifiche pronto. Rilevati {len(utenti_df)} dispositivi anonimi registrati.")
-        except:
-            pass
-            
+            if not utenti_df.empty:
+                for idx, notizia in df_glide.iterrows():
+                    cat = notizia['category']
+                    titolo = notizia['title']
+                    
+                    colonna_spunta = 'notify_general'
+                    if cat == 'Salute & Medicina':
+                        colonna_spunta = 'notify_health'
+                    elif cat == 'Edilizia & Cantieri':
+                        colonna_spunta = 'notify_construction'
+                    
+                    target_dispositivi = utenti_df[utenti_df[colonna_spunta] == True]['id'].tolist()
+                    
+                    if target_dispositivi:
+                        print(f"🔔 Notifica preparata per {len(target_dispositivi)} dispositivi anonimi su area '{cat}': {titolo[:40]}...")
+            else:
+                print("ℹ️ Coda notifiche vuota: nessun dispositivo ancora registrato nell'app.")
+        except Exception as ue:
+            print(f"⚠️ Nota logica notifiche: tabella transiti non popolata ({ue})")
+                
     except Exception as e:
         print('❌ Errore durante l\'inserimento nel database Glide:', e)
 
