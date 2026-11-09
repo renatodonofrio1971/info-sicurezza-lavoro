@@ -191,16 +191,14 @@ def scrape_normattiva():
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
         soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # Nuova struttura Normattiva: le notizie in evidenza usano i tag h3
-        notizie = soup.find_all('h3')
+        links = soup.find_all('h3')
         contatore = 0
         data_oggi = datetime.now().strftime("%d/%m/%Y")
-        
-        for index, item in enumerate(notizie):
+        for index, item in enumerate(links):
             titolo = item.get_text(strip=True).replace('"', '')
             if len(titolo) > 10:
-                # Forza il link istituzionale statico esatto richiesto
+                
+                # LINK ESATTO E STATICO RICHIESTO
                 link_ufficiale = "https://www.normattiva.it/"
                 
                 riga = [f"NORMATTIVA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Normattiva", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
@@ -218,18 +216,14 @@ def scrape_gazzetta_ufficiale():
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
         soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # Nuova struttura Gazzetta: estrazione dall'area Notizie o link interni brevi
         blocchi = soup.find_all('a')
         contatore = 0
         data_oggi = datetime.now().strftime("%d/%m/%Y")
-        
         for index, item in enumerate(blocchi):
             titolo = item.get_text(strip=True)
-            # Filtro per raccogliere solo le notizie reali ed evitare i menu fissi
             if len(titolo) > 25 and any(p in titolo.lower() for p in ["decreto", "legge", "l.", "d.l.", "attuazione", "misure"]):
                 
-                # Forza il link istituzionale statico esatto richiesto
+                # LINK ESATTO E STATICO RICHIESTO
                 link_ufficiale = "https://www.gazzettaufficiale.it/"
                 
                 riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
@@ -275,38 +269,57 @@ def spingi_dati_a_glide():
     if db_url.startswith("postgresql://"):
         db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-    if os.path.exists(FILE_LOCALE):
-        from sqlalchemy import create_engine
-        import time
+    from sqlalchemy import create_engine
+    import time
+    
+    try:
+        engine = create_engine(db_url)
         
-        df = pd.read_csv(FILE_LOCALE, sep=';').fillna('')
-        df_glide = pd.DataFrame()
-        
-        timestamp_base = int(time.time())
-        df_glide['id'] = [timestamp_base + i for i in range(len(df))]
-        df_glide['title'] = df['Titolo']
-        df_glide['source'] = df['Fonte']
-        df_glide['date'] = df['Data']
-        df_glide['official_link'] = df['Link_Ufficiale']
-        df_glide['category'] = df['Categoria']
-        df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
-        
-        try:
-            engine = create_engine(db_url)
-            df_glide.to_sql('news', con=engine, if_exists='append', index=False)
-            print(f"✅ Sincronizzazione SQL completata: inserite {len(df_glide)} notizie nella tabella 'news'!")
+        # 1. INVIO DELLE NOTIZIE (Tabella 'news')
+        if os.path.exists(FILE_LOCALE):
+            df = pd.read_csv(FILE_LOCALE, sep=';').fillna('')
+            df_glide = pd.DataFrame()
+            timestamp_base = int(time.time())
+            df_glide['id'] = [timestamp_base + i for i in range(len(df))]
+            df_glide['title'] = df['Titolo']
+            df_glide['source'] = df['Fonte']
+            df_glide['date'] = df['Data']
+            df_glide['official_link'] = df['Link_Ufficiale']
+            df_glide['category'] = df['Categoria']
+            df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
             
-            print("📢 Controllo dispositivi anonimi abilitati per le notifiche...")
-            try:
-                utenti_df = pd.read_sql_table('Users', con=engine)
-                print(f"ℹ️ Rilevati {len(utenti_df)} dispositivi anonimi nel database per la ricezione mirata.")
-            except Exception as ue:
-                print(f"ℹ️ Nessun dispositivo ancora registrato nella tabella 'Users' ({ue})")
-                
-        except Exception as e:
-            print('❌ Errore durante l\'inserimento nel database Glide:', e)
-    else:
-        print('File Database_Notizie.csv non trovato per Glide!')
+            df_glide.to_sql('news', con=engine, if_exists='append', index=False)
+            print(f"✅ SQL News completato: inserite {len(df_glide)} notizie.")
+
+        # 2. GENERAZIONE E INVIO DELLE SCADENZE (Tabella 'deadlines')
+        print("⏳ Generazione scadenze di conformità correnti...")
+        scadenze_dati = [
+            {"title": "Aggiornamento DVR - Analisi dei Rischi Annuale", "due_date": "2026-12-15", "notes": "Verifica conformità e aggiornamento signatures del RLS."},
+            {"title": "Invio Autoliquidazione INAIL 2026", "due_date": "2026-11-30", "notes": "Scadenza termine per calcolo saldo e premio di regolazione."},
+            {"title": "Verifica Periodica Impianti di Messa a Terra", "due_date": "2026-12-01", "notes": "Controllo ispettivo biennale/quinquennale obbligatorio DPR 462/01."},
+            {"title": "Scadenza Rinnovo Cassette Primo Soccorso", "due_date": "2026-11-25", "notes": "Controllo integrità e validità dei presidi medici scaduti."}
+        ]
+        
+        df_scadenze = pd.DataFrame(scadenze_dati)
+        df_scadenze_glide = pd.DataFrame()
+        timestamp_scad = int(time.time()) + 1000
+        df_scadenze_glide['id'] = [timestamp_scad + i for i in range(len(df_scadenze))]
+        df_scadenze_glide['title'] = df_scadenze['title']
+        df_scadenze_glide['due_date'] = df_scadenze['due_date']
+        df_scadenze_glide['notes'] = df_scadenze['notes']
+        
+        df_scadenze_glide.to_sql('deadlines', con=engine, if_exists='append', index=False)
+        print(f"✅ SQL Deadlines completato: inserite {len(df_scadenze_glide)} scadenze istituzionali attive!")
+        
+        # 3. VERIFICA DISPOSITIVI ANONIMI GDPR
+        try:
+            utenti_df = pd.read_sql_table('Users', con=engine)
+            print(f"ℹ️ Sistema notifiche pronto. Rilevati {len(utenti_df)} dispositivi anonimi registrati.")
+        except:
+            pass
+            
+    except Exception as e:
+        print('❌ Errore durante l\'inserimento nel database Glide:', e)
 
 if __name__ == "__main__":
     inizializza_database_locale()
