@@ -191,14 +191,16 @@ def scrape_normattiva():
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
         soup = BeautifulSoup(response.text, 'html.parser')
-        links = soup.find_all('a')
+        
+        # Nuova struttura Normattiva: le notizie in evidenza usano i tag h3
+        notizie = soup.find_all('h3')
         contatore = 0
         data_oggi = datetime.now().strftime("%d/%m/%Y")
-        for index, link in enumerate(links):
-            titolo = link.get_text(strip=True)
-            if len(titolo) > 20 and ("d.lgs" in titolo.lower() or "legge" in titolo.lower() or "decreto" in titolo.lower()):
-                
-                # Forziamo l'URL esatto statico richiesto senza sottocartelle
+        
+        for index, item in enumerate(notizie):
+            titolo = item.get_text(strip=True).replace('"', '')
+            if len(titolo) > 10:
+                # Forza il link istituzionale statico esatto richiesto
                 link_ufficiale = "https://www.normattiva.it/"
                 
                 riga = [f"NORMATTIVA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Normattiva", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
@@ -216,21 +218,24 @@ def scrape_gazzetta_ufficiale():
         response = requests.get(url, headers=HEADERS, timeout=15)
         if response.status_code != 200: return
         soup = BeautifulSoup(response.text, 'html.parser')
-        notizie = soup.find_all('span', class_='titolo-provvedimento') or [a for a in soup.find_all('a') if "serie" in a.get_text().lower()]
+        
+        # Nuova struttura Gazzetta: estrazione dall'area Notizie o link interni brevi
+        blocchi = soup.find_all('a')
         contatore = 0
         data_oggi = datetime.now().strftime("%d/%m/%Y")
-        for index, item in enumerate(notizie[:5]):
-            link_tag = item if item.name == 'a' else item.find('a')
-            if not link_tag: continue
-            titolo = link_tag.get_text(strip=True)
-            if len(titolo) < 15: continue
-            
-            # Forziamo l'URL esatto statico richiesto senza sottocartelle
-            link_ufficiale = "https://www.gazzettaufficiale.it/"
-            
-            riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
-            aggiungi_riga_locale(riga)
-            contatore += 1
+        
+        for index, item in enumerate(blocchi):
+            titolo = item.get_text(strip=True)
+            # Filtro per raccogliere solo le notizie reali ed evitare i menu fissi
+            if len(titolo) > 25 and any(p in titolo.lower() for p in ["decreto", "legge", "l.", "d.l.", "attuazione", "misure"]):
+                
+                # Forza il link istituzionale statico esatto richiesto
+                link_ufficiale = "https://www.gazzettaufficiale.it/"
+                
+                riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
+                aggiungi_riga_locale(riga)
+                contatore += 1
+                if contatore >= 5: break
         print(f"✅ Gazzetta Ufficiale completato: aggregati {contatore} atti ufficiali.")
     except Exception as e:
         print(f"⚠️ Nota: Gazzetta Ufficiale non raggiungibile ({e})")
@@ -243,7 +248,6 @@ def scrape_garante_privacy():
         if response.status_code != 200: return
         soup = BeautifulSoup(response.text, 'html.parser')
         notizie = soup.find_all('h2', class_='titolo') or soup.find_all('p', class_='titolo') or soup.find_all('h3')
-        
         contatore = 0
         data_oggi = datetime.now().strftime("%d/%m/%Y")
         for index, item in enumerate(notizie[:5]):
@@ -253,7 +257,6 @@ def scrape_garante_privacy():
             if len(titolo) < 15 or "ricerca" in titolo.lower(): continue
             link_parziale = link_tag.get('href', '')
             link_ufficiale = link_parziale if link_parziale.startswith('http') else f"https://garanteprivacy.it/{link_parziale.lstrip('/')}"
-            
             riga = [f"GARANTE_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Garante Privacy", data_oggi, link_ufficiale, "Cybersecurity e IA", "Media"]
             aggiungi_riga_locale(riga)
             contatore += 1
@@ -276,14 +279,11 @@ def spingi_dati_a_glide():
         from sqlalchemy import create_engine
         import time
         
-        df = pd.read_csv(FILE_LOCALE, sep=';')
-        df = df.fillna('')
-        
+        df = pd.read_csv(FILE_LOCALE, sep=';').fillna('')
         df_glide = pd.DataFrame()
         
         timestamp_base = int(time.time())
         df_glide['id'] = [timestamp_base + i for i in range(len(df))]
-        
         df_glide['title'] = df['Titolo']
         df_glide['source'] = df['Fonte']
         df_glide['date'] = df['Data']
@@ -291,13 +291,18 @@ def spingi_dati_a_glide():
         df_glide['category'] = df['Categoria']
         df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
         
-        df_da_caricare = df_glide
-        totale_notizie = len(df_da_caricare)
-        
         try:
             engine = create_engine(db_url)
-            df_da_caricare.to_sql('news', con=engine, if_exists='append', index=False)
-            print(f"✅ Sincronizzazione SQL completata: inserite tutte le {totale_notizie} notizie reali nella tabella 'news'!")
+            df_glide.to_sql('news', con=engine, if_exists='append', index=False)
+            print(f"✅ Sincronizzazione SQL completata: inserite {len(df_glide)} notizie nella tabella 'news'!")
+            
+            print("📢 Controllo dispositivi anonimi abilitati per le notifiche...")
+            try:
+                utenti_df = pd.read_sql_table('Users', con=engine)
+                print(f"ℹ️ Rilevati {len(utenti_df)} dispositivi anonimi nel database per la ricezione mirata.")
+            except Exception as ue:
+                print(f"ℹ️ Nessun dispositivo ancora registrato nella tabella 'Users' ({ue})")
+                
         except Exception as e:
             print('❌ Errore durante l\'inserimento nel database Glide:', e)
     else:
@@ -305,7 +310,6 @@ def spingi_dati_a_glide():
 
 if __name__ == "__main__":
     inizializza_database_locale()
-    
     print("🚀 --- AVVIO SUPER-MOTORE MULTI-FONTE ESTESO (7 FONTI) --- 🚀\n")
     scrape_inail()
     print("-" * 50)
@@ -322,7 +326,6 @@ if __name__ == "__main__":
     scrape_garante_privacy()
     print("\n🎉 SUPER ARCHIVIO GENERATO CON SUCCESSO LOCALE!")
     print("-" * 50)
-    
     spingi_dati_a_glide()
 
 
