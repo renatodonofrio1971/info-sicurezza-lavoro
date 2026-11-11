@@ -274,25 +274,43 @@ def spingi_dati_a_glide():
     
     try:
         engine = create_engine(db_url)
+        df_nuove_reali = pd.DataFrame()
         
-        # 1. INVIO DELLE NOTIZIE (Tabella 'news')
+        # 1. INVIO DELLE NOTIZIE CON DEDUPLICAZIONE (Tabella 'news')
         if os.path.exists(FILE_LOCALE):
             df = pd.read_csv(FILE_LOCALE, sep=';').fillna('')
             df_glide = pd.DataFrame()
             timestamp_base = int(time.time())
             df_glide['id'] = [timestamp_base + i for i in range(len(df))]
-            df_glide['title'] = df['Titolo']
+            df_glide['title'] = df['Titolo'].astype(str).str.strip()
             df_glide['source'] = df['Fonte']
             df_glide['date'] = df['Data']
             df_glide['official_link'] = df['Link_Ufficiale']
             df_glide['category'] = df['Categoria']
             df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
             
-            df_glide.to_sql('news', con=engine, if_exists='append', index=False)
-            print(f"✅ SQL News completato: inserite {len(df_glide)} notizie.")
+            # Recupera i titoli già presenti nel database per evitare duplicati
+            titoli_esistenti = set()
+            for t_news in ['news', 'News']:
+                try:
+                    df_esistenti = pd.read_sql(f'SELECT title FROM "{t_news}"', con=engine)
+                    titoli_esistenti = set(df_esistenti['title'].dropna().astype(str).str.strip())
+                    break
+                except:
+                    continue
 
-        # 2. INVIO DELLE SCADENZE (Tabella 'deadlines')
-        print("⏳ Generazione scadenze di conformità correnti...")
+            df_nuove_reali = df_glide[~df_glide['title'].isin(titoli_esistenti)].copy()
+            # Rimuove anche eventuali duplicati interni nello stesso batch giornaliero
+            df_nuove_reali = df_nuove_reali.drop_duplicates(subset=['title'])
+
+            if not df_nuove_reali.empty:
+                df_nuove_reali.to_sql('news', con=engine, if_exists='append', index=False)
+                print(f"✅ SQL News completato: inserite {len(df_nuove_reali)} NUOVE notizie (scartati {len(df_glide) - len(df_nuove_reali)} duplicati).")
+            else:
+                print("ℹ️ SQL News: nessuna nuova notizia rilevata oggi, database già aggiornato.")
+
+        # 2. INVIO DELLE SCADENZE CON DEDUPLICAZIONE (Tabella 'deadlines')
+        print("⏳ Controllo e sincronizzazione scadenze di conformità correnti...")
         scadenze_dati = [
             {"title": "Aggiornamento DVR - Analisi dei Rischi Annuale", "due_date": "2026-12-15", "notes": "Verifica conformità e aggiornamento signatures del RLS."},
             {"title": "Invio Autoliquidazione INAIL 2026", "due_date": "2026-11-30", "notes": "Scadenza termine per calcolo saldo e premio di regolazione."},
@@ -304,17 +322,30 @@ def spingi_dati_a_glide():
         df_scadenze_glide = pd.DataFrame()
         timestamp_scad = int(time.time()) + 1000
         df_scadenze_glide['id'] = [timestamp_scad + i for i in range(len(df_scadenze))]
-        df_scadenze_glide['title'] = df_scadenze['title']
+        df_scadenze_glide['title'] = df_scadenze['title'].astype(str).str.strip()
         df_scadenze_glide['due_date'] = df_scadenze['due_date']
         df_scadenze_glide['notes'] = df_scadenze['notes']
+
+        scadenze_esistenti = set()
+        for t_dl in ['deadlines', 'Deadlines']:
+            try:
+                df_dl_esistenti = pd.read_sql(f'SELECT title FROM "{t_dl}"', con=engine)
+                scadenze_esistenti = set(df_dl_esistenti['title'].dropna().astype(str).str.strip())
+                break
+            except:
+                continue
+
+        df_scadenze_nuove = df_scadenze_glide[~df_scadenze_glide['title'].isin(scadenze_esistenti)].copy()
+
+        if not df_scadenze_nuove.empty:
+            df_scadenze_nuove.to_sql('deadlines', con=engine, if_exists='append', index=False)
+            print(f"✅ SQL Deadlines completato: inserite {len(df_scadenze_nuove)} nuove scadenze istituzionali!")
+        else:
+            print("ℹ️ SQL Deadlines: tutte le scadenze correnti sono già presenti nel database.")
         
-        df_scadenze_glide.to_sql('deadlines', con=engine, if_exists='append', index=False)
-        print(f"✅ SQL Deadlines completato: inserite {len(df_scadenze_glide)} scadenze istituzionali attive!")
-        
-        # 3. ENGINE NOTIFICHE INCROCIATE ANONIME A NORMA GDPR
+        # 3. ENGINE NOTIFICHE INCROCIATE ANONIME A NORMA GDPR (SOLO SULLE NUOVE NOTIZIE)
         print("📢 Rilevamento preferenze per smistamento notifiche Push...")
         
-        # PROVA ENTRAMBE LE VARIANTI DI COSTRUTTO SU POSTGRES PER SICUREZZA
         utenti_df = pd.DataFrame()
         for t_name in ['users', 'Users']:
             try:
@@ -324,9 +355,9 @@ def spingi_dati_a_glide():
             except:
                 continue
 
-        if not utenti_df.empty:
+        if not utenti_df.empty and not df_nuove_reali.empty:
             print(f"ℹ️ Sistema notifiche pronto. Rilevati {len(utenti_df)} dispositivi anonimi registrati.")
-            for idx, notizia in df_glide.iterrows():
+            for idx, notizia in df_nuove_reali.iterrows():
                 cat = notizia['category']
                 titolo = notizia['title']
                 
@@ -340,6 +371,8 @@ def spingi_dati_a_glide():
                     target_dispositivi = utenti_df[utenti_df[colonna_spunta] == True]['id'].tolist()
                     if target_dispositivi:
                         print(f"🔔 Notifica preparata per {len(target_dispositivi)} dispositivi anonimi su area '{cat}': {titolo[:40]}...")
+        elif df_nuove_reali.empty:
+            print("ℹ️ Nessuna nuova notizia da notificare oggi.")
         else:
             print("ℹ️ Coda notifiche in transito: nessun dispositivo ancora registrato nell'app.")
                 
@@ -365,5 +398,3 @@ if __name__ == "__main__":
     print("\n🎉 SUPER ARCHIVIO GENERATO CON SUCCESSO LOCALE!")
     print("-" * 50)
     spingi_dati_a_glide()
-
-
