@@ -295,8 +295,17 @@ def spingi_dati_a_glide():
         
         df_sub = pd.DataFrame(righe_sub)
         try:
-            df_sub.to_sql('subcategories', con=engine, if_exists='append', index=False)
-            print(f"✅ Tabella dinamica 'subcategories' popolata!")
+            df_sub_esistenti = pd.read_sql('SELECT macro_area, tag_name FROM subcategories', con=engine)
+            coppie_esistenti = set(zip(df_sub_esistenti['macro_area'], df_sub_esistenti['tag_name']))
+            max_id_sub = pd.read_sql('SELECT COALESCE(MAX(id), 0) AS m FROM subcategories', con=engine)['m'].iloc[0]
+            
+            df_sub_nuove = df_sub[~df_sub.apply(lambda r: (r['macro_area'], r['tag_name']) in coppie_esistenti, axis=1)].copy()
+            if not df_sub_nuove.empty:
+                df_sub_nuove['id'] = [int(max_id_sub) + i + 1 for i in range(len(df_sub_nuove))]
+                df_sub_nuove.to_sql('subcategories', con=engine, if_exists='append', index=False)
+                print(f"✅ Tabella 'subcategories' aggiornata: aggiunti {len(df_sub_nuove)} nuovi tag!")
+            else:
+                print("ℹ️ Tabella 'subcategories' già allineata.")
         except Exception as sub_err:
             print(f"ℹ️ Verifica subcategories: {sub_err}")
         
