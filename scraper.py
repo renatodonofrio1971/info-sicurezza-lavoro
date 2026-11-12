@@ -269,7 +269,7 @@ def spingi_dati_a_glide():
     if db_url.startswith("postgresql://"):
         db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-    from sqlalchemy import create_engine
+    from sqlalchemy import create_engine, text
     from datetime import datetime
     import time
     
@@ -277,8 +277,16 @@ def spingi_dati_a_glide():
         engine = create_engine(db_url)
         df_nuove_reali = pd.DataFrame()
         oggi_iso = datetime.now().strftime('%Y-%m-%d')
+
+        # Assicura che esistano le colonne 'summary' su news e 'official_link' su deadlines
+        with engine.begin() as conn:
+            try:
+                conn.execute(text('ALTER TABLE news ADD COLUMN IF NOT EXISTS summary TEXT;'))
+                conn.execute(text('ALTER TABLE deadlines ADD COLUMN IF NOT EXISTS official_link TEXT;'))
+            except Exception as col_err:
+                print(f"ℹ️ Verifica colonne extra: {col_err}")
         
-        # 1. INVIO DELLE NOTIZIE CON DEDUPLICAZIONE (Tabella 'news')
+        # 1. INVIO DELLE NOTIZIE CON DEDUPLICAZIONE E RIASSUNTO (Tabella 'news')
         if os.path.exists(FILE_LOCALE):
             df = pd.read_csv(FILE_LOCALE, sep=';').fillna('')
             df_glide = pd.DataFrame()
@@ -291,12 +299,19 @@ def spingi_dati_a_glide():
             df_glide['category'] = df['Categoria']
             df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
             
-            # Protezione anti-NULL per evitare crash nell'interfaccia Glide
+            # Usa eventuali colonne di testo/descrizione se presenti nel CSV, altrimenti arricchisce con contesto
+            if 'Descrizione' in df.columns:
+                df_glide['summary'] = df['Descrizione'].astype(str).str.strip()
+            elif 'Testo' in df.columns:
+                df_glide['summary'] = df['Testo'].astype(str).str.strip()
+            else:
+                df_glide['summary'] = df['Fonte'] + " - " + df['Categoria'] + ": " + df['Titolo']
+            
+            # Protezione anti-NULL
             df_glide['date'] = df_glide['date'].replace('', oggi_iso).fillna(oggi_iso)
             df_glide['category'] = df_glide['category'].replace('', 'Sicurezza Generale').fillna('Sicurezza Generale')
             df_glide['importance'] = df_glide['importance'].replace('', 'Medium').fillna('Medium')
             
-            # Recupera i titoli già presenti nel database per evitare duplicati
             titoli_esistenti = set()
             for t_news in ['news', 'News']:
                 try:
@@ -311,17 +326,37 @@ def spingi_dati_a_glide():
 
             if not df_nuove_reali.empty:
                 df_nuove_reali.to_sql('news', con=engine, if_exists='append', index=False)
-                print(f"✅ SQL News completato: inserite {len(df_nuove_reali)} NUOVE notizie (scartati {len(df_glide) - len(df_nuove_reali)} duplicati).")
+                print(f"✅ SQL News completato: inserite {len(df_nuove_reali)} NUOVE notizie.")
             else:
                 print("ℹ️ SQL News: nessuna nuova notizia rilevata oggi, database già aggiornato.")
 
-        # 2. INVIO DELLE SCADENZE CON DEDUPLICAZIONE (Tabella 'deadlines')
+        # 2. INVIO DELLE SCADENZE CON LINK UFFICIALE (Tabella 'deadlines')
         print("⏳ Controllo e sincronizzazione scadenze di conformità correnti...")
         scadenze_dati = [
-            {"title": "Aggiornamento DVR - Analisi dei Rischi Annuale", "due_date": "2026-12-15", "notes": "Verifica conformità e aggiornamento signatures del RLS."},
-            {"title": "Invio Autoliquidazione INAIL 2026", "due_date": "2026-11-30", "notes": "Scadenza termine per calcolo saldo e premio di regolazione."},
-            {"title": "Verifica Periodica Impianti di Messa a Terra", "due_date": "2026-12-01", "notes": "Controllo ispettivo biennale/quinquennale obbligatorio DPR 462/01."},
-            {"title": "Scadenza Rinnovo Cassette Primo Soccorso", "due_date": "2026-11-25", "notes": "Controllo integrità e validità dei presidi medici scaduti."}
+            {
+                "title": "Aggiornamento DVR - Analisi dei Rischi Annuale",
+                "due_date": "2026-12-15",
+                "notes": "Verifica conformità e aggiornamento firme del RLS (D.Lgs. 81/08 art. 28-29).",
+                "official_link": "https://normattiva.it"
+            },
+            {
+                "title": "Invio Autoliquidazione INAIL 2026",
+                "due_date": "2026-11-30",
+                "notes": "Scadenza termine per calcolo saldo e premio di regolazione sul portale INAIL.",
+                "official_link": "https://inail.it"
+            },
+            {
+                "title": "Verifica Periodica Impianti di Messa a Terra",
+                "due_date": "2026-12-01",
+                "notes": "Controllo ispettivo biennale/quinquennale obbligatorio DPR 462/01 tramite portale CIVA.",
+                "official_link": "https://inail.it"
+            },
+            {
+                "title": "Scadenza Rinnovo Cassette Primo Soccorso",
+                "due_date": "2026-11-25",
+                "notes": "Controllo integrità e validità dei presidi medici scaduti (DM 388/2003).",
+                "official_link": "https://gazzettaufficiale.it"
+            }
         ]
         
         df_scadenze = pd.DataFrame(scadenze_dati)
@@ -331,6 +366,7 @@ def spingi_dati_a_glide():
         df_scadenze_glide['title'] = df_scadenze['title'].astype(str).str.strip()
         df_scadenze_glide['due_date'] = df_scadenze['due_date']
         df_scadenze_glide['notes'] = df_scadenze['notes']
+        df_scadenze_glide['official_link'] = df_scadenze['official_link']
 
         scadenze_esistenti = set()
         for t_dl in ['deadlines', 'Deadlines']:
@@ -349,9 +385,8 @@ def spingi_dati_a_glide():
         else:
             print("ℹ️ SQL Deadlines: tutte le scadenze correnti sono già presenti nel database.")
         
-        # 3. ENGINE NOTIFICHE INCROCIATE ANONIME A NORMA GDPR (SOLO SULLE NUOVE NOTIZIE)
+        # 3. ENGINE NOTIFICHE INCROCIATE ANONIME A NORMA GDPR
         print("📢 Rilevamento preferenze per smistamento notifiche Push...")
-        
         utenti_df = pd.DataFrame()
         for t_name in ['users', 'Users']:
             try:
@@ -366,7 +401,6 @@ def spingi_dati_a_glide():
             for idx, notizia in df_nuove_reali.iterrows():
                 cat = notizia['category']
                 titolo = notizia['title']
-                
                 colonna_spunta = 'notify_general'
                 if cat == 'Salute & Medicina':
                     colonna_spunta = 'notify_health'
