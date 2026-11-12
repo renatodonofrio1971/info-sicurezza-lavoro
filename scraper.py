@@ -270,11 +270,13 @@ def spingi_dati_a_glide():
         db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
     from sqlalchemy import create_engine
+    from datetime import datetime
     import time
     
     try:
         engine = create_engine(db_url)
         df_nuove_reali = pd.DataFrame()
+        oggi_iso = datetime.now().strftime('%Y-%m-%d')
         
         # 1. INVIO DELLE NOTIZIE CON DEDUPLICAZIONE (Tabella 'news')
         if os.path.exists(FILE_LOCALE):
@@ -289,6 +291,11 @@ def spingi_dati_a_glide():
             df_glide['category'] = df['Categoria']
             df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
             
+            # Protezione anti-NULL per evitare crash nell'interfaccia Glide
+            df_glide['date'] = df_glide['date'].replace('', oggi_iso).fillna(oggi_iso)
+            df_glide['category'] = df_glide['category'].replace('', 'Sicurezza Generale').fillna('Sicurezza Generale')
+            df_glide['importance'] = df_glide['importance'].replace('', 'Medium').fillna('Medium')
+            
             # Recupera i titoli già presenti nel database per evitare duplicati
             titoli_esistenti = set()
             for t_news in ['news', 'News']:
@@ -300,7 +307,6 @@ def spingi_dati_a_glide():
                     continue
 
             df_nuove_reali = df_glide[~df_glide['title'].isin(titoli_esistenti)].copy()
-            # Rimuove anche eventuali duplicati interni nello stesso batch giornaliero
             df_nuove_reali = df_nuove_reali.drop_duplicates(subset=['title'])
 
             if not df_nuove_reali.empty:
