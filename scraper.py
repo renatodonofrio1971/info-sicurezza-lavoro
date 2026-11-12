@@ -269,7 +269,7 @@ def spingi_dati_a_glide():
     if db_url.startswith("postgresql://"):
         db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-    from sqlalchemy import create_engine, text
+    from sqlalchemy import create_engine
     from datetime import datetime
     import time
     
@@ -278,13 +278,27 @@ def spingi_dati_a_glide():
         df_nuove_reali = pd.DataFrame()
         oggi_iso = datetime.now().strftime('%Y-%m-%d')
 
-        # Assicura che esistano le colonne 'summary' su news e 'official_link' su deadlines
-        with engine.begin() as conn:
-            try:
-                conn.execute(text('ALTER TABLE news ADD COLUMN IF NOT EXISTS summary TEXT;'))
-                conn.execute(text('ALTER TABLE deadlines ADD COLUMN IF NOT EXISTS official_link TEXT;'))
-            except Exception as col_err:
-                print(f"ℹ️ Verifica colonne extra: {col_err}")
+        # 0. AGGIORNAMENTO DINAMICO MACRO-AREE E SOTTOCATEGORIE (Modifica qui quando vuoi!)
+        mappa_categorie = {
+            "Sicurezza Generale": ["#DVR", "#Formazione", "#DPI", "#Antincendio", "#PrimoSoccorso", "#Sanzioni", "#RSPP", "#Appalti", "#Privacy"],
+            "Salute & Medicina": ["#MedicoCompetente", "#VisiteMediche", "#StressLavoroCorrelato", "#Ergonomia", "#RischioChimico", "#RischioBiologico", "#DPI"],
+            "Edilizia & Cantieri": ["#PatenteACrediti", "#POS_PSC", "#Ponteggi", "#LavoriInQuota", "#Scavi", "#Amianto", "#DPI", "#Formazione"],
+            "Industria & Macchine": ["#DirettivaMacchine", "#RischioElettrico", "#SpaziConfinati", "#VerifichePeriodiche", "#ATEX", "#DPI"]
+        }
+        
+        righe_sub = []
+        idx_sub = 1
+        for macro, tags in mappa_categorie.items():
+            for t in tags:
+                righe_sub.append({"id": idx_sub, "macro_area": macro, "tag_name": t})
+                idx_sub += 1
+        
+        df_sub = pd.DataFrame(righe_sub)
+        try:
+            df_sub.to_sql('subcategories', con=engine, if_exists='append', index=False)
+            print(f"✅ Tabella dinamica 'subcategories' popolata!")
+        except Exception as sub_err:
+            print(f"ℹ️ Verifica subcategories: {sub_err}")
         
         # 1. INVIO DELLE NOTIZIE CON DEDUPLICAZIONE E RIASSUNTO (Tabella 'news')
         if os.path.exists(FILE_LOCALE):
@@ -299,7 +313,6 @@ def spingi_dati_a_glide():
             df_glide['category'] = df['Categoria']
             df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
             
-            # Usa eventuali colonne di testo/descrizione se presenti nel CSV, altrimenti arricchisce con contesto
             if 'Descrizione' in df.columns:
                 df_glide['summary'] = df['Descrizione'].astype(str).str.strip()
             elif 'Testo' in df.columns:
@@ -307,7 +320,6 @@ def spingi_dati_a_glide():
             else:
                 df_glide['summary'] = df['Fonte'] + " - " + df['Categoria'] + ": " + df['Titolo']
             
-            # Protezione anti-NULL
             df_glide['date'] = df_glide['date'].replace('', oggi_iso).fillna(oggi_iso)
             df_glide['category'] = df_glide['category'].replace('', 'Sicurezza Generale').fillna('Sicurezza Generale')
             df_glide['importance'] = df_glide['importance'].replace('', 'Medium').fillna('Medium')
@@ -406,6 +418,8 @@ def spingi_dati_a_glide():
                     colonna_spunta = 'notify_health'
                 elif cat == 'Edilizia & Cantieri':
                     colonna_spunta = 'notify_construction'
+                elif cat == 'Industria & Macchine':
+                    colonna_spunta = 'notify_industry'
                 
                 if colonna_spunta in utenti_df.columns:
                     target_dispositivi = utenti_df[utenti_df[colonna_spunta] == True]['id'].tolist()
