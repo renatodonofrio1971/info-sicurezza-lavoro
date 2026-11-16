@@ -334,6 +334,18 @@ def scrape_gazzetta_ufficiale():
 
         articoli = estrai_articoli_generici(soup, url_statico, limite=25)
 
+                if not articoli:
+            for a_tag in soup.find_all("a", string=re.compile(r"Leggi la notizia", re.I))[:25]:
+                contenitore = a_tag.parent
+                testo = pulisci_testo(contenitore.get_text(" ", strip=True)) if contenitore else ""
+                testo = re.sub(r"Leggi la notizia", "", testo, flags=re.I).strip()
+                if len(testo) > 20:
+                    articoli.append({
+                        "titolo": testo[:180],
+                        "link": url_statico,
+                        "descrizione": testo
+                    })
+
         if not articoli:
             for item in soup.select(".risultato, .elenco_atti li, article")[:25]:
                 testo = pulisci_testo(item.get_text(" ", strip=True))
