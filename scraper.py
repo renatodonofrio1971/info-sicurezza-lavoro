@@ -422,6 +422,14 @@ def spingi_dati_a_glide():
         conn = psycopg2.connect(db_url)
         cur = conn.cursor()
         print("[DB] Connessione a PostgreSQL GlideOS riuscita.")
+        
+                # Uniforma eventuali vecchie date in formato DD/MM/YYYY al formato standard YYYY-MM-DD
+        cur.execute("""
+            UPDATE news
+            SET date = TO_CHAR(TO_DATE(date, 'DD/MM/YYYY'), 'YYYY-MM-DD')
+            WHERE date ~ '^[0-9]{2}/[0-9]{2}/[0-9]{4}$';
+        """)
+
 
         # 1. Sincronizzazione 'subcategories' con ID INTEGER progressivo
         cur.execute("SELECT COALESCE(MAX(id), 0) FROM subcategories;")
