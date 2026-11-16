@@ -1,446 +1,536 @@
-import csv
 import os
+import csv
+import re
+from datetime import datetime
+from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
-import json
-import pandas as pd
+import psycopg2
+from psycopg2.extras import execute_values
 
-# Configurazione file locale
-FILE_LOCALE = "Database_Notizie.csv"
-COLONNE = ["ID", "Titolo", "Fonte", "Data", "Link_Ufficiale", "Categoria", "Importanza"]
+FILE_CSV_LOCALE = "dati_opera_sicura.csv"
+COLONNE_CSV = [
+    "Titolo",
+    "Fonte",
+    "Data",
+    "Link",
+    "Categoria",
+    "Importanza",
+    "Tipo",         # "News" oppure "Scadenza"
+    "Descrizione"   # 8a colonna -> popola 'summary' (news) e 'notes' (deadlines)
+]
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+HEADERS_HTTP = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/128.0.0.0 Safari/537.36"
+    ),
+    "Accept-Language": "it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7"
 }
 
-def pulisci_testo(testo):
-    """Sostituisce i caratteri speciali più comuni per evitare bug visivi in Excel"""
-    if not testo:
-        return ""
-    sostituzioni = {
-        "â€¦": "...", "â€œ": '"', "â€ ": '"', "â€“": "-", "â€™": "'", "\xa0": " ",
-        "Ã\xa0": "à", "Ã²": "ò", "Ã¹": "ù", "Ã¨": "è", "Ã©": "é", "Ã¬": "ì",
-        "unitÃ\xa0": "unità", "professionalitÃ\xa0": "professionalità"
-    }
-    for errato, corretto in sostituzioni.items():
-        testo = testo.replace(errato, corretto)
-    return testo.strip()
+# Set globale per evitare duplicati interni tra le 7 fonti senza passare parametri
+TITOLI_VISTI = set()
+
+# Dizionario dinamico per la tabella PostgreSQL 'subcategories'
+mappa_categorie = {
+    "Edilizia & Cantieri": [
+        "#PatenteACrediti", "#CantieriTemporanei", "#Ponteggi", "#LavoriInQuota", "#PSC_POS"
+    ],
+    "Salute & Medicina": [
+        "#SorveglianzaSanitaria", "#MedicoCompetente", "#Amianto", "#StressLavoroCorrelato", "#MalattieProfessionali"
+    ],
+    "Industria & Impianti": [
+        "#DirettivaMacchine", "#ATEX", "#RischioChimico", "#ImpiantiElettrici", "#DPI"
+    ],
+    "Privacy & Lavoro": [
+        "#Videosorveglianza", "#GDPRLavoro", "#ControlloADistanza", "#DatiBiometrici"
+    ],
+    "Normativa Generale": [
+        "#DLgs81_08", "#DVR", "#FormazioneSicurezza", "#BandoISI", "#SanzioniINL"
+    ]
+}
+
 
 def inizializza_database_locale():
-    if not os.path.exists(FILE_LOCALE):
-        with open(FILE_LOCALE, mode='w', newline='', encoding='utf-8-sig') as f:
-            writer = csv.writer(f, delimiter=';')
-            writer.writerow(COLONNE)
-        print(f"📁 Creato nuovo database locale: {FILE_LOCALE}")
+    """Crea o azzera il file CSV locale a 8 colonne e resetta i titoli visti."""
+    global TITOLI_VISTI
+    TITOLI_VISTI = set()
+    with open(FILE_CSV_LOCALE, mode="w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(COLONNE_CSV)
+    print(f"[CSV] Database locale '{FILE_CSV_LOCALE}' inizializzato (8 colonne).")
 
-def assegna_macro_area_e_tag(titolo):
-    """Analizza il titolo della notizia e assegna Macro-Area e Sotto-Area (Tag)"""
-    titolo_up = titolo.upper()
-    
-    if any(p in titolo_up for p in ["ATTREZZATUR", "MACCHIN", "DPI", "SEGNALETICA", "LUOGHI DI LAVORO", "APPALT", "DUVRI"]):
-        macro = "Sicurezza Generale"
-        sub = "#Attrezzature" if "MACCHIN" in titolo_up or "ATTREZZATUR" in titolo_up else "#DPI" if "DPI" in titolo_up else "#Segnaletica" if "SEGNALETICA" in titolo_up else "#Generale"
-    elif any(p in titolo_up for p in ["MEDICO", "SORVEGLIANZA SANITARIA", "VISIT", "RUMORE", "VIBRAZION", "ERGONOMIA", "VDT", "BIOLOGIC"]):
-        macro = "Salute & Medicina"
-        sub = "#Sorveglianza" if "MEDICO" in titolo_up or "VISIT" in titolo_up else "#RischiFisici" if "RUMORE" in titolo_up or "VIBRAZION" in titolo_up else "#Ergonomia"
-    elif any(p in titolo_up for p in ["CANTIERE", "EDILIZIA", "POS", "PSC", "PONTEGGI", "QUOTA", "PATENTE A CREDITI"]):
-        macro = "Edilizia & Cantieri"
-        sub = "#PatenteACrediti" if "PATENTE" in titolo_up else "#LavoriInQuota" if "QUOTA" in titolo_up or "PONTEGGI" in titolo_up else "#Cantieristica"
-    elif any(p in titolo_up for p in ["INCENDI", "ANTINCENDIO", "EVACUAZION", "EMERGENZ", "ESTINTORE", "SOCCORSO"]):
-        macro = "Antincendio & Emergenze"
-        sub = "#Presidi" if "ESTINTORE" in titolo_up or "MANUTENZ" in titolo_up else "#Antincendio"
-    elif any(p in titolo_up for p in ["FORMAZION", "CORSO", "CORSI", "ADDESTRASMENTO", "AGGIORNAMENTO RSPP", "RLS", "PREPOSTO", "PATENTIN"]):
-        macro = "Formazione & Ruoli"
-        sub = "#Abilitazioni" if "PATENTIN" in titolo_up else "#Corsi"
-    elif any(p in titolo_up for p in ["CHIMICO", "REACH", "CLP", "SDS", "ATEX", "RIFIUTI", "MUD", "AUA", "AMBIENT"]):
-        macro = "Rischio Chimico & Ambiente"
-        sub = "#Ambiente" if "RIFIUTI" in titolo_up or "MUD" in titolo_up else "#Chimico"
+
+def pulisci_testo(testo):
+    """Pulisce spazi multipli, tabulazioni e interruzioni di riga."""
+    if not testo:
+        return ""
+    return re.sub(r"\s+", " ", testo).strip()
+
+
+def classifica_notizia(titolo, descrizione=""):
+    """Assegna categoria e importanza in base alle parole chiave."""
+    testo = f"{titolo} {descrizione}".lower()
+
+    parole_alte = [
+        "scadenza", "obbligo", "sanzion", "decreto", "legge", "urgente",
+        "infortun", "mort", "cantiere", "patente a crediti", "ispettorato",
+        "dvr", "sorveglianza sanitaria", "bando isi", "sicurezza sul lavoro"
+    ]
+    importanza = "High" if any(p in testo for p in parole_alte) else "Medium"
+
+    if any(k in testo for k in ["cantiere", "ediliz", "pontegg", "patente a crediti", "gru"]):
+        categoria = "Edilizia & Cantieri"
+    elif any(k in testo for k in ["sanit", "medico", "sorveglianza", "salute", "malattia professionale", "amianto"]):
+        categoria = "Salute & Medicina"
+    elif any(k in testo for k in ["industria", "macchinar", "chimic", "impiant", "atex", "fabbrica"]):
+        categoria = "Industria & Impianti"
+    elif any(k in testo for k in ["privacy", "gdpr", "videosorveglianza", "biometr", "garante"]):
+        categoria = "Privacy & Lavoro"
     else:
-        macro = "Sicurezza Generale"
-        sub = "#Generale"
-        
-    return macro, sub
+        categoria = "Normativa Generale"
 
-def aggiungi_riga_locale(riga):
-    id_notizia = riga[0]
-    titolo_originale = riga[1]
-    fonte = riga[2]
-    data = riga[3]
-    link_ufficiale = riga[4]
-    
-    macro_area, sotto_tag = assegna_macro_area_e_tag(titolo_originale)
-    importanza = "Alta" if any(p in titolo_originale.upper() for p in ["URGENTI", "OBBLIGO", "D.LGS", "DECRETO"]) or riga[6] == "Alta" else "Media"
-    titolo_con_tag = f"{titolo_originale} {sotto_tag}"
-    
-    riga_finale = [id_notizia, titolo_con_tag, fonte, data, link_ufficiale, macro_area, importanza]
-    riga_pulita = [pulisci_testo(str(item)) for item in riga_finale]
-    with open(FILE_LOCALE, mode='a', newline='', encoding='utf-8-sig') as f:
-        writer = csv.writer(f, delimiter=';')
-        writer.writerow(riga_pulita)
+    return categoria, importanza
+
+
+def aggiungi_riga_locale(titolo, fonte, data_str, link, categoria=None, importanza=None, tipo="News", descrizione=""):
+    """Aggiunge una riga al CSV locale evitando duplicati interni e salvando la Descrizione."""
+    titolo_pulito = pulisci_testo(titolo)
+    if not titolo_pulito or len(titolo_pulito) < 12:
+        return False
+
+    chiave = titolo_pulito.lower()
+    if chiave in TITOLI_VISTI:
+        return False
+    TITOLI_VISTI.add(chiave)
+
+    descrizione_pulita = pulisci_testo(descrizione)
+    if not descrizione_pulita:
+        descrizione_pulita = f"Aggiornamento istituzionale da {fonte}: {titolo_pulito}."
+
+    if not categoria or not importanza:
+        cat_auto, imp_auto = classifica_notizia(titolo_pulito, descrizione_pulita)
+        categoria = categoria or cat_auto
+        importanza = importanza or imp_auto
+
+    data_finale = pulisci_testo(data_str) or datetime.now().strftime("%Y-%m-%d")
+    link_finale = pulisci_testo(link)
+
+    with open(FILE_CSV_LOCALE, mode="a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            titolo_pulito,
+            fonte,
+            data_finale,
+            link_finale,
+            categoria,
+            importanza,
+            tipo,
+            descrizione_pulita
+        ])
+    return True
+
+
+def estrai_articoli_generici(soup, base_url, limite=25):
+    """Legge h2/h3 anche in basso, risale al padre per <a> ed estrae <p> per summary."""
+    risultati = []
+    titoli_locali = set()
+
+    for heading in soup.find_all(["h2", "h3"]):
+        if len(risultati) >= limite:
+            break
+
+        titolo = pulisci_testo(heading.get_text(" ", strip=True))
+        if not titolo or len(titolo) < 15:
+            continue
+
+        if titolo.lower() in ["ricerca semplice", "collegamenti veloci", "in evidenza", "normattiva", "menu", "contatti"]:
+            continue
+
+        if titolo.lower() in titoli_locali:
+            continue
+
+        link_tag = heading.find("a", href=True)
+        contenitore = heading.parent
+
+        if not link_tag and contenitore:
+            link_tag = contenitore.find("a", href=True)
+
+        if not link_tag and contenitore and contenitore.parent:
+            contenitore = contenitore.parent
+            link_tag = contenitore.find("a", href=True)
+
+        href = urljoin(base_url, link_tag["href"]) if link_tag else base_url
+
+        riassunto = ""
+        p_fratello = heading.find_next_sibling("p")
+        if p_fratello:
+            riassunto = pulisci_testo(p_fratello.get_text(" ", strip=True))
+
+        if not riassunto and contenitore:
+            for p in contenitore.find_all("p"):
+                testo_p = pulisci_testo(p.get_text(" ", strip=True))
+                if len(testo_p) > 35 and testo_p.lower() != titolo.lower():
+                    riassunto = testo_p
+                    break
+
+        titoli_locali.add(titolo.lower())
+        risultati.append({
+            "titolo": titolo,
+            "link": href,
+            "descrizione": riassunto
+        })
+
+    return risultati
+# ==============================================================================
+# 3. LE 7 FUNZIONI DI SCRAPING ISTITUZIONALI (SENZA PARAMETRI)
+# ==============================================================================
 
 def scrape_inail():
-    print("🕵️‍♂️ 1/7 - Estrazione da INAIL Nazionale...")
+    """1. INAIL - News e Bandi ISI (legge h2/h3 con link sul contenitore card + <p>)."""
+    fonte = "INAIL"
     url = "https://inail.it"
+    aggiunti = 0
     try:
-        response = requests.get(url, headers=HEADERS, timeout=15)
-        if response.status_code != 200: return
-        soup = BeautifulSoup(response.text, 'html.parser')
-        notizie = soup.find_all('div', class_='news-item') or soup.find_all('div', class_='col-item') or [h3 for h3 in soup.find_all('h3') if h3.find('a')]
+        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
 
-        contatore = 0
-        data_oggi = datetime.now().strftime("%d/%m/%Y")
-        for index, item in enumerate(notizie[:10]):
-            link_tag = item if item.name == 'a' else item.find('a')
-            if not link_tag: continue
-            titolo = link_tag.get_text(strip=True)
-            if len(titolo) < 15 or "vai a" in titolo.lower(): continue
-            link_parziale = link_tag.get('href', '')
-            link_ufficiale = f"https://inail.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
-            
-            riga = [f"INAIL_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "INAIL Nazionale", data_oggi, link_ufficiale, "Istituzionale", "Media"]
-            aggiungi_riga_locale(riga)
-            contatore += 1
-        print(f"✅ INAIL completato: aggiunte {contatore} notizie.")
+        articoli = estrai_articoli_generici(soup, "https://inail.it", limite=25)
+        for art in articoli:
+            tipo = "Scadenza" if any(k in art["titolo"].lower() for k in ["bando", "scadenza", "isi"]) else "News"
+            if aggiungi_riga_locale(
+                titolo=art["titolo"],
+                fonte=fonte,
+                data_str=datetime.now().strftime("%Y-%m-%d"),
+                link=art["link"],
+                tipo=tipo,
+                descrizione=art["descrizione"]
+            ):
+                aggiunti += 1
     except Exception as e:
-        print(f"❌ Errore INAIL: {e}")
+        print(f"[ERRORE {fonte}] {e}")
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_anfos():
-    print("🕵️‍♂️ 2/7 - Estrazione da ANFOS (Scadenze & Formazione)...")
+    """2. ANFOS - Associazione Nazionale Formatori Sicurezza sul Lavoro."""
+    fonte = "ANFOS"
     url = "https://anfos.it"
+    aggiunti = 0
     try:
-        response = requests.get(url, headers=HEADERS, timeout=15)
-        if response.status_code != 200: return
-        soup = BeautifulSoup(response.text, 'html.parser')
-        notizie = soup.find_all('h2', class_='entry-title')
-        
-        contatore = 0
-        data_oggi = datetime.now().strftime("%d/%m/%Y")
-        for index, item in enumerate(notizie[:10]):
-            link_tag = item.find('a')
-            if not link_tag: continue
-            titolo = link_tag.get_text(strip=True)
-            link_ufficiale = link_tag.get('href', '')
-            
-            importance_flag = "Alta" if "scadenza" in titolo.lower() or "obbligo" in titolo.lower() else "Media"
-            categoria = "Scadenze e Norme" if "scadenza" in titolo.lower() else "Aggiornamenti"
-            
-            riga = [f"ANFOS_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "ANFOS", data_oggi, link_ufficiale, categoria, importance_flag]
-            aggiungi_riga_locale(riga)
-            contatore += 1
-        print(f"✅ ANFOS completato: aggiunte {contatore} notizie.")
+        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+
+        articoli = estrai_articoli_generici(soup, "https://anfos.it", limite=25)
+        for art in articoli:
+            if aggiungi_riga_locale(
+                titolo=art["titolo"],
+                fonte=fonte,
+                data_str=datetime.now().strftime("%Y-%m-%d"),
+                link=art["link"],
+                tipo="News",
+                descrizione=art["descrizione"]
+            ):
+                aggiunti += 1
     except Exception as e:
-        print(f"❌ Errore ANFOS: {e}")
+        print(f"[ERRORE {fonte}] {e}")
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_inl():
-    print("🕵️‍♂️ 3/7 - Estrazione da Ispettorato Nazionale del Lavoro (INL)...")
+    """3. INL - Ispettorato Nazionale del Lavoro (card con h2/h3 e link nel padre)."""
+    fonte = "Ispettorato Nazionale del Lavoro"
     url = "https://ispettorato.gov.it"
+    aggiunti = 0
     try:
-        response = requests.get(url, headers=HEADERS, timeout=15)
-        if response.status_code != 200: return
-        soup = BeautifulSoup(response.text, 'html.parser')
-        notizie = soup.find_all('h3') or soup.find_all('h2')
-        
-        contatore = 0
-        data_oggi = datetime.now().strftime("%d/%m/%Y")
-        for index, item in enumerate(notizie[:10]):
-            link_tag = item if item.name == 'a' else item.find('a')
-            if not link_tag: continue
-            titolo = link_tag.get_text(strip=True)
-            if len(titolo) < 15 or "menu" in titolo.lower(): continue
-            link_parziale = link_tag.get('href', '')
-            link_ufficiale = f"https://ispettorato.gov.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
-            
-            riga = [f"INL_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Ispettorato Lavoro", data_oggi, link_ufficiale, "Vigilanza e Controlli", "Alta"]
-            aggiungi_riga_locale(riga)
-            contatore += 1
-        print(f"✅ INL completato: aggiunte {contatore} notizie.")
+        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+
+        articoli = estrai_articoli_generici(soup, "https://ispettorato.gov.it", limite=25)
+        for art in articoli:
+            if aggiungi_riga_locale(
+                titolo=art["titolo"],
+                fonte=fonte,
+                data_str=datetime.now().strftime("%Y-%m-%d"),
+                link=art["link"],
+                tipo="News",
+                descrizione=art["descrizione"]
+            ):
+                aggiunti += 1
     except Exception as e:
-        print(f"❌ Errore INL: {e}")
+        print(f"[ERRORE {fonte}] {e}")
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_ministero_lavoro():
-    print("🕵️‍♂️ 4/7 - Estrazione da Ministero del Lavoro...")
+    """4. Ministero del Lavoro e delle Politiche Sociali."""
+    fonte = "Ministero del Lavoro"
     url = "https://lavoro.gov.it"
+    aggiunti = 0
     try:
-        response = requests.get(url, headers=HEADERS, timeout=15)
-        if response.status_code != 200: return
-        soup = BeautifulSoup(response.text, 'html.parser')
-        notizie = soup.find_all('h4') or soup.find_all('h3')
-        
-        contatore = 0
-        data_oggi = datetime.now().strftime("%d/%m/%Y")
-        for index, item in enumerate(notizie[:10]):
-            link_tag = item if item.name == 'a' else item.find('a')
-            if not link_tag: continue
-            titolo = link_tag.get_text(strip=True)
-            if len(titolo) < 15: continue
-            link_parziale = link_tag.get('href', '')
-            link_ufficiale = f"https://lavoro.gov.it{link_parziale}" if link_parziale.startswith('/') else link_parziale
-            
-            riga = [f"MIN_LAVORO_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Ministero del Lavoro", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
-            aggiungi_riga_locale(riga)
-            contatore += 1
-        print(f"✅ Ministero del Lavoro completato: aggiunte {contatore} notizie.")
+        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+
+        articoli = estrai_articoli_generici(soup, "https://lavoro.gov.it", limite=25)
+        for art in articoli:
+            if aggiungi_riga_locale(
+                titolo=art["titolo"],
+                fonte=fonte,
+                data_str=datetime.now().strftime("%Y-%m-%d"),
+                link=art["link"],
+                tipo="News",
+                descrizione=art["descrizione"]
+            ):
+                aggiunti += 1
     except Exception as e:
-        print(f"❌ Errore Ministero del Lavoro: {e}")
+        print(f"[ERRORE {fonte}] {e}")
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_normattiva():
-    print("🕵️‍♂️ 5/7 - Estrazione da Normattiva (Leggi vigenti)...")
-    url = "https://www.normattiva.it/"
+    """5. Normattiva - Atti in evidenza con link istituzionale statico pulito."""
+    fonte = "Normattiva"
+    url_statico = "https://normattiva.it"
+    aggiunti = 0
     try:
-        response = requests.get(url, headers=HEADERS, timeout=15)
-        if response.status_code != 200: return
-        soup = BeautifulSoup(response.text, 'html.parser')
-        links = soup.find_all('h3')
-        contatore = 0
-        data_oggi = datetime.now().strftime("%d/%m/%Y")
-        for index, item in enumerate(links):
-            titolo = item.get_text(strip=True).replace('"', '')
-            if len(titolo) > 10:
-                
-                # LINK ANCORATO E BLINDATO COME RICHIESTO
-                link_ufficiale = "https://www.normattiva.it/"
-                
-                riga = [f"NORMATTIVA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Normattiva", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
-                aggiungi_riga_locale(riga)
-                contatore += 1
-                if contatore >= 5: break
-        print(f"✅ Normattiva completato: aggiunte {contatore} novità legislative.")
+        resp = requests.get(url_statico, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+
+        articoli = estrai_articoli_generici(soup, url_statico, limite=25)
+        for art in articoli:
+            if aggiungi_riga_locale(
+                titolo=art["titolo"],
+                fonte=fonte,
+                data_str=datetime.now().strftime("%Y-%m-%d"),
+                link=url_statico,
+                categoria="Normativa Generale",
+                importanza="High",
+                tipo="News",
+                descrizione=art["descrizione"]
+            ):
+                aggiunti += 1
     except Exception as e:
-        print(f"⚠️ Nota: Normattiva non raggiungibile ({e})")
+        print(f"[ERRORE {fonte}] {e}")
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_gazzetta_ufficiale():
-    print("🕵️‍♂️ 6/7 - Estrazione da Gazzetta Ufficiale...")
-    url = "https://www.gazzettaufficiale.it/"
+    """6. Gazzetta Ufficiale - Ultimi atti con link istituzionale statico pulito."""
+    fonte = "Gazzetta Ufficiale"
+    url_scrape = "https://gazzettaufficiale.it"
+    url_statico = "https://gazzettaufficiale.it"
+    aggiunti = 0
     try:
-        response = requests.get(url, headers=HEADERS, timeout=15)
-        if response.status_code != 200: return
-        soup = BeautifulSoup(response.text, 'html.parser')
-        blocchi = soup.find_all('a')
-        contatore = 0
-        data_oggi = datetime.now().strftime("%d/%m/%Y")
-        for index, item in enumerate(blocchi):
-            titolo = item.get_text(strip=True)
-            if len(titolo) > 25 and any(p in titolo.lower() for p in ["decreto", "legge", "l.", "d.l.", "attuazione", "misure"]):
-                
-                # LINK ANCORATO E BLINDATO COME RICHIESTO
-                link_ufficiale = "https://www.gazzettaufficiale.it/"
-                
-                riga = [f"GAZZETTA_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Gazzetta Ufficiale", data_oggi, link_ufficiale, "Decreti e Normative", "Alta"]
-                aggiungi_riga_locale(riga)
-                contatore += 1
-                if contatore >= 5: break
-        print(f"✅ Gazzetta Ufficiale completato: aggregati {contatore} atti ufficiali.")
+        resp = requests.get(url_scrape, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+
+        articoli = estrai_articoli_generici(soup, url_statico, limite=25)
+
+        if not articoli:
+            for item in soup.select(".risultato, .elenco_atti li, article")[:25]:
+                testo = pulisci_testo(item.get_text(" ", strip=True))
+                if len(testo) > 25:
+                    articoli.append({
+                        "titolo": testo[:180],
+                        "link": url_statico,
+                        "descrizione": testo
+                    })
+
+        for art in articoli:
+            if aggiungi_riga_locale(
+                titolo=art["titolo"],
+                fonte=fonte,
+                data_str=datetime.now().strftime("%Y-%m-%d"),
+                link=url_statico,
+                categoria="Normativa Generale",
+                importanza="High",
+                tipo="News",
+                descrizione=art["descrizione"]
+            ):
+                aggiunti += 1
     except Exception as e:
-        print(f"⚠️ Nota: Gazzetta Ufficiale non raggiungibile ({e})")
+        print(f"[ERRORE {fonte}] {e}")
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_garante_privacy():
-    print("🕵️‍♂️ 7/7 - Estrazione da Garante Privacy (Cybersecurity e IA)...")
+    """7. Garante per la Protezione dei Dati Personali - Provvedimenti e News lavoro."""
+    fonte = "Garante Privacy"
     url = "https://garanteprivacy.it"
+    aggiunti = 0
     try:
-        response = requests.get(url, headers=HEADERS, timeout=15)
-        if response.status_code != 200: return
-        soup = BeautifulSoup(response.text, 'html.parser')
-        notizie = soup.find_all('h2', class_='titolo') or soup.find_all('p', class_='titolo') or soup.find_all('h3')
-        contatore = 0
-        data_oggi = datetime.now().strftime("%d/%m/%Y")
-        for index, item in enumerate(notizie[:5]):
-            link_tag = item if item.name == 'a' else item.find('a')
-            if not link_tag: continue
-            titolo = link_tag.get_text(strip=True)
-            if len(titolo) < 15 or "ricerca" in titolo.lower(): continue
-            link_parziale = link_tag.get('href', '')
-            link_ufficiale = link_parziale if link_parziale.startswith('http') else f"https://garanteprivacy.it/{link_parziale.lstrip('/')}"
-            riga = [f"GARANTE_{datetime.now().strftime('%Y%m%d')}_{index}", titolo, "Garante Privacy", data_oggi, link_ufficiale, "Cybersecurity e IA", "Media"]
-            aggiungi_riga_locale(riga)
-            contatore += 1
-        print(f"✅ Garante Privacy completato: aggiunte {contatore} linee guida/provvedimenti.")
+        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+
+        articoli = estrai_articoli_generici(soup, "https://garanteprivacy.it", limite=25)
+        for art in articoli:
+            if aggiungi_riga_locale(
+                titolo=art["titolo"],
+                fonte=fonte,
+                data_str=datetime.now().strftime("%Y-%m-%d"),
+                link=art["link"],
+                categoria="Privacy & Lavoro",
+                tipo="News",
+                descrizione=art["descrizione"]
+            ):
+                aggiunti += 1
     except Exception as e:
-        print(f"❌ Errore Garante Privacy: {e}")
+        print(f"[ERRORE {fonte}] {e}")
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+# ==============================================================================
+# 4. SINCRONIZZAZIONE DIRETTA SU POSTGRESQL GLIDEOS + BLOCCO MAIN
+# ==============================================================================
 
 def spingi_dati_a_glide():
-    print("🚀 --- INIZIO SINCRONIZZAZIONE DIRETTA DATABASE GLIDE (SQL) --- 🚀")
+    """
+    Legge il CSV locale a 8 colonne e sincronizza su PostgreSQL di GlideOS:
+    - Tabella 'subcategories' (da mappa_categorie senza duplicati)
+    - Tabella 'news' (deduplicazione su title, protezione anti-NULL e summary)
+    - Tabella 'deadlines' (deduplicazione su title, due_date, notes e official_link)
+    - Controllo notifiche anonime GDPR su 'users'
+    """
     db_url = os.environ.get("GLIDE_DB_URL")
-    
     if not db_url:
-        print("⚠️ Stringa di connessione GLIDE_DB_URL mancante nei repository Secrets!")
+        print("[ERRORE DB] Variabile d'ambiente GLIDE_DB_URL non trovata.")
         return
 
-    if db_url.startswith("postgresql://"):
-        db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+    if not os.path.exists(FILE_CSV_LOCALE):
+        print(f"[ERRORE CSV] File '{FILE_CSV_LOCALE}' non trovato.")
+        return
 
-    from sqlalchemy import create_engine
-    from datetime import datetime
-    import time
-    
+    conn = None
     try:
-        engine = create_engine(db_url)
-        df_nuove_reali = pd.DataFrame()
-        oggi_iso = datetime.now().strftime('%Y-%m-%d')
+        conn = psycopg2.connect(db_url)
+        cur = conn.cursor()
+        print("[DB] Connessione a PostgreSQL GlideOS riuscita.")
 
-        # 0. AGGIORNAMENTO DINAMICO MACRO-AREE E SOTTOCATEGORIE (Modifica qui quando vuoi!)
-        mappa_categorie = {
-            "Sicurezza Generale": ["#DVR", "#Formazione", "#DPI", "#Antincendio", "#PrimoSoccorso", "#Sanzioni", "#RSPP", "#Appalti", "#Privacy"],
-            "Salute & Medicina": ["#MedicoCompetente", "#VisiteMediche", "#StressLavoroCorrelato", "#Ergonomia", "#RischioChimico", "#RischioBiologico", "#DPI"],
-            "Edilizia & Cantieri": ["#PatenteACrediti", "#POS_PSC", "#Ponteggi", "#LavoriInQuota", "#Scavi", "#Amianto", "#DPI", "#Formazione"],
-            "Industria & Macchine": ["#DirettivaMacchine", "#RischioElettrico", "#SpaziConfinati", "#VerifichePeriodiche", "#ATEX", "#DPI"]
-        }
-        
-        righe_sub = []
-        idx_sub = 1
-        for macro, tags in mappa_categorie.items():
-            for t in tags:
-                righe_sub.append({"id": idx_sub, "macro_area": macro, "tag_name": t})
-                idx_sub += 1
-        
-        df_sub = pd.DataFrame(righe_sub)
-        try:
-            df_sub_esistenti = pd.read_sql('SELECT macro_area, tag_name FROM subcategories', con=engine)
-            coppie_esistenti = set(zip(df_sub_esistenti['macro_area'], df_sub_esistenti['tag_name']))
-            max_id_sub = pd.read_sql('SELECT COALESCE(MAX(id), 0) AS m FROM subcategories', con=engine)['m'].iloc[0]
-            
-            df_sub_nuove = df_sub[~df_sub.apply(lambda r: (r['macro_area'], r['tag_name']) in coppie_esistenti, axis=1)].copy()
-            if not df_sub_nuove.empty:
-                df_sub_nuove['id'] = [int(max_id_sub) + i + 1 for i in range(len(df_sub_nuove))]
-                df_sub_nuove.to_sql('subcategories', con=engine, if_exists='append', index=False)
-                print(f"✅ Tabella 'subcategories' aggiornata: aggiunti {len(df_sub_nuove)} nuovi tag!")
-            else:
-                print("ℹ️ Tabella 'subcategories' già allineata.")
-        except Exception as sub_err:
-            print(f"ℹ️ Verifica subcategories: {sub_err}")
-        
-        # 1. INVIO DELLE NOTIZIE CON DEDUPLICAZIONE E RIASSUNTO (Tabella 'news')
-        if os.path.exists(FILE_LOCALE):
-            df = pd.read_csv(FILE_LOCALE, sep=';').fillna('')
-            df_glide = pd.DataFrame()
-            timestamp_base = int(time.time())
-            df_glide['id'] = [timestamp_base + i for i in range(len(df))]
-            df_glide['title'] = df['Titolo'].astype(str).str.strip()
-            df_glide['source'] = df['Fonte']
-            df_glide['date'] = df['Data']
-            df_glide['official_link'] = df['Link_Ufficiale']
-            df_glide['category'] = df['Categoria']
-            df_glide['importance'] = df['Importanza'].replace({'Alta': 'High', 'Media': 'Medium', 'Bassa': 'Low'})
-            
-            if 'Descrizione' in df.columns:
-                df_glide['summary'] = df['Descrizione'].astype(str).str.strip()
-            elif 'Testo' in df.columns:
-                df_glide['summary'] = df['Testo'].astype(str).str.strip()
-            else:
-                df_glide['summary'] = df['Fonte'] + " - " + df['Categoria'] + ": " + df['Titolo']
-            
-            df_glide['date'] = df_glide['date'].replace('', oggi_iso).fillna(oggi_iso)
-            df_glide['category'] = df_glide['category'].replace('', 'Sicurezza Generale').fillna('Sicurezza Generale')
-            df_glide['importance'] = df_glide['importance'].replace('', 'Medium').fillna('Medium')
-            
-            titoli_esistenti = set()
-            for t_news in ['news', 'News']:
-                try:
-                    df_esistenti = pd.read_sql(f'SELECT title FROM "{t_news}"', con=engine)
-                    titoli_esistenti = set(df_esistenti['title'].dropna().astype(str).str.strip())
-                    break
-                except:
+        # 1. Sincronizzazione tabella 'subcategories' senza duplicati
+        cur.execute("SELECT macro_area, tag_name FROM subcategories;")
+        sub_esistenti = {(r, r) for r in cur.fetchall() if r and r}
+
+        nuove_sub = []
+        for macro_area, tags in mappa_categorie.items():
+            for tag in tags:
+                if (macro_area, tag) not in sub_esistenti:
+                    nuove_sub.append((macro_area, tag))
+
+        if nuove_sub:
+            execute_values(
+                cur,
+                "INSERT INTO subcategories (macro_area, tag_name) VALUES %s;",
+                nuove_sub
+            )
+            print(f"[DB] Inserite {len(nuove_sub)} nuove sotto-categorie in 'subcategories'.")
+
+        # 2. Recupero titoli già presenti su 'news' e 'deadlines' per deduplicazione
+        cur.execute("SELECT LOWER(TRIM(title)) FROM news WHERE title IS NOT NULL;")
+        news_esistenti = {r for r in cur.fetchall() if r}
+
+        cur.execute("SELECT LOWER(TRIM(title)) FROM deadlines WHERE title IS NOT NULL;")
+        scadenze_esistenti = {r for r in cur.fetchall() if r}
+
+        nuove_news = []
+        nuove_scadenze = []
+        oggi_str = datetime.now().strftime("%Y-%m-%d")
+
+        with open(FILE_CSV_LOCALE, mode="r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                titolo = pulisci_testo(row.get("Titolo", ""))
+                if not titolo:
                     continue
 
-            df_nuove_reali = df_glide[~df_glide['title'].isin(titoli_esistenti)].copy()
-            df_nuove_reali = df_nuove_reali.drop_duplicates(subset=['title'])
+                chiave = titolo.lower()
+                fonte = pulisci_testo(row.get("Fonte", "")) or "Fonte Istituzionale"
+                data_val = pulisci_testo(row.get("Data", "")) or oggi_str
+                link = pulisci_testo(row.get("Link", "")) or "https://normattiva.it"
+                categoria = pulisci_testo(row.get("Categoria", "")) or "Normativa Generale"
+                importanza = pulisci_testo(row.get("Importanza", "")) or "Medium"
+                tipo = pulisci_testo(row.get("Tipo", "")) or "News"
+                descrizione = pulisci_testo(row.get("Descrizione", "")) or f"Aggiornamento da {fonte}: {titolo}."
 
-            if not df_nuove_reali.empty:
-                df_nuove_reali.to_sql('news', con=engine, if_exists='append', index=False)
-                print(f"✅ SQL News completato: inserite {len(df_nuove_reali)} NUOVE notizie.")
-            else:
-                print("ℹ️ SQL News: nessuna nuova notizia rilevata oggi, database già aggiornato.")
+                if tipo.lower() == "scadenza":
+                    if chiave not in scadenze_esistenti:
+                        scadenze_esistenti.add(chiave)
+                        nuove_scadenze.append((
+                            titolo,
+                            data_val,
+                            descrizione,
+                            link
+                        ))
+                else:
+                    if chiave not in news_esistenti:
+                        news_esistenti.add(chiave)
+                        nuove_news.append((
+                            titolo,
+                            fonte,
+                            data_val,
+                            link,
+                            categoria,
+                            importanza,
+                            descrizione
+                        ))
 
-        # 2. INVIO DELLE SCADENZE CON LINK UFFICIALE (Tabella 'deadlines')
-        print("⏳ Controllo e sincronizzazione scadenze di conformità correnti...")
-        scadenze_dati = [
-            {
-                "title": "Aggiornamento DVR - Analisi dei Rischi Annuale",
-                "due_date": "2026-12-15",
-                "notes": "Verifica conformità e aggiornamento firme del RLS (D.Lgs. 81/08 art. 28-29).",
-                "official_link": "https://normattiva.it"
-            },
-            {
-                "title": "Invio Autoliquidazione INAIL 2026",
-                "due_date": "2026-11-30",
-                "notes": "Scadenza termine per calcolo saldo e premio di regolazione sul portale INAIL.",
-                "official_link": "https://inail.it"
-            },
-            {
-                "title": "Verifica Periodica Impianti di Messa a Terra",
-                "due_date": "2026-12-01",
-                "notes": "Controllo ispettivo biennale/quinquennale obbligatorio DPR 462/01 tramite portale CIVA.",
-                "official_link": "https://inail.it"
-            },
-            {
-                "title": "Scadenza Rinnovo Cassette Primo Soccorso",
-                "due_date": "2026-11-25",
-                "notes": "Controllo integrità e validità dei presidi medici scaduti (DM 388/2003).",
-                "official_link": "https://gazzettaufficiale.it"
-            }
-        ]
-        
-        df_scadenze = pd.DataFrame(scadenze_dati)
-        df_scadenze_glide = pd.DataFrame()
-        timestamp_scad = int(time.time()) + 1000
-        df_scadenze_glide['id'] = [timestamp_scad + i for i in range(len(df_scadenze))]
-        df_scadenze_glide['title'] = df_scadenze['title'].astype(str).str.strip()
-        df_scadenze_glide['due_date'] = df_scadenze['due_date']
-        df_scadenze_glide['notes'] = df_scadenze['notes']
-        df_scadenze_glide['official_link'] = df_scadenze['official_link']
-
-        scadenze_esistenti = set()
-        for t_dl in ['deadlines', 'Deadlines']:
-            try:
-                df_dl_esistenti = pd.read_sql(f'SELECT title FROM "{t_dl}"', con=engine)
-                scadenze_esistenti = set(df_dl_esistenti['title'].dropna().astype(str).str.strip())
-                break
-            except:
-                continue
-
-        df_scadenze_nuove = df_scadenze_glide[~df_scadenze_glide['title'].isin(scadenze_esistenti)].copy()
-
-        if not df_scadenze_nuove.empty:
-            df_scadenze_nuove.to_sql('deadlines', con=engine, if_exists='append', index=False)
-            print(f"✅ SQL Deadlines completato: inserite {len(df_scadenze_nuove)} nuove scadenze istituzionali!")
+        # 3. Inserimento massivo su 'news'
+        if nuove_news:
+            execute_values(
+                cur,
+                """
+                INSERT INTO news (title, source, date, official_link, category, importance, summary)
+                VALUES %s;
+                """,
+                nuove_news
+            )
+            print(f"[DB] Inserite {len(nuove_news)} nuove notizie in 'news' (con summary).")
         else:
-            print("ℹ️ SQL Deadlines: tutte le scadenze correnti sono già presenti nel database.")
-        
-        # 3. ENGINE NOTIFICHE INCROCIATE ANONIME A NORMA GDPR
-        print("📢 Rilevamento preferenze per smistamento notifiche Push...")
-        utenti_df = pd.DataFrame()
-        for t_name in ['users', 'Users']:
-            try:
-                utenti_df = pd.read_sql_table(t_name, con=engine)
-                print(f"🔍 Tabella utenti agganciata correttamente con il nome: '{t_name}'")
-                break
-            except:
-                continue
+            print("[DB] Nessuna nuova notizia da inserire in 'news'.")
 
-        if not utenti_df.empty and not df_nuove_reali.empty:
-            print(f"ℹ️ Sistema notifiche pronto. Rilevati {len(utenti_df)} dispositivi anonimi registrati.")
-            for idx, notizia in df_nuove_reali.iterrows():
-                cat = notizia['category']
-                titolo = notizia['title']
-                colonna_spunta = 'notify_general'
-                if cat == 'Salute & Medicina':
-                    colonna_spunta = 'notify_health'
-                elif cat == 'Edilizia & Cantieri':
-                    colonna_spunta = 'notify_construction'
-                elif cat == 'Industria & Macchine':
-                    colonna_spunta = 'notify_industry'
-                
-                if colonna_spunta in utenti_df.columns:
-                    target_dispositivi = utenti_df[utenti_df[colonna_spunta] == True]['id'].tolist()
-                    if target_dispositivi:
-                        print(f"🔔 Notifica preparata per {len(target_dispositivi)} dispositivi anonimi su area '{cat}': {titolo[:40]}...")
-        elif df_nuove_reali.empty:
-            print("ℹ️ Nessuna nuova notizia da notificare oggi.")
+        # 4. Inserimento massivo su 'deadlines'
+        if nuove_scadenze:
+            execute_values(
+                cur,
+                """
+                INSERT INTO deadlines (title, due_date, notes, official_link)
+                VALUES %s;
+                """,
+                nuove_scadenze
+            )
+            print(f"[DB] Inserite {len(nuove_scadenze)} nuove scadenze in 'deadlines'.")
         else:
-            print("ℹ️ Coda notifiche in transito: nessun dispositivo ancora registrato nell'app.")
-                
+            print("[DB] Nessuna nuova scadenza da inserire in 'deadlines'.")
+
+        # 5. Controllo utenti anonimi iscritti alle notifiche Push (GDPR)
+        cur.execute("""
+            SELECT COUNT(*)
+            FROM users
+            WHERE COALESCE(notify_general, FALSE) = TRUE
+               OR COALESCE(notify_health, FALSE) = TRUE
+               OR COALESCE(notify_construction, FALSE) = TRUE
+               OR COALESCE(notify_industry, FALSE) = TRUE;
+        """)
+        utenti_attivi = cur.fetchone()
+        print(f"[PUSH GDPR] Dispositivi anonimi con notifiche attive: {utenti_attivi}.")
+
+        conn.commit()
+        cur.close()
+        print("[DB] Sincronizzazione PostgreSQL completata con successo!")
+
     except Exception as e:
-        print('❌ Errore durante l\'inserimento nel database Glide:', e)
+        if conn:
+            conn.rollback()
+        print(f"[ERRORE CRITICO DB] {e}")
+    finally:
+        if conn:
+            conn.close()
+
 
 if __name__ == "__main__":
     inizializza_database_locale()
