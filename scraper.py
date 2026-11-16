@@ -291,22 +291,24 @@ def scrape_ministero_lavoro():
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
-
 def scarica_senza_redirect_nudo(url, timeout=35):
-    """Scarica la pagina evitando redirect verso domini senza 'www.' che non risolvono DNS."""
+    """Segue i redirect passo-passo forzando sempre il prefisso 'www.'."""
     session = requests.Session()
-    resp = session.get(url, headers=HEADERS_HTTP, timeout=timeout, allow_redirects=False)
-    if resp.is_redirect or resp.is_permanent_redirect:
-        loc = resp.headers.get("Location", "")
-        if loc:
-            nuovo_url = urljoin(url, loc)
-            # Forza sempre il prefisso www. se il server prova a rimuoverlo
-            nuovo_url = nuovo_url.replace("://normattiva.it", "://www.normattiva.it")
-            nuovo_url = nuovo_url.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
-            resp = session.get(nuovo_url, headers=HEADERS_HTTP, timeout=timeout, allow_redirects=True)
+    url_corrente = url
+    for _ in range(5):
+        resp = session.get(url_corrente, headers=HEADERS_HTTP, timeout=timeout, allow_redirects=False)
+        if resp.status_code in (301, 302, 303, 307, 308):
+            loc = resp.headers.get("Location", "")
+            if not loc:
+                break
+            url_corrente = urljoin(url_corrente, loc)
+            url_corrente = url_corrente.replace("://normattiva.it", "://www.normattiva.it")
+            url_corrente = url_corrente.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
+            continue
+        resp.raise_for_status()
+        return resp
     resp.raise_for_status()
     return resp
-
 
 def scrape_normattiva():
     """5. Normattiva - Evita redirect su dominio senza www."""
