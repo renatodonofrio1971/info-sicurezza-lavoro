@@ -1,6 +1,7 @@
 import os
 import csv
 import re
+import uuid
 from datetime import datetime
 from urllib.parse import urljoin
 import requests
@@ -188,18 +189,18 @@ def estrai_articoli_generici(soup, base_url, limite=25):
 # ==============================================================================
 
 def scrape_inail():
-    """1. INAIL - News e Bandi ISI (legge h2/h3 con link sul contenitore card + <p>)."""
+    """1. INAIL - Homepage e News (usa www.inail.it e timeout 45s per server GitHub)."""
     fonte = "INAIL"
     url = "https://inail.it"
     aggiunti = 0
     try:
-        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
+        resp = requests.get(url, headers=HEADERS_HTTP, timeout=45)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, "https://inail.it", limite=25)
+        articoli = estrai_articoli_generici(soup, "https://inail.it", limite=30)
         for art in articoli:
-            tipo = "Scadenza" if any(k in art["titolo"].lower() for k in ["bando", "scadenza", "isi"]) else "News"
+            tipo = "Scadenza" if any(k in art["titolo"].lower() for k in ["bando", "scadenza", "isi", "entro il"]) else "News"
             if aggiungi_riga_locale(
                 titolo=art["titolo"],
                 fonte=fonte,
@@ -212,7 +213,6 @@ def scrape_inail():
     except Exception as e:
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
-
 
 def scrape_anfos():
     """2. ANFOS - Associazione Nazionale Formatori Sicurezza sul Lavoro."""
@@ -293,22 +293,22 @@ def scrape_ministero_lavoro():
 
 
 def scrape_normattiva():
-    """5. Normattiva - Atti in evidenza con link istituzionale statico pulito."""
+    """5. Normattiva - Usa sempre www.normattiva.it per evitare errori DNS."""
     fonte = "Normattiva"
-    url_statico = "https://normattiva.it"
+    url_www = "https://normattiva.it"
     aggiunti = 0
     try:
-        resp = requests.get(url_statico, headers=HEADERS_HTTP, timeout=20)
+        resp = requests.get(url_www, headers=HEADERS_HTTP, timeout=35)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, url_statico, limite=25)
+        articoli = estrai_articoli_generici(soup, url_www, limite=25)
         for art in articoli:
             if aggiungi_riga_locale(
                 titolo=art["titolo"],
                 fonte=fonte,
                 data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=url_statico,
+                link=url_www,
                 categoria="Normativa Generale",
                 importanza="High",
                 tipo="News",
@@ -321,17 +321,17 @@ def scrape_normattiva():
 
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Ultimi atti con link istituzionale statico pulito."""
+    """6. Gazzetta Ufficiale - Usa sempre www.gazzettaufficiale.it per il DNS."""
     fonte = "Gazzetta Ufficiale"
     url_scrape = "https://gazzettaufficiale.it"
-    url_statico = "https://gazzettaufficiale.it"
+    url_link = "https://gazzettaufficiale.it"
     aggiunti = 0
     try:
-        resp = requests.get(url_scrape, headers=HEADERS_HTTP, timeout=20)
+        resp = requests.get(url_scrape, headers=HEADERS_HTTP, timeout=35)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, url_statico, limite=25)
+        articoli = estrai_articoli_generici(soup, url_link, limite=25)
 
         if not articoli:
             for item in soup.select(".risultato, .elenco_atti li, article")[:25]:
@@ -339,7 +339,7 @@ def scrape_gazzetta_ufficiale():
                 if len(testo) > 25:
                     articoli.append({
                         "titolo": testo[:180],
-                        "link": url_statico,
+                        "link": url_link,
                         "descrizione": testo
                     })
 
@@ -348,7 +348,7 @@ def scrape_gazzetta_ufficiale():
                 titolo=art["titolo"],
                 fonte=fonte,
                 data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=url_statico,
+                link=url_link,
                 categoria="Normativa Generale",
                 importanza="High",
                 tipo="News",
@@ -358,7 +358,6 @@ def scrape_gazzetta_ufficiale():
     except Exception as e:
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
-
 
 def scrape_garante_privacy():
     """7. Garante per la Protezione dei Dati Personali - Provvedimenti e News lavoro."""
@@ -391,11 +390,8 @@ def scrape_garante_privacy():
 
 def spingi_dati_a_glide():
     """
-    Legge il CSV locale a 8 colonne e sincronizza su PostgreSQL di GlideOS:
-    - Tabella 'subcategories' (da mappa_categorie senza duplicati)
-    - Tabella 'news' (deduplicazione su title, protezione anti-NULL e summary)
-    - Tabella 'deadlines' (deduplicazione su title, due_date, notes e official_link)
-    - Controllo notifiche anonime GDPR su 'users'
+    Sincronizza su PostgreSQL di GlideOS generando UUID espliciti per la colonna 'id'
+    di subcategories, news e deadlines.
     """
     db_url = os.environ.get("GLIDE_DB_URL")
     if not db_url:
@@ -412,7 +408,7 @@ def spingi_dati_a_glide():
         cur = conn.cursor()
         print("[DB] Connessione a PostgreSQL GlideOS riuscita.")
 
-        # 1. Sincronizzazione tabella 'subcategories' senza duplicati
+        # 1. Sincronizzazione 'subcategories' con id UUID esplicito
         cur.execute("SELECT macro_area, tag_name FROM subcategories;")
         sub_esistenti = {(r, r) for r in cur.fetchall() if r and r}
 
@@ -420,17 +416,17 @@ def spingi_dati_a_glide():
         for macro_area, tags in mappa_categorie.items():
             for tag in tags:
                 if (macro_area, tag) not in sub_esistenti:
-                    nuove_sub.append((macro_area, tag))
+                    nuove_sub.append((str(uuid.uuid4()), macro_area, tag))
 
         if nuove_sub:
             execute_values(
                 cur,
-                "INSERT INTO subcategories (macro_area, tag_name) VALUES %s;",
+                "INSERT INTO subcategories (id, macro_area, tag_name) VALUES %s;",
                 nuove_sub
             )
             print(f"[DB] Inserite {len(nuove_sub)} nuove sotto-categorie in 'subcategories'.")
 
-        # 2. Recupero titoli già presenti su 'news' e 'deadlines' per deduplicazione
+        # 2. Recupero titoli esistenti per deduplicazione
         cur.execute("SELECT LOWER(TRIM(title)) FROM news WHERE title IS NOT NULL;")
         news_esistenti = {r for r in cur.fetchall() if r}
 
@@ -461,6 +457,7 @@ def spingi_dati_a_glide():
                     if chiave not in scadenze_esistenti:
                         scadenze_esistenti.add(chiave)
                         nuove_scadenze.append((
+                            str(uuid.uuid4()),
                             titolo,
                             data_val,
                             descrizione,
@@ -470,6 +467,7 @@ def spingi_dati_a_glide():
                     if chiave not in news_esistenti:
                         news_esistenti.add(chiave)
                         nuove_news.append((
+                            str(uuid.uuid4()),
                             titolo,
                             fonte,
                             data_val,
@@ -479,12 +477,12 @@ def spingi_dati_a_glide():
                             descrizione
                         ))
 
-        # 3. Inserimento massivo su 'news'
+        # 3. Inserimento massivo su 'news' con id UUID
         if nuove_news:
             execute_values(
                 cur,
                 """
-                INSERT INTO news (title, source, date, official_link, category, importance, summary)
+                INSERT INTO news (id, title, source, date, official_link, category, importance, summary)
                 VALUES %s;
                 """,
                 nuove_news
@@ -493,12 +491,12 @@ def spingi_dati_a_glide():
         else:
             print("[DB] Nessuna nuova notizia da inserire in 'news'.")
 
-        # 4. Inserimento massivo su 'deadlines'
+        # 4. Inserimento massivo su 'deadlines' con id UUID
         if nuove_scadenze:
             execute_values(
                 cur,
                 """
-                INSERT INTO deadlines (title, due_date, notes, official_link)
+                INSERT INTO deadlines (id, title, due_date, notes, official_link)
                 VALUES %s;
                 """,
                 nuove_scadenze
@@ -530,7 +528,6 @@ def spingi_dati_a_glide():
     finally:
         if conn:
             conn.close()
-
 
 if __name__ == "__main__":
     inizializza_database_locale()
