@@ -1,5 +1,6 @@
 import os
 import csv
+import json
 import re
 from datetime import datetime
 from urllib.parse import urljoin
@@ -615,6 +616,55 @@ def spingi_dati_a_glide():
         """)
         utenti_attivi = cur.fetchone()[0]
         print(f"[PUSH GDPR] Dispositivi anonimi con notifiche attive: {utenti_attivi}.")
+        # 6. Esportazione archivio completo in 'dati_app.json' per la Web App / PWA gratuita
+        cur.execute("""
+            SELECT id, title, source, date, official_link, category, importance, summary
+            FROM news
+            ORDER BY date DESC, id DESC;
+        """)
+        tutte_news = [
+            {
+                "id": r[0],
+                "title": r[1],
+                "source": r[2],
+                "date": r[3],
+                "official_link": r[4],
+                "category": r[5],
+                "importance": r[6],
+                "summary": r[7] or ""
+            }
+            for r in cur.fetchall()
+        ]
+
+        cur.execute("""
+            SELECT id, title, due_date, notes, official_link
+            FROM deadlines
+            ORDER BY due_date ASC, id DESC;
+        """)
+        tutte_scadenze = [
+            {
+                "id": r[0],
+                "title": r[1],
+                "due_date": r[2],
+                "notes": r[3] or "",
+                "official_link": r[4] or "https://inail.it"
+            }
+            for r in cur.fetchall()
+        ]
+
+        payload_app = {
+            "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "subcategories": mappa_categorie,
+            "news": tutte_news,
+            "deadlines": tutte_scadenze
+        }
+        with open("dati_app.json", mode="w", encoding="utf-8") as f_json:
+            json.dump(payload_app, f_json, ensure_ascii=False, indent=2)
+        print(f"[PWA] Esportato 'dati_app.json' ({len(tutte_news)} news, {len(tutte_scadenze)} scadenze).")
+
+        conn.commit()
+        cur.close()
+        print("[DB] Sincronizzazione PostgreSQL completata con successo!")
 
         conn.commit()
         cur.close()
