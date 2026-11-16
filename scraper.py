@@ -292,14 +292,29 @@ def scrape_ministero_lavoro():
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
 
+def scarica_senza_redirect_nudo(url, timeout=35):
+    """Scarica la pagina evitando redirect verso domini senza 'www.' che non risolvono DNS."""
+    session = requests.Session()
+    resp = session.get(url, headers=HEADERS_HTTP, timeout=timeout, allow_redirects=False)
+    if resp.is_redirect or resp.is_permanent_redirect:
+        loc = resp.headers.get("Location", "")
+        if loc:
+            nuovo_url = urljoin(url, loc)
+            # Forza sempre il prefisso www. se il server prova a rimuoverlo
+            nuovo_url = nuovo_url.replace("://normattiva.it", "://www.normattiva.it")
+            nuovo_url = nuovo_url.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
+            resp = session.get(nuovo_url, headers=HEADERS_HTTP, timeout=timeout, allow_redirects=True)
+    resp.raise_for_status()
+    return resp
+
+
 def scrape_normattiva():
-    """5. Normattiva - Usa sempre www.normattiva.it per evitare errori DNS."""
+    """5. Normattiva - Evita redirect su dominio senza www."""
     fonte = "Normattiva"
     url_www = "https://normattiva.it"
     aggiunti = 0
     try:
-        resp = requests.get(url_www, headers=HEADERS_HTTP, timeout=35)
-        resp.raise_for_status()
+        resp = scarica_senza_redirect_nudo(url_www, timeout=35)
         soup = BeautifulSoup(resp.text, "html.parser")
 
         articoli = estrai_articoli_generici(soup, url_www, limite=25)
@@ -321,14 +336,13 @@ def scrape_normattiva():
 
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Usa sempre www.gazzettaufficiale.it per il DNS."""
+    """6. Gazzetta Ufficiale - Evita redirect su dominio senza www."""
     fonte = "Gazzetta Ufficiale"
     url_scrape = "https://gazzettaufficiale.it"
     url_link = "https://gazzettaufficiale.it"
     aggiunti = 0
     try:
-        resp = requests.get(url_scrape, headers=HEADERS_HTTP, timeout=35)
-        resp.raise_for_status()
+        resp = scarica_senza_redirect_nudo(url_scrape, timeout=35)
         soup = BeautifulSoup(resp.text, "html.parser")
 
         articoli = estrai_articoli_generici(soup, url_link, limite=25)
@@ -390,8 +404,8 @@ def scrape_garante_privacy():
 
 def spingi_dati_a_glide():
     """
-    Sincronizza su PostgreSQL di GlideOS generando UUID espliciti per la colonna 'id'
-    di subcategories, news e deadlines.
+    Sincronizza su PostgreSQL di GlideOS calcolando ID interi progressivi (MAX(id) + 1)
+    per subcategories, news e deadlines.
     """
     db_url = os.environ.get("GLIDE_DB_URL")
     if not db_url:
@@ -408,15 +422,19 @@ def spingi_dati_a_glide():
         cur = conn.cursor()
         print("[DB] Connessione a PostgreSQL GlideOS riuscita.")
 
-        # 1. Sincronizzazione 'subcategories' con id UUID esplicito
+        # 1. Sincronizzazione 'subcategories' con ID INTEGER progressivo
+        cur.execute("SELECT COALESCE(MAX(id), 0) FROM subcategories;")
+        next_sub_id = cur.fetchone()[0] + 1
+
         cur.execute("SELECT macro_area, tag_name FROM subcategories;")
-        sub_esistenti = {(r, r) for r in cur.fetchall() if r and r}
+        sub_esistenti = {(r[0], r[1]) for r in cur.fetchall() if r[0] and r[1]}
 
         nuove_sub = []
         for macro_area, tags in mappa_categorie.items():
             for tag in tags:
                 if (macro_area, tag) not in sub_esistenti:
-                    nuove_sub.append((str(uuid.uuid4()), macro_area, tag))
+                    nuove_sub.append((next_sub_id, macro_area, tag))
+                    next_sub_id += 1
 
         if nuove_sub:
             execute_values(
@@ -426,12 +444,18 @@ def spingi_dati_a_glide():
             )
             print(f"[DB] Inserite {len(nuove_sub)} nuove sotto-categorie in 'subcategories'.")
 
-        # 2. Recupero titoli esistenti per deduplicazione
+        # 2. Calcolo prossimi ID INTEGER e recupero titoli esistenti per deduplicazione
+        cur.execute("SELECT COALESCE(MAX(id), 0) FROM news;")
+        next_news_id = cur.fetchone()[0] + 1
+
+        cur.execute("SELECT COALESCE(MAX(id), 0) FROM deadlines;")
+        next_deadline_id = cur.fetchone()[0] + 1
+
         cur.execute("SELECT LOWER(TRIM(title)) FROM news WHERE title IS NOT NULL;")
-        news_esistenti = {r for r in cur.fetchall() if r}
+        news_esistenti = {r[0] for r in cur.fetchall() if r[0]}
 
         cur.execute("SELECT LOWER(TRIM(title)) FROM deadlines WHERE title IS NOT NULL;")
-        scadenze_esistenti = {r for r in cur.fetchall() if r}
+        scadenze_esistenti = {r[0] for r in cur.fetchall() if r[0]}
 
         nuove_news = []
         nuove_scadenze = []
@@ -457,17 +481,18 @@ def spingi_dati_a_glide():
                     if chiave not in scadenze_esistenti:
                         scadenze_esistenti.add(chiave)
                         nuove_scadenze.append((
-                            str(uuid.uuid4()),
+                            next_deadline_id,
                             titolo,
                             data_val,
                             descrizione,
                             link
                         ))
+                        next_deadline_id += 1
                 else:
                     if chiave not in news_esistenti:
                         news_esistenti.add(chiave)
                         nuove_news.append((
-                            str(uuid.uuid4()),
+                            next_news_id,
                             titolo,
                             fonte,
                             data_val,
@@ -476,8 +501,9 @@ def spingi_dati_a_glide():
                             importanza,
                             descrizione
                         ))
+                        next_news_id += 1
 
-        # 3. Inserimento massivo su 'news' con id UUID
+        # 3. Inserimento massivo su 'news'
         if nuove_news:
             execute_values(
                 cur,
@@ -491,7 +517,7 @@ def spingi_dati_a_glide():
         else:
             print("[DB] Nessuna nuova notizia da inserire in 'news'.")
 
-        # 4. Inserimento massivo su 'deadlines' con id UUID
+        # 4. Inserimento massivo su 'deadlines'
         if nuove_scadenze:
             execute_values(
                 cur,
@@ -514,7 +540,7 @@ def spingi_dati_a_glide():
                OR COALESCE(notify_construction, FALSE) = TRUE
                OR COALESCE(notify_industry, FALSE) = TRUE;
         """)
-        utenti_attivi = cur.fetchone()
+        utenti_attivi = cur.fetchone()[0]
         print(f"[PUSH GDPR] Dispositivi anonimi con notifiche attive: {utenti_attivi}.")
 
         conn.commit()
