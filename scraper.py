@@ -334,7 +334,7 @@ def scrape_gazzetta_ufficiale():
 
         articoli = estrai_articoli_generici(soup, url_statico, limite=25)
 
-                if not articoli:
+        if not articoli:
             for a_tag in soup.find_all("a", string=re.compile(r"Leggi la notizia", re.I))[:25]:
                 contenitore = a_tag.parent
                 testo = pulisci_testo(contenitore.get_text(" ", strip=True)) if contenitore else ""
