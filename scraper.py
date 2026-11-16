@@ -1,7 +1,6 @@
 import os
 import csv
 import re
-import uuid
 from datetime import datetime
 from urllib.parse import urljoin
 import requests
@@ -52,6 +51,34 @@ mappa_categorie = {
     ]
 }
 
+# Regole parole chiave per associare automaticamente gli hashtag alle notizie
+REGOLE_HASHTAG = {
+    "#PatenteACrediti": ["patente a crediti", "patente a punti"],
+    "#CantieriTemporanei": ["cantiere", "cantieri", "ediliz"],
+    "#Ponteggi": ["pontegg"],
+    "#LavoriInQuota": ["quota", "caduta dall'alto"],
+    "#PSC_POS": ["psc", "pos", "piano di sicurezza"],
+    "#SorveglianzaSanitaria": ["sorveglianza sanitaria", "visita medica"],
+    "#MedicoCompetente": ["medico competente"],
+    "#Amianto": ["amianto"],
+    "#StressLavoroCorrelato": ["stress lavoro", "salute mentale", "benessere psicologico"],
+    "#MalattieProfessionali": ["malattia professionale", "malattie professionali", "patologie"],
+    "#DirettivaMacchine": ["macchinar", "direttiva macchine"],
+    "#ATEX": ["atex", "esplosiv"],
+    "#RischioChimico": ["chimic", "sostanze pericolose"],
+    "#ImpiantiElettrici": ["impiant", "elettric"],
+    "#DPI": ["dpi", "dispositivi di protezione"],
+    "#Videosorveglianza": ["videosorveglianza", "telecamer"],
+    "#GDPRLavoro": ["privacy", "gdpr", "dati personali", "garante"],
+    "#ControlloADistanza": ["controllo a distanza", "lavoro agile", "smart working"],
+    "#DatiBiometrici": ["biometr"],
+    "#DLgs81_08": ["81/08", "81/2008", "testo unico", "sicurezza sul lavoro", "prevenzione"],
+    "#DVR": ["dvr", "valutazione dei rischi", "rischi"],
+    "#FormazioneSicurezza": ["formazione", "addestramento", "corso", "scuole"],
+    "#BandoISI": ["bando isi", "bric", "finanziament", "incentiv"],
+    "#SanzioniINL": ["sanzion", "ispettorato", "vigilanza", "ispezion"]
+}
+
 
 def inizializza_database_locale():
     """Crea o azzera il file CSV locale a 8 colonne e resetta i titoli visti."""
@@ -68,6 +95,24 @@ def pulisci_testo(testo):
     if not testo:
         return ""
     return re.sub(r"\s+", " ", testo).strip()
+
+
+def aggiungi_hashtag_al_testo(titolo, descrizione):
+    """Appende gli hashtag pertinenti in fondo alla descrizione per attivare i chip su GlideOS."""
+    testo_ricerca = f"{titolo} {descrizione}".lower()
+    tag_trovati = []
+
+    for hashtag, keywords in REGOLE_HASHTAG.items():
+        if any(kw in testo_ricerca for kw in keywords):
+            if hashtag not in descrizione:
+                tag_trovati.append(hashtag)
+
+    if not tag_trovati and "#DLgs81_08" not in descrizione:
+        tag_trovati.append("#DLgs81_08")
+
+    if tag_trovati:
+        return f"{descrizione} | {' '.join(tag_trovati)}"
+    return descrizione
 
 
 def classifica_notizia(titolo, descrizione=""):
@@ -96,7 +141,7 @@ def classifica_notizia(titolo, descrizione=""):
 
 
 def aggiungi_riga_locale(titolo, fonte, data_str, link, categoria=None, importanza=None, tipo="News", descrizione=""):
-    """Aggiunge una riga al CSV locale evitando duplicati interni e salvando la Descrizione."""
+    """Aggiunge una riga al CSV locale evitando duplicati interni e salvando la Descrizione con hashtag."""
     titolo_pulito = pulisci_testo(titolo)
     if not titolo_pulito or len(titolo_pulito) < 12:
         return False
@@ -114,6 +159,8 @@ def aggiungi_riga_locale(titolo, fonte, data_str, link, categoria=None, importan
         cat_auto, imp_auto = classifica_notizia(titolo_pulito, descrizione_pulita)
         categoria = categoria or cat_auto
         importanza = importanza or imp_auto
+
+    descrizione_pulita = aggiungi_hashtag_al_testo(titolo_pulito, descrizione_pulita)
 
     data_finale = pulisci_testo(data_str) or datetime.now().strftime("%Y-%m-%d")
     link_finale = pulisci_testo(link)
@@ -294,22 +341,23 @@ def scrape_ministero_lavoro():
 
 
 def scrape_normattiva():
-    """5. Normattiva - Atti in evidenza con link istituzionale statico pulito."""
+    """5. Normattiva - Estrae il link diretto al singolo provvedimento (es. uri-res/N2Ls)."""
     fonte = "Normattiva"
-    url_statico = "https://www.normattiva.it"
+    url_base = "https://www.normattiva.it"
     aggiunti = 0
     try:
-        resp = requests.get(url_statico, headers=HEADERS_HTTP, timeout=20)
+        resp = requests.get(url_base, headers=HEADERS_HTTP, timeout=20)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, url_statico, limite=25)
+        articoli = estrai_articoli_generici(soup, url_base, limite=25)
         for art in articoli:
+            link_diretto = art["link"] if art["link"].startswith("http") else url_base
             if aggiungi_riga_locale(
                 titolo=art["titolo"],
                 fonte=fonte,
                 data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=url_statico,
+                link=link_diretto,
                 categoria="Normativa Generale",
                 importanza="High",
                 tipo="News",
@@ -322,7 +370,7 @@ def scrape_normattiva():
 
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Ultimi atti con link istituzionale statico pulito."""
+    """6. Gazzetta Ufficiale - Ultimi atti con link diretto o istituzionale pulito."""
     fonte = "Gazzetta Ufficiale"
     url_scrape = "https://www.gazzettaufficiale.it"
     url_statico = "https://www.gazzettaufficiale.it"
@@ -339,10 +387,11 @@ def scrape_gazzetta_ufficiale():
                 contenitore = a_tag.parent
                 testo = pulisci_testo(contenitore.get_text(" ", strip=True)) if contenitore else ""
                 testo = re.sub(r"Leggi la notizia", "", testo, flags=re.I).strip()
+                href = urljoin(url_statico, a_tag["href"]) if a_tag.get("href") else url_statico
                 if len(testo) > 20:
                     articoli.append({
                         "titolo": testo[:180],
-                        "link": url_statico,
+                        "link": href,
                         "descrizione": testo
                     })
 
@@ -361,7 +410,7 @@ def scrape_gazzetta_ufficiale():
                 titolo=art["titolo"],
                 fonte=fonte,
                 data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=url_statico,
+                link=art["link"],
                 categoria="Normativa Generale",
                 importanza="High",
                 tipo="News",
@@ -371,6 +420,7 @@ def scrape_gazzetta_ufficiale():
     except Exception as e:
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_garante_privacy():
     """7. Garante per la Protezione dei Dati Personali - Provvedimenti e News lavoro."""
@@ -397,8 +447,6 @@ def scrape_garante_privacy():
     except Exception as e:
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
-
-
 # ==============================================================================
 # 4. SINCRONIZZAZIONE DIRETTA SU POSTGRESQL GLIDEOS + BLOCCO MAIN
 # ==============================================================================
@@ -406,7 +454,7 @@ def scrape_garante_privacy():
 def spingi_dati_a_glide():
     """
     Sincronizza su PostgreSQL di GlideOS calcolando ID interi progressivi (MAX(id) + 1)
-    per subcategories, news e deadlines.
+    per subcategories, news e deadlines, e aggiorna le righe esistenti con hashtag e link diretti.
     """
     db_url = os.environ.get("GLIDE_DB_URL")
     if not db_url:
@@ -422,14 +470,30 @@ def spingi_dati_a_glide():
         conn = psycopg2.connect(db_url)
         cur = conn.cursor()
         print("[DB] Connessione a PostgreSQL GlideOS riuscita.")
-        
-                # Uniforma eventuali vecchie date in formato DD/MM/YYYY al formato standard YYYY-MM-DD
+
+        # 0. Manutenzione automatica righe già esistenti (date ISO + hashtag nel summary + link Normattiva)
         cur.execute("""
             UPDATE news
             SET date = TO_CHAR(TO_DATE(date, 'DD/MM/YYYY'), 'YYYY-MM-DD')
             WHERE date ~ '^[0-9]{2}/[0-9]{2}/[0-9]{4}$';
         """)
 
+        cur.execute("SELECT id, title, COALESCE(summary, '') FROM news WHERE COALESCE(summary, '') NOT LIKE '%#%';")
+        righe_senza_tag = cur.fetchall()
+        for r_id, r_title, r_summary in righe_senza_tag:
+            nuovo_summary = aggiungi_hashtag_al_testo(r_title or "", r_summary or r_title or "")
+            cur.execute("UPDATE news SET summary = %s WHERE id = %s;", (nuovo_summary, r_id))
+        if righe_senza_tag:
+            print(f"[DB] Aggiornate {len(righe_senza_tag)} notizie esistenti con gli hashtag per i chip.")
+
+        # Aggiorna eventuali link diretti di Normattiva per le notizie già presenti
+        with open(FILE_CSV_LOCALE, mode="r", encoding="utf-8") as f_norm:
+            for r_norm in csv.DictReader(f_norm):
+                if r_norm.get("Fonte") == "Normattiva" and r_norm.get("Link", "").startswith("http"):
+                    cur.execute(
+                        "UPDATE news SET official_link = %s WHERE source = 'Normattiva' AND LOWER(TRIM(title)) = %s;",
+                        (r_norm["Link"], pulisci_testo(r_norm["Titolo"]).lower())
+                    )
 
         # 1. Sincronizzazione 'subcategories' con ID INTEGER progressivo
         cur.execute("SELECT COALESCE(MAX(id), 0) FROM subcategories;")
@@ -480,7 +544,7 @@ def spingi_dati_a_glide():
                 chiave = titolo.lower()
                 fonte = pulisci_testo(row.get("Fonte", "")) or "Fonte Istituzionale"
                 data_val = pulisci_testo(row.get("Data", "")) or oggi_str
-                link = pulisci_testo(row.get("Link", "")) or "https://normattiva.it"
+                link = pulisci_testo(row.get("Link", "")) or "https://www.normattiva.it"
                 categoria = pulisci_testo(row.get("Categoria", "")) or "Normativa Generale"
                 importanza = pulisci_testo(row.get("Importanza", "")) or "Medium"
                 tipo = pulisci_testo(row.get("Tipo", "")) or "News"
@@ -563,6 +627,7 @@ def spingi_dati_a_glide():
     finally:
         if conn:
             conn.close()
+
 
 if __name__ == "__main__":
     inizializza_database_locale()
