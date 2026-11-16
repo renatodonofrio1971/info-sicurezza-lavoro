@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Opera Sicura</title>
+  <meta name="theme-color" content="#d4a017" />
+  <link rel="manifest" href="./manifest.json" />
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #181b22;
+      --card-hover: #20242e;
+      --border: #2a2f3c;
+      --gold: #e0a81e;
+      --gold-soft: rgba(224, 168, 30, 0.16);
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 84px; -webkit-tap-highlight-color: transparent; }
+    .container { max-width: 640px; margin: 0 auto; padding: 16px; }
+
+    /* Intestazione Panoramica con sottotitolo su 2 righe */
+    .hero { text-align: center; padding: 18px 12px 20px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+    .hero-logo { width: 64px; height: 64px; border-radius: 16px; background: var(--gold-soft); border: 1px solid var(--gold); display: inline-flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 10px; }
+    .hero h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+    .hero h1 span { color: var(--gold); }
+    .hero-sub { margin-top: 6px; font-size: 0.95rem; line-height: 1.35; color: var(--muted); }
+    .hero-sub span { display: block; }
+
+    /* KPI Grid */
+    .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+    .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 10px; text-align: center; }
+    .kpi-num { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+    .kpi-label { font-size: 0.72rem; color: var(--muted); line-height: 1.25; }
+    .kpi-danger .kpi-num { color: var(--danger); }
+    .kpi-warn .kpi-num { color: var(--warning); }
+    .kpi-gold .kpi-num { color: var(--gold); }
+
+    .section-title { font-size: 1.05rem; font-weight: 700; margin: 14px 0 12px; display: flex; align-items: center; justify-content: space-between; }
+    .badge-update { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
+
+    /* Search & 2-level Filters */
+    .search-box { width: 100%; background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 12px; font-size: 0.95rem; margin-bottom: 12px; outline: none; }
+    .search-box:focus { border-color: var(--gold); }
+    .chips-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 8px; scrollbar-width: none; }
+    .chips-row::-webkit-scrollbar { display: none; }
+    .chip { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 7px 13px; border-radius: 999px; font-size: 0.8rem; white-space: nowrap; cursor: pointer; transition: 0.15s; }
+    .chip.active { background: var(--gold); color: #111; border-color: var(--gold); font-weight: 700; }
+    .chip-sub.active { background: var(--gold-soft); color: var(--gold); border-color: var(--gold); font-weight: 600; }
+
+    /* Cards */
+    .card { display: block; text-decoration: none; color: inherit; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 12px; transition: 0.15s; }
+    .card:active { transform: scale(0.99); background: var(--card-hover); }
+    .card-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.75rem; color: var(--muted); margin-bottom: 6px; }
+    .source-pill { background: var(--gold-soft); color: var(--gold); padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+    .imp-high { color: var(--warning); font-weight: 700; }
+    .card-title { font-size: 0.98rem; font-weight: 700; line-height: 1.35; color: #fff; margin-bottom: 6px; }
+    .card-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-cat { margin-top: 8px; font-size: 0.72rem; color: var(--gold); }
+
+    /* Load more & Scroll to top */
+    .btn-more { width: 100%; background: var(--card); border: 1px solid var(--gold); color: var(--gold); padding: 12px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 6px; }
+    .btn-top { position: fixed; right: 16px; bottom: 82px; background: var(--gold); color: #111; border: none; border-radius: 999px; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; box-shadow: 0 6px 18px rgba(0,0,0,0.45); cursor: pointer; display: none; z-index: 50; }
+
+    /* Settings Switches */
+    .setting-row { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .setting-info h3 { font-size: 0.95rem; margin-bottom: 3px; }
+    .setting-info p { font-size: 0.78rem; color: var(--muted); }
+    .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; inset: 0; background: #323846; border-radius: 999px; transition: 0.2s; cursor: pointer; }
+    .slider:before { content: ""; position: absolute; height: 20px; width: 20px; left: 4px; bottom: 4px; background: #fff; border-radius: 50%; transition: 0.2s; }
+    input:checked + .slider { background: var(--gold); }
+    input:checked + .slider:before { transform: translateX(20px); background: #111; }
+
+    /* Bottom Navigation */
+    .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(24, 27, 34, 0.96); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 4px 12px; z-index: 100; }
+    .tab-btn { background: none; border: none; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.72rem; cursor: pointer; }
+    .tab-btn.active { color: var(--gold); font-weight: 700; }
+    .tab-icon { font-size: 1.2rem; }
+    .view { display: none; }
+    .view.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- TAB 1: PANORAMICA -->
+    <section id="view-home" class="view active">
+      <div class="hero">
+        <div class="hero-logo">🛡️</div>
+        <h1>Opera <span>Sicura</span></h1>
+        <p class="hero-sub">
+          <span>Normative e scadenze</span>
+          <span>sulla sicurezza sul lavoro</span>
+        </p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-danger">
+          <div class="kpi-num" id="kpi-expired">0</div>
+          <div class="kpi-label">Scadute</div>
+        </div>
+        <div class="kpi-card kpi-warn">
+          <div class="kpi-num" id="kpi-soon">0</div>
+          <div class="kpi-label">In scadenza (30 gg)</div>
+        </div>
+        <div class="kpi-card kpi-gold">
+          <div class="kpi-num" id="kpi-high">0</div>
+          <div class="kpi-label">News importanti</div>
+        </div>
+      </div>
+
+      <div class="section-title">
+        <span>Ultime notizie urgenti</span>
+        <span class="badge-update" id="last-update">Caricamento...</span>
+      </div>
+      <div id="home-urgent-list"></div>
+    </section>
+
+    <!-- TAB 2: NEWS -->
+    <section id="view-news" class="view">
+      <div class="section-title"><span>Archivio Normative & News</span></div>
+      <input type="search" id="search-input" class="search-box" placeholder="Cerca per parola chiave, decreto, #tag..." />
+      <div class="chips-row" id="macro-chips"></div>
+      <div class="chips-row" id="sub-chips" style="display:none;"></div>
+      <div id="news-list"></div>
+      <button id="btn-load-more" class="btn-more" style="display:none;">Mostra altre notizie</button>
+    </section>
+
+    <!-- TAB 3: SCADENZE -->
+    <section id="view-deadlines" class="view">
+      <div class="section-title"><span>Scadenzario Adempimenti</span></div>
+      <div id="deadlines-list"></div>
+    </section>
+
+    <!-- TAB 4: IMPOSTAZIONI -->
+    <section id="view-settings" class="view">
+      <div class="section-title"><span>Preferenze Avvisi (GDPR)</span></div>
+      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">
+        Nessun account richiesto. Le tue preferenze restano salvate in modo anonimo su questo dispositivo.
+      </p>
+      <div class="setting-row">
+        <div class="setting-info"><h3>Normativa Generale</h3><p>D.Lgs. 81/08, DVR, Gazzetta Ufficiale</p></div>
+        <label class="switch"><input type="checkbox" data-pref="notify_general" checked><span class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><h3>Salute & Medicina</h3><p>Sorveglianza sanitaria, medico competente</p></div>
+        <label class="switch"><input type="checkbox" data-pref="notify_health" checked><span class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><h3>Edilizia & Cantieri</h3><p>Patente a crediti, ponteggi, PSC/POS</p></div>
+        <label class="switch"><input type="checkbox" data-pref="notify_construction" checked><span class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><h3>Industria & Impianti</h3><p>Macchinari, ATEX, rischio chimico</p></div>
+        <label class="switch"><input type="checkbox" data-pref="notify_industry"><span class="slider"></span></label>
+      </div>
+    </section>
+  </div>
+
+  <button id="btn-top" class="btn-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Torna in cima</button>
+
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-target="view-home"><span class="tab-icon">🏠</span><span>Panoramica</span></button>
+    <button class="tab-btn" data-target="view-news"><span class="tab-icon">📰</span><span>News</span></button>
+    <button class="tab-btn" data-target="view-deadlines"><span class="tab-icon">📅</span><span>Scadenze</span></button>
+    <button class="tab-btn" data-target="view-settings"><span class="tab-icon">⚙️</span><span>Impostazioni</span></button>
+  </nav>
+  <script>
+    let APP_DATA = { news: [], deadlines: [], subcategories: {} };
+    let selectedMacro = "Tutte";
+    let selectedTag = "";
+    let visibleCount = 15;
+
+    function formatDateIt(isoStr) {
+      if (!isoStr || !isoStr.includes("-")) return isoStr || "";
+      const mesi = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+      const [y, m, d] = isoStr.split("-");
+      const idx = parseInt(m, 10) - 1;
+      return mesi[idx] ? `${parseInt(d, 10)} ${mesi[idx]} ${y}` : isoStr;
+    }
+
+    function createCardHTML(item, isDeadline = false) {
+      const link = item.official_link || "https://normattiva.it";
+      const dateStr = formatDateIt(isDeadline ? item.due_date : item.date);
+      const source = isDeadline ? "Scadenza Ufficiale" : (item.source || "Fonte Ufficiale");
+      const desc = isDeadline ? (item.notes || "") : (item.summary || "");
+      const impBadge = (!isDeadline && item.importance === "High") ? `<span class="imp-high">● Urgente</span>` : "";
+      const catLine = (!isDeadline && item.category) ? `<div class="card-cat">${item.category}</div>` : "";
+      return `
+        <a class="card" href="${link}" target="_blank" rel="noopener noreferrer">
+          <div class="card-meta">
+            <span class="source-pill">${source}</span>
+            <span>${impBadge} ${dateStr}</span>
+          </div>
+          <div class="card-title">${item.title}</div>
+          <div class="card-desc">${desc}</div>
+          ${catLine}
+        </a>`;
+    }
+
+    function renderAll() {
+      const today = new Date().toISOString().slice(0, 10);
+      const in30 = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+
+      const expired = APP_DATA.deadlines.filter(d => d.due_date && d.due_date < today).length;
+      const soon = APP_DATA.deadlines.filter(d => d.due_date && d.due_date >= today && d.due_date <= in30).length;
+      const highNews = APP_DATA.news.filter(n => n.importance === "High");
+
+      document.getElementById("kpi-expired").textContent = expired;
+      document.getElementById("kpi-soon").textContent = soon;
+      document.getElementById("kpi-high").textContent = highNews.length;
+      document.getElementById("last-update").textContent = APP_DATA.updated_at ? `Agg. ${APP_DATA.updated_at}` : "";
+
+      document.getElementById("home-urgent-list").innerHTML = highNews.slice(0, 6).map(n => createCardHTML(n)).join("") || "<p style='color:var(--muted)'>Nessuna notizia urgente.</p>";
+      document.getElementById("deadlines-list").innerHTML = APP_DATA.deadlines.map(d => createCardHTML(d, true)).join("") || "<p style='color:var(--muted)'>Nessuna scadenza attiva in archivio.</p>";
+
+      renderMacros();
+      renderNewsList();
+    }
+
+    function renderMacros() {
+      const macros = ["Tutte", ...Object.keys(APP_DATA.subcategories || {})];
+      const box = document.getElementById("macro-chips");
+      box.innerHTML = macros.map(m => `<button class="chip ${selectedMacro === m ? 'active' : ''}" onclick="selectMacro('${m}')">${m}</button>`).join("");
+    }
+
+    function selectMacro(macro) {
+      selectedMacro = macro;
+      selectedTag = "";
+      visibleCount = 15;
+      renderMacros();
+      const subBox = document.getElementById("sub-chips");
+      const tags = APP_DATA.subcategories[macro] || [];
+      if (macro !== "Tutte" && tags.length) {
+        subBox.style.display = "flex";
+        subBox.innerHTML = tags.map(t => `<button class="chip chip-sub ${selectedTag === t ? 'active' : ''}" onclick="selectTag('${t}')">${t}</button>`).join("");
+      } else {
+        subBox.style.display = "none";
+      }
+      renderNewsList();
+    }
+
+    function selectTag(tag) {
+      selectedTag = (selectedTag === tag) ? "" : tag;
+      visibleCount = 15;
+      const subBox = document.getElementById("sub-chips");
+      const tags = APP_DATA.subcategories[selectedMacro] || [];
+      subBox.innerHTML = tags.map(t => `<button class="chip chip-sub ${selectedTag === t ? 'active' : ''}" onclick="selectTag('${t}')">${t}</button>`).join("");
+      renderNewsList();
+    }
+
+    function renderNewsList() {
+      const q = document.getElementById("search-input").value.trim().toLowerCase();
+      const filtered = APP_DATA.news.filter(n => {
+        if (selectedMacro !== "Tutte" && n.category !== selectedMacro) return false;
+        const fullText = `${n.title} ${n.source} ${n.summary}`.toLowerCase();
+        if (selectedTag && !fullText.includes(selectedTag.toLowerCase())) return false;
+        if (q && !fullText.includes(q)) return false;
+        return true;
+      });
+
+      const slice = filtered.slice(0, visibleCount);
+      document.getElementById("news-list").innerHTML = slice.map(n => createCardHTML(n)).join("") || "<p style='color:var(--muted)'>Nessun risultato trovato.</p>";
+      const btnMore = document.getElementById("btn-load-more");
+      btnMore.style.display = filtered.length > visibleCount ? "block" : "none";
+    }
+
+    document.getElementById("search-input").addEventListener("input", () => { visibleCount = 15; renderNewsList(); });
+    document.getElementById("btn-load-more").addEventListener("click", () => { visibleCount += 15; renderNewsList(); });
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.target).classList.add("active");
+        window.scrollTo({ top: 0 });
+      });
+    });
+
+    window.addEventListener("scroll", () => {
+      document.getElementById("btn-top").style.display = window.scrollY > 350 ? "block" : "none";
+    });
+
+    document.querySelectorAll("input[data-pref]").forEach(chk => {
+      const saved = localStorage.getItem(chk.dataset.pref);
+      if (saved !== null) chk.checked = (saved === "true");
+      chk.addEventListener("change", () => localStorage.setItem(chk.dataset.pref, chk.checked));
+    });
+
+    fetch("./dati_app.json?t=" + Date.now())
+      .then(r => r.json())
+      .then(data => { APP_DATA = data; renderAll(); })
+      .catch(() => { document.getElementById("last-update").textContent = "In attesa di dati_app.json"; });
+  </script>
+</body>
+</html>
