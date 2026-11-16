@@ -360,7 +360,6 @@ def scrape_gazzetta_ufficiale():
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
-
 def scrape_garante_privacy():
     """7. Garante per la Protezione dei Dati Personali - Provvedimenti e News lavoro."""
     fonte = "Garante Privacy"
