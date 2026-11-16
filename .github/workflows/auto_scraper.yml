@@ -27,3 +27,11 @@ jobs:
       env:
         GLIDE_DB_URL: ${{ secrets.GLIDE_DB_URL }}
       run: python scraper.py
+      
+    - name: Salva dati_app.json nel repository
+      run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add dati_app.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Aggiornamento dati_app.json" && git push)
+
