@@ -1,0 +1,1832 @@
+{
+  "updated_at": "2026-11-16 15:40",
+  "subcategories": {
+    "Edilizia & Cantieri": [
+      "#PatenteACrediti",
+      "#CantieriTemporanei",
+      "#Ponteggi",
+      "#LavoriInQuota",
+      "#PSC_POS"
+    ],
+    "Salute & Medicina": [
+      "#SorveglianzaSanitaria",
+      "#MedicoCompetente",
+      "#Amianto",
+      "#StressLavoroCorrelato",
+      "#MalattieProfessionali"
+    ],
+    "Industria & Impianti": [
+      "#DirettivaMacchine",
+      "#ATEX",
+      "#RischioChimico",
+      "#ImpiantiElettrici",
+      "#DPI"
+    ],
+    "Privacy & Lavoro": [
+      "#Videosorveglianza",
+      "#GDPRLavoro",
+      "#ControlloADistanza",
+      "#DatiBiometrici"
+    ],
+    "Normativa Generale": [
+      "#DLgs81_08",
+      "#DVR",
+      "#FormazioneSicurezza",
+      "#BandoISI",
+      "#SanzioniINL"
+    ]
+  },
+  "news": [
+    {
+      "id": 1794624308,
+      "title": "Lavoro su piattaforme, recepita la Direttiva UE",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/lavoro-su-piattaforme-recepita-la-direttiva-ue",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "In Gazzetta Ufficiale il decreto legislativo 2 novembre 2026, n. 208 con cui si introducono, tra le altre, la presunzione legale di subordinazione e misure per la trasparenza dei sistemi di monitoraggio | #DLgs81_08"
+    },
+    {
+      "id": 1794624307,
+      "title": "28/10/2026 EMISSIONI INDUSTRIALI E DISCARICHE DI RIFIUTI - ATTUAZIONE DIRETTIVA (UE) ( D.Lgs. 28 settembre 2026, n. 197 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "28/10/2026 EMISSIONI INDUSTRIALI E DISCARICHE DI RIFIUTI - ATTUAZIONE DIRETTIVA (UE) ( D.Lgs. 28 settembre 2026, n. 197 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624306,
+      "title": "29/10/2026 MALATTIE RARE E FARMACI ORFANI - REGOLAMENTO ATTUATIVO ( Decreto 5 agosto 2026, n. 198 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "29/10/2026 MALATTIE RARE E FARMACI ORFANI - REGOLAMENTO ATTUATIVO ( Decreto 5 agosto 2026, n. 198 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624305,
+      "title": "30/10/2026 PLASTICA RICICLATA A CONTATTO CON I PRODOTTI ALIMENTARI - ADEGUAMENTO UE ( D.Lgs. 9 ottobre 2026, n. 199 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "30/10/2026 PLASTICA RICICLATA A CONTATTO CON I PRODOTTI ALIMENTARI - ADEGUAMENTO UE ( D.Lgs. 9 ottobre 2026, n. 199 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624304,
+      "title": "04/11/2026 DISABILITA' IN ETA' EVOLUTIVA - INCLUSIONE SCOLASTICA ( Sentenza 22/09 - 03/11/2026, n. 182 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "04/11/2026 DISABILITA' IN ETA' EVOLUTIVA - INCLUSIONE SCOLASTICA ( Sentenza 22/09 - 03/11/2026, n. 182 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624303,
+      "title": "04/11/2026 REATI MILITARI - TRATTAMENTO SANZIONATORIO DELLA DIFFAMAZIONE ( Sentenza 10/06 - 03/11/2026, n. 181 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "04/11/2026 REATI MILITARI - TRATTAMENTO SANZIONATORIO DELLA DIFFAMAZIONE ( Sentenza 10/06 - 03/11/2026, n. 181 ) | #SanzioniINL"
+    },
+    {
+      "id": 1794624302,
+      "title": "06/11/2026 CONTINUITA' FUNZIONI ANAC - MISURE URGENTI ( D.L. 6 novembre 2026, n. 200 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "06/11/2026 CONTINUITA' FUNZIONI ANAC - MISURE URGENTI ( D.L. 6 novembre 2026, n. 200 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624301,
+      "title": "09/11/2026 PREZZI DEI CARBURANTI - CONVERSIONE D.L. 157/2026 ( L. 6 novembre 2026, n. 202 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "09/11/2026 PREZZI DEI CARBURANTI - CONVERSIONE D.L. 157/2026 ( L. 6 novembre 2026, n. 202 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624300,
+      "title": "09/11/2026 PUBBLICITA' DELLE SENTENZE DI ASSOLUZIONE O PROSCIOGLIMENTO - MODIFICHE ( L. 29 ottobre 2026, n. 201 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "09/11/2026 PUBBLICITA' DELLE SENTENZE DI ASSOLUZIONE O PROSCIOGLIMENTO - MODIFICHE ( L. 29 ottobre 2026, n. 201 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624299,
+      "title": "10/11/2026 MINISTERO DELLA GIUSTIZIA - 300 POSTI DI MAGISTRATO ORDINARIO ( Concorso )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "10/11/2026 MINISTERO DELLA GIUSTIZIA - 300 POSTI DI MAGISTRATO ORDINARIO ( Concorso ) | #PSC_POS #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624298,
+      "title": "10/11/2026 ARCHIVIO CENTRALE DELLO STATO - NUOVA DENOMINAZIONE «ARCHIVIO NAZIONALE» ( L. 29 ottobre 2026, n. 203 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "10/11/2026 ARCHIVIO CENTRALE DELLO STATO - NUOVA DENOMINAZIONE «ARCHIVIO NAZIONALE» ( L. 29 ottobre 2026, n. 203 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624297,
+      "title": "11/11/2026 BRADISISMO CAMPI FLEGREI - PIANO STRAORDINARIO ( D.L. 11 novembre 2026, n. 205 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "11/11/2026 BRADISISMO CAMPI FLEGREI - PIANO STRAORDINARIO ( D.L. 11 novembre 2026, n. 205 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624296,
+      "title": "12/11/2026 GIOVANI E SERVIZIO CIVILE UNIVERSALE - DELEGHE AL GOVERNO ( L. 29 ottobre 2026, n. 206 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "12/11/2026 GIOVANI E SERVIZIO CIVILE UNIVERSALE - DELEGHE AL GOVERNO ( L. 29 ottobre 2026, n. 206 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624295,
+      "title": "13/11/2026 ASST SANTI PAOLO E CARLO DI MILANO - 60 POSTI VARI PROFILI PROFESSIONALI ( G.U. 4ª s.s. n. 88 del 13/11/2026 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "13/11/2026 ASST SANTI PAOLO E CARLO DI MILANO - 60 POSTI VARI PROFILI PROFESSIONALI ( G.U. 4ª s.s. n. 88 del 13/11/2026 ) | #PSC_POS"
+    },
+    {
+      "id": 1794624294,
+      "title": "13/11/2026 PATROCINIO DINANZI ALLE GIURISDIZIONI SUPERIORI - CORSO PROPEDEUTICO ( Concorso )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "13/11/2026 PATROCINIO DINANZI ALLE GIURISDIZIONI SUPERIORI - CORSO PROPEDEUTICO ( Concorso ) | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624293,
+      "title": "13/11/2026 RIDUZIONE DEL COSTO DELL'ENERGIA ELETTRICA E DEL GAS - DISPOSIZIONI URGENTI ( D.L. 13 novembre 2026, n. 207 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "13/11/2026 RIDUZIONE DEL COSTO DELL'ENERGIA ELETTRICA E DEL GAS - DISPOSIZIONI URGENTI ( D.L. 13 novembre 2026, n. 207 ) | #PSC_POS #ImpiantiElettrici"
+    },
+    {
+      "id": 1794624292,
+      "title": "14/11/2026 LAVORO MEDIANTE PIATTAFORME DIGITALI - ATTUAZIONE DIRETTIVA (UE) ( D.Lgs. 2 novembre 2026, n. 208 )",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-16",
+      "official_link": "https://www.gazzettaufficiale.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "14/11/2026 LAVORO MEDIANTE PIATTAFORME DIGITALI - ATTUAZIONE DIRETTIVA (UE) ( D.Lgs. 2 novembre 2026, n. 208 ) | #DLgs81_08"
+    },
+    {
+      "id": 1794624291,
+      "title": "\"INTEGRAZIONE STUDENTI STRANIERI, SCUOLA E RICERCA - MISURE URGENTI\"",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legge:2026-09-30;170",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Banca Dati è aggiornata in multivigenza con le modifiche apportate dal Decreto-Legge 30 settembre 2026, n. 170 . | #DLgs81_08"
+    },
+    {
+      "id": 1794624290,
+      "title": "\"OBBLIGO DI COMPOSTABILITA' DEGLI IMBALLAGGI - CONVERSIONE IN LEGGE\"",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legge:2026-08-07;143",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Banca Dati è aggiornata in multivigenza con le modifiche apportate dal D.L. 143 del 2026 , convertito, con modificazioni, dalla L. 173 del 2026 . | #PSC_POS"
+    },
+    {
+      "id": 1794624289,
+      "title": "\"FUNZIONALITA' PA ED ENTI TERRITORIALI - CONVERSIONE IN LEGGE\"",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legge:2026-08-07;144",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Banca Dati è aggiornata in multivigenza con le modifiche apportate dal D.L. 144 del 2026 , convertito, con modificazioni, dalla L. 174 del 2026 . | #DLgs81_08"
+    },
+    {
+      "id": 1794624288,
+      "title": "\"ISTRUTTORIE AMBIENTALI, PROBLEMI CLIMATICI, ECONOMIA CIRCOLARE - DISPOSIZIONI URGENTI\"",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legge:2026-10-08;177",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Banca Dati è aggiornata in multivigenza con le modifiche apportate dal Decreto-Legge 8 ottobre 2026, n. 177 . | #PSC_POS"
+    },
+    {
+      "id": 1794624287,
+      "title": "\"INTELLIGENZA ARTIFICIALE, AUTORITA' NAZIONALI E FORMAZIONE - ADEGUAMENTO UE\"",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2026-10-07;179",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Banca Dati è aggiornata in multivigenza con le modifiche apportate dal D.Lgs. 7 ottobre 2026, n. 179. | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624286,
+      "title": "\"LEGGE ELETTORALE - MODIFICHE\"",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2026-10-09;180",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Banca Dati è aggiornata in multivigenza con le modifiche apportate dalla L. 9 ottobre 2026, n. 180 . | #DLgs81_08"
+    },
+    {
+      "id": 1794624285,
+      "title": "\"SICUREZZA PUBBLICA E CONTRASTO ALLA CRIMINALITA' MINORILE - DISPOSIZIONI URGENTI\"",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legge:2026-10-22;190",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Banca Dati è aggiornata in multivigenza con le modifiche apportate dal Decreto-Legge 22 ottobre 2026, n. 190 . | #PSC_POS"
+    },
+    {
+      "id": 1794624284,
+      "title": "\"AUTOTRASPORTO, AGRICOLTURA E PESCA - DISPOSIZIONI URGENTI E MISURE DI SOSTEGNO\"",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legge:2026-10-23;193",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Banca Dati è aggiornata in multivigenza con le modifiche apportate dal Decreto-Legge 23 ottobre 2026, n. 193 . | #PSC_POS"
+    },
+    {
+      "id": 1794624283,
+      "title": "Open Data Normattiva",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://dati.normattiva.it/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Normattiva: Open Data Normattiva. | #DLgs81_08"
+    },
+    {
+      "id": 1794624282,
+      "title": "Ricerca degli atti statali in multivigenza",
+      "source": "Normattiva",
+      "date": "2026-11-16",
+      "official_link": "https://www.normattiva.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Normattiva: Ricerca degli atti statali in multivigenza. | #DLgs81_08"
+    },
+    {
+      "id": 1794624281,
+      "title": "Comunicazione dei dati di contatto del RPD",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://servizi.gpdp.it/comunicazionerpd/s/",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Comunicazione dei dati di contatto del RPD. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624280,
+      "title": "Comunicazione dei dati di contatto del Responsabile della Protezione dei Dati",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Comunicazione dei dati di contatto del Responsabile della Protezione dei Dati. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624279,
+      "title": "Notifica di una violazione dei dati personali (data breach)",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Notifica di una violazione dei dati personali (data breach). | #GDPRLavoro"
+    },
+    {
+      "id": 1794624278,
+      "title": "Sistema d'Informazione Schengen (SIS)",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it/sis",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "MODELLI per l'esercizio dei diritti in materia di protezione dati personali | #GDPRLavoro #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624277,
+      "title": "Sistema di Informazione Schengen (SIS)",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Sistema di Informazione Schengen (SIS). | #GDPRLavoro #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624276,
+      "title": "Reclami e segnalazioni",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Reclami e segnalazioni. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624275,
+      "title": "Segnalazione per contrastare pratiche di revenge porn",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://servizi.gpdp.it/diritti/s/revenge-porn-scelta-auth",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Segnalazione per contrastare pratiche di revenge porn. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624274,
+      "title": "Segnalazione Revenge Porn",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Segnalazione Revenge Porn. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624273,
+      "title": "Segnalazione telefonate indesiderate (telemarketing)",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://servizi.gpdp.it/diritti/s/tel-indesiderate-scelta-auth",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Segnalazione telefonate indesiderate (telemarketing). | #GDPRLavoro"
+    },
+    {
+      "id": 1794624272,
+      "title": "Segnalazione di Comunicazioni indesiderate (telemarketing)",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Segnalazione di Comunicazioni indesiderate (telemarketing). | #GDPRLavoro"
+    },
+    {
+      "id": 1794624271,
+      "title": "Modulistica e servizi online",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it/home/modulistica-e-servizi-online",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Modulistica e servizi online. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624270,
+      "title": "Vita digitale e dati personali",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Vita digitale e dati personali. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624269,
+      "title": "Relazione annuale",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Relazione annuale. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624268,
+      "title": "I podcast del Garante",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it/podcast",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Tutte le puntate di \"A proposito di privacy\" e \"Questioni di privacy\" | #PSC_POS #GDPRLavoro"
+    },
+    {
+      "id": 1794624267,
+      "title": "A proposito di privacy - Il podcast del Garante",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: A proposito di privacy - Il podcast del Garante. | #PSC_POS #GDPRLavoro"
+    },
+    {
+      "id": 1794624266,
+      "title": "Il diritto alla privacy - Raccolta della normativa essenziale",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Il diritto alla privacy - Raccolta della normativa essenziale. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624265,
+      "title": "Newsletter HOMEPAGE CARD",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Newsletter HOMEPAGE CARD. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624264,
+      "title": "Aggregatore Risorse",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Aggregatore Risorse. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624263,
+      "title": "Interviste e interventi HOMPAGE CARD",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Interviste e interventi HOMPAGE CARD. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624262,
+      "title": "Menu principale",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it/home",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Menu principale. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624261,
+      "title": "Menù di navigazione",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Menù di navigazione. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624260,
+      "title": "GGpdp5SearchToggleBar",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: GGpdp5SearchToggleBar. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624259,
+      "title": "Imprese ed enti",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Imprese ed enti. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624258,
+      "title": "Selettore lingua",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Selettore lingua. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624257,
+      "title": "Seguici su Basic",
+      "source": "Garante Privacy",
+      "date": "2026-11-16",
+      "official_link": "https://garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Seguici su Basic. | #GDPRLavoro"
+    },
+    {
+      "id": 1794624256,
+      "title": "INL - Sedi Ispettorato",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.ispettorato.gov.it/it-it/il-ministero/Uffici-periferici-e-territoriali/Pagine/default.aspx",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: INL - Sedi Ispettorato. | #SanzioniINL"
+    },
+    {
+      "id": 1794624255,
+      "title": "Studi e Statistiche",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.lavoro.gov.it/documenti/rapporto-annuale-sulle-comunicazioni-obbligatorie-2025.pdf",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Studi e Statistiche. | #DLgs81_08"
+    },
+    {
+      "id": 1794624254,
+      "title": "Vai al sito dedicato al Distacco Transnazionale",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Vai al sito dedicato al Distacco Transnazionale. | #DLgs81_08"
+    },
+    {
+      "id": 1794624253,
+      "title": "Vai al sito del nuovo Programma",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Vai al sito del nuovo Programma. | #DLgs81_08"
+    },
+    {
+      "id": 1794624252,
+      "title": "Vai al sito del Programma nazionale Giovani, donne e lavoro",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Vai al sito del Programma nazionale Giovani, donne e lavoro. | #DLgs81_08"
+    },
+    {
+      "id": 1794624251,
+      "title": "Autorità europea del Lavoro",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Autorità europea del Lavoro. | #DLgs81_08"
+    },
+    {
+      "id": 1794624250,
+      "title": "Attuazione Interventi PNRR",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Attuazione Interventi PNRR. | #DLgs81_08"
+    },
+    {
+      "id": 1794624249,
+      "title": "Vai al Registro Unico Nazionale del Terzo Settore",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Vai al Registro Unico Nazionale del Terzo Settore. | #DLgs81_08"
+    },
+    {
+      "id": 1794624248,
+      "title": "Vai al sito dedicato agli Operatori dell’Assegno di inclusione",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Vai al sito dedicato agli Operatori dell’Assegno di inclusione. | #DLgs81_08"
+    },
+    {
+      "id": 1794624247,
+      "title": "Vai Portale sulla Previdenza Complementare",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Vai Portale sulla Previdenza Complementare. | #DLgs81_08"
+    },
+    {
+      "id": 1794624246,
+      "title": "Sistema Informativo per l’Inclusione Sociale e Lavorativa (SIISL)",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Sistema Informativo per l’Inclusione Sociale e Lavorativa (SIISL). | #DLgs81_08"
+    },
+    {
+      "id": 1794624245,
+      "title": "Progetto EDO – Educazione Digitale per l’Occupazione",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Progetto EDO – Educazione Digitale per l’Occupazione. | #DLgs81_08"
+    },
+    {
+      "id": 1794624244,
+      "title": "Vai all'Osservatorio nazionale",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Vai all'Osservatorio nazionale. | #DLgs81_08"
+    },
+    {
+      "id": 1794624243,
+      "title": "Pubblicato l’Avviso \"PRIMI PASSI\"",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/pubblicato-avviso-primi-passi",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Dal 5 novembre al 4 dicembre 2026, aperte le adesioni per i 96 Ambiti Territoriali Sociali individuati dall’Avviso finanziato dal PN Inclusione e lotta alla povertà 2021-2027. Il 5 novembre è in programma un webinar di presentazione | #DLgs81_08"
+    },
+    {
+      "id": 1794624242,
+      "title": "IA: Calderone, “La tecnologia resti al servizio della persona”",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/ia-calderone-la-tecnologia-resti-al-servizio-della-persona",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Al seminario ISSA all’Inps: formazione permanente, lavoro di qualità e allerta precoce sui dati | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624241,
+      "title": "Osservatorio IA, eletta la Presidenza della Consulta delle parti sociali",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/osservatorio-ia-eletta-la-presidenza-della-consulta-delle-parti-sociali",
+      "category": "Industria & Impianti",
+      "importance": "Medium",
+      "summary": "I componenti dell’organismo istituito presso il Ministero del Lavoro e delle Politiche Sociali hanno scelto Francesco Maria Gennaro (UIL) per la guida della Consulta. A Chiara Zinno (Confindustria) la vicepresidenza | #DLgs81_08"
+    },
+    {
+      "id": 1794624240,
+      "title": "Storie di ADI, dall’aiuto ricevuto all’aiuto donato",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/stampa-e-media/comunicati/pagine/storie-di-adi-dallaiuto-ricevuto-allaiuto-donato",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "Simona racconta il progetto personalizzato che dall’Assegno di inclusione l’ha portata a diventare operatrice socio-sanitaria grazie al Programma GOL | #DLgs81_08"
+    },
+    {
+      "id": 1794624239,
+      "title": "OrientaSud 2026: il Ministero del Lavoro a Napoli per tre giorni dedicati all'orientamento e alle opportunità per i giovani",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/orientasud-2026-il-ministero-del-lavoro-napoli-tre-giorni",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Nel corso della rassegna i giovani potranno conoscere alcuni degli strumenti per favorire l’accesso al mondo del lavoro | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624238,
+      "title": "Premio Marco Biagi 2027",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/premio-marco-biagi-2027",
+      "category": "Industria & Impianti",
+      "importance": "Medium",
+      "summary": "Bando per tesi su diritto del lavoro e relazioni industriali | #DLgs81_08"
+    },
+    {
+      "id": 1794624237,
+      "title": "Intesa sindacati-imprese, Calderone: \"Un accordo storico\"",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/stampa-e-media/comunicati/pagine/intesa-sindacati-imprese-calderone-un-accordo-storico",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "La dichiarazione del Ministro del Lavoro e delle Politiche Sociali | #DLgs81_08"
+    },
+    {
+      "id": 1794624236,
+      "title": "Calderone: \"L'Europa sceglie la memoria di Marcinelle per ricordare le vittime degli incidenti sul lavoro\"",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/stampa-e-media/comunicati/pagine/calderone-leuropa-sceglie-la-memoria-di-marcinelle",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "La dichiarazione del Ministro del Lavoro e delle Politiche Sociali | #DLgs81_08"
+    },
+    {
+      "id": 1794624235,
+      "title": "Giovani, competenze e lavoro: il Ministero del Lavoro e delle Politiche Sociali al Festival Orientamenti 2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/giovani-competenze-e-lavoro-il-ministero-orientamenti-2026",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Dal 17 al 20 novembre ai Magazzini del Cotone – Porto Antico di Genova, quattro giorni di incontri e orientamento per conoscere strumenti, opportunità e percorsi dedicati al futuro dei giovani | #DLgs81_08"
+    },
+    {
+      "id": 1794624234,
+      "title": "IA e lavoro, l’Osservatorio verso una strategia nazionale",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/stampa-e-media/comunicati/pagine/ia-e-lavoro-losservatorio-verso-una-strategia-nazionale",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: IA e lavoro, l’Osservatorio verso una strategia nazionale. | #DLgs81_08"
+    },
+    {
+      "id": 1794624233,
+      "title": "Storie di comunità e ricostruzioni, la mostra del Cratere Sisma 2016-2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/storie-di-comunita-e-ricostruzioni-la-mostra-del-cratere-sisma-2016-2026",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: Storie di comunità e ricostruzioni, la mostra del Cratere Sisma 2016-2026. | #DLgs81_08"
+    },
+    {
+      "id": 1794624232,
+      "title": "In arrivo la Banca dati degli appalti in agricoltura",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://lavoro.gov.it/stampa-e-media/comunicati/pagine/arrivo-la-banca-dati-degli-appalti-agricoltura",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Ministero del Lavoro: In arrivo la Banca dati degli appalti in agricoltura. | #DLgs81_08"
+    },
+    {
+      "id": 1794624231,
+      "title": "Sezione Link Utili",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.ispettorato.gov.it/privacy-policy/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Sezione Link Utili. | #SanzioniINL"
+    },
+    {
+      "id": 1794624230,
+      "title": "Sedi e Contatti",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/contatti/",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Sede centrale Piazza della Repubblica, 59 - 00185 ROMA | #DLgs81_08"
+    },
+    {
+      "id": 1794624229,
+      "title": "Attività, studi e statistiche",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.ispettorato.gov.it/attivita-studi-e-statistiche/attivita/programmazione-delle-attivita-di-vigilanza/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Attività, studi e statistiche. | #SanzioniINL"
+    },
+    {
+      "id": 1794624228,
+      "title": "Documenti e Normativa",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.ispettorato.gov.it/documenti-e-normativa/orientamenti-giuridici-inl/circolari/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Documenti e Normativa. | #SanzioniINL"
+    },
+    {
+      "id": 1794624227,
+      "title": "Servizi e Modulistica",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.ispettorato.gov.it/servizi-e-modulistica/scopri-i-servizi-e-la-modulistica/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Servizi e Modulistica. | #SanzioniINL"
+    },
+    {
+      "id": 1794624226,
+      "title": "Area servizi ClicLavoro",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://servizi.lavoro.gov.it/Public/login?retUrl=https://servizi.lavoro.gov.it/&App=ServiziHome",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Area servizi ClicLavoro. | #SanzioniINL"
+    },
+    {
+      "id": 1794624225,
+      "title": "Il Portale dell'INAIL",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Il Portale dell'INAIL. | #SanzioniINL"
+    },
+    {
+      "id": 1794624224,
+      "title": "Il Portale dell'INPS",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.inps.it/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Il Portale dell'INPS. | #SanzioniINL"
+    },
+    {
+      "id": 1794624223,
+      "title": "Il Portale del Ministero del Lavoro",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.lavoro.gov.it/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Il Portale del Ministero del Lavoro. | #SanzioniINL"
+    },
+    {
+      "id": 1794624222,
+      "title": "Sedi territoriali",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "L’Ispettorato Nazionale del Lavoro è composto da tre Direzioni interregionali del lavoro (DIL): Direzione interregionale del Nord (Milano), Direzione interregionale del Centro (Roma) e Direzione interregionale del Sud (Napoli). Sul territorio è distribuito attraverso un’articolazione costituita da undici Ispettorati di area metropolitana (IAM) e cinquantanove Ispettorati territoriali del lavoro (ITL). | #PSC_POS #SanzioniINL"
+    },
+    {
+      "id": 1794624221,
+      "title": "Servizi per i datori di lavoro o loro delegati",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/servizi-e-modulistica/per-il-datore-di-lavoro/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Servizi per i datori di lavoro o loro delegati. | #SanzioniINL"
+    },
+    {
+      "id": 1794624220,
+      "title": "Servizi per i lavoratori o loro delegati",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/servizi-e-modulistica/per-i-lavoratori/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Servizi per i lavoratori o loro delegati. | #SanzioniINL"
+    },
+    {
+      "id": 1794624219,
+      "title": "I nostri servizi",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/servizi-e-modulistica/per-i-lavoratori/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: I nostri servizi. | #SanzioniINL"
+    },
+    {
+      "id": 1794624218,
+      "title": "Monitoraggi e Report",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "Programmazione e monitoraggio dell’attività di vigilanza in materia di tutela della salute e della sicurezza nei luoghi di lavoro | #SanzioniINL"
+    },
+    {
+      "id": 1794624217,
+      "title": "Attività di Vigilanza",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "Coordinamento, programmazione ed esercizio dell’azione ispettiva, il cui core è rappresentato dalla verifica del rispetto delle norme in materia di lavoro, legislazione sociale, contributiva ed assicurativa, nonché in materia di salute e sicurezza | #SanzioniINL"
+    },
+    {
+      "id": 1794624216,
+      "title": "Orientamenti Giuridici",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Supporto tecnico-giuridico in ordine ai profili interpretativi e applicativi della disciplina in materia di lavoro e legislazione sociale, attraverso circolari e note interpretative | #DLgs81_08"
+    },
+    {
+      "id": 1794624215,
+      "title": "Decreto Legislativo 9 aprile 2008, n.81 – aggiornamento di gennaio 2026",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Decreto Legislativo 9 aprile 2008, n.81 – aggiornamento di gennaio 2026. | #SanzioniINL"
+    },
+    {
+      "id": 1794624214,
+      "title": "Locali sotterranei o semisotterranei: nota prot. n. 811 del 29 gennaio 2025",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/2025/01/29/16815/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Locali sotterranei o semisotterranei: nota prot. n. 811 del 29 gennaio 2025. | #SanzioniINL"
+    },
+    {
+      "id": 1794624213,
+      "title": "Patente a crediti: disponibili le nuove funzionalità di gestione del Portale dalle ore 10.00 del 10 luglio 2025",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/2025/07/10/inl-rilascio-nuove-funzionalita-patente-a-crediti/",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Patente a crediti: disponibili le nuove funzionalità di gestione del Portale dalle ore 10.00 del 10 luglio 2025. | #PatenteACrediti #SanzioniINL"
+    },
+    {
+      "id": 1794624212,
+      "title": "Patente a Crediti: aggiornate le FAQ al 25 luglio 2025",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/2025/07/25/patente-a-crediti-faq/",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Patente a Crediti: aggiornate le FAQ al 25 luglio 2025. | #PatenteACrediti #SanzioniINL"
+    },
+    {
+      "id": 1794624211,
+      "title": "Patente a Crediti (PaC): manuale operativo per la gestione della piattaforma",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/2025/07/28/patente-a-crediti-pac-manuale-operativo-per-la-gestione-della-piattaforma/",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Patente a Crediti (PaC): manuale operativo per la gestione della piattaforma. | #PatenteACrediti #SanzioniINL"
+    },
+    {
+      "id": 1794624210,
+      "title": "Richiesta di intervento ispettivo: denuncia all'Ispettorato del Lavoro di eventuali violazioni di obblighi riguardanti il rapporto di lavoro.",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/servizio/richiesta-di-intervento-ispettivo/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Richiesta di intervento ispettivo: denuncia all'Ispettorato del Lavoro di eventuali violazioni di obblighi riguardanti il rapporto di lavoro.. | #SanzioniINL"
+    },
+    {
+      "id": 1794624209,
+      "title": "Patente a crediti: fonti normative e note INL",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/2024/09/23/inl-circolare-n-4-del-23-settembre-2024-su-patente-a-crediti/",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Patente a crediti: fonti normative e note INL. | #PatenteACrediti #SanzioniINL"
+    },
+    {
+      "id": 1794624208,
+      "title": "Patente a crediti: indicazioni per il riconoscimento di ulteriori crediti",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://ispettorato.gov.it/documenti-e-normativa/orientamenti-giuridici-inl/note-e-pareri/",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Patente a crediti: indicazioni per il riconoscimento di ulteriori crediti. | #PatenteACrediti #SanzioniINL"
+    },
+    {
+      "id": 1794624207,
+      "title": "Patente a crediti: disponibili nuovi requisiti",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-16",
+      "official_link": "https://www.ispettorato.gov.it/2026/11/02/patente-a-crediti-disponibili-nuovi-requisiti/",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Patente a crediti: disponibili nuovi requisiti. | #PatenteACrediti #SanzioniINL"
+    },
+    {
+      "id": 1794624206,
+      "title": "1575 Centri in italia",
+      "source": "ANFOS",
+      "date": "2026-11-16",
+      "official_link": "https://www.anfos.it/corsi-aula-convenzionati/",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da ANFOS: 1575 Centri in italia. | #DLgs81_08"
+    },
+    {
+      "id": 1794624205,
+      "title": "3241 Formatori iscritti",
+      "source": "ANFOS",
+      "date": "2026-11-16",
+      "official_link": "https://www.anfos.it/elenco-formatori-rspp-aspp-anfos/",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da ANFOS: 3241 Formatori iscritti. | #DLgs81_08"
+    },
+    {
+      "id": 1794624204,
+      "title": "Corsi di formazione in aula",
+      "source": "ANFOS",
+      "date": "2026-11-16",
+      "official_link": "tel:069968740",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "I corsi proposti da ANFOS SERVIZI sono organizzati ai sensi dell Art. 37 in collaborazione con Organismo Paritetico , gli attestati verranno rilasciati da: ANFOS “Associazione Nazionale Formatori della Sicurezza sul Lavoro” | #PSC_POS #DLgs81_08 #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624203,
+      "title": "Corsi in AULA VIRTUALE",
+      "source": "ANFOS",
+      "date": "2026-11-16",
+      "official_link": "https://www.anfos.it/aula-virtuale/",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "ANFOS SERVIZI eroga corsi di formazione per i lavoratori e per i datori di lavoro anche in Aula Virtuale. In particolare vengono proposti i corsi obbligatori introdotti dal Dlgs 81/2008 Testo Unico Sicurezza e dai successivi Accordi Stato-Regioni: | #PSC_POS #DLgs81_08 #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624202,
+      "title": "Percorsi di cioccolato",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/multimedia/video-gallery/video.2026.09.videogallery-percorsi-di-cioccolato.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Il cortometraggio dedicato al reinserimento sociale delle donne realizzato per la Mostra internazionale d’arte cinematografica di Venezia | #DLgs81_08"
+    },
+    {
+      "id": 1794624201,
+      "title": "Relazione annuale Inail 2025",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/multimedia/video-gallery/video.2026.09.videogallery-relazione-annuale-2025.html",
+      "category": "Edilizia & Cantieri",
+      "importance": "Medium",
+      "summary": "Il video realizzato per l’evento di presentazione nell’Aula dei Gruppi parlamentari della Camera dei deputati | #DLgs81_08"
+    },
+    {
+      "id": 1794624200,
+      "title": "Salute e prevenzione per il lavoratore sportivo: Inail e Aic al Social Football Summit di Torino",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/eventi/evento.2026.11.salute-e-prevenzione-per-il-lavoratore-sportivo-inail-e-aic-al-social-football-summit-di-torino.html",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "All’Allianz Stadium la presentazione di un progetto di ricerca sulle patologie osteoarticolari a lungo termine nei calciatori professionisti | #MalattieProfessionali #DLgs81_08"
+    },
+    {
+      "id": 1794624199,
+      "title": "Dalla prevenzione alla predizione: l’intelligenza artificiale e nuovi approcci alla salute e sicurezza sul lavoro",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/eventi/evento.2026.11.dalla-prevenzione-alla-predizione-l-intelligenza-artificiale-e-nuovi-approcci-alla-salute-e-sicurezza-sul-lavoro.html",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Il seminario offre una lettura multidisciplinare delle opportunità e delle criticità connesse all’impiego dell’IA | #DLgs81_08"
+    },
+    {
+      "id": 1794624198,
+      "title": "Strategie e strumenti per la gestione integrata della sicurezza sul lavoro nel lavoro ibrido e agile",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/eventi/evento.2026.11.strategie-e-strumenti-per-la-gestione-integrata-della-sicurezza-sul-lavoro-nel-lavoro-ibrido-e-agile.html",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "L’evento, di carattere teorico-pratico, è finalizzato all’aggiornamento professionale e all’acquisizione di conoscenze e strumenti operativi | #DLgs81_08"
+    },
+    {
+      "id": 1794624197,
+      "title": "Giornata dell’Unità nazionale e delle Forze armate, l’Inail ricorda i dipendenti caduti in guerra",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.l-inail-ricorda-i-dipendenti-caduti-in-guerra.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "La cerimonia si è svolta nella sede di via IV Novembre a Roma, alla presenza dei vertici dell’Istituto | #DLgs81_08"
+    },
+    {
+      "id": 1794624196,
+      "title": "SI.IN.PRE.SA., il truck dell’Inail che porta i servizi sul territorio sul lungomare della Stazione Reggio Calabria",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.si-in-pre-sa-il-truck-dell-inail-che-porta-i-servizi-sul-territorio-sul-lungomare-della-stazione-reggio-calabria.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Prosegue il percorso itinerante della stazione mobile. Due giorni per accedere alle opportunità offerte dall’Istituto | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624195,
+      "title": "Inail Marche e Università di Macerata incontrano gli studenti per affrontare il tema degli infortuni in itinere",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.inail-marche-e-universit--di-macerata-incontrano-gli-studenti-per-affrontare-il-tema-degli-infortuni-in-itinere.html",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "L’iniziativa si inserisce nel quadro della campagna europea Eu-Osha \"Ambienti di lavoro sani e sicuri 2026-2028\" | #DLgs81_08"
+    },
+    {
+      "id": 1794624194,
+      "title": "Calcio professionistico e salute, al via lo studio di Inail e Aic sulle patologie articolari degli atleti",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.calcio-professionistico-e-salute-al-via-lo-studio-di-inail-e-aic-sulle-patologie-articolari-degli-atleti.html",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "All’Allianz Stadium di Torino presentato il progetto di ricerca che coinvolgerà circa 2.500 calciatrici e calciatori, sia in attività sia ritirati | #MalattieProfessionali"
+    },
+    {
+      "id": 1794624193,
+      "title": "Lavoro agile e prevenzione, un nuovo modulo Inail per imparare a riconoscere i rischi",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.lavoro-agile-e-prevenzione-un-nuovo-modulo-inail-per-imparare-a-riconoscere-i-rischi.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Un percorso di formazione esperienziale che integra simulazione digitale, branching scenario, approfondimento e produzione di contenuti multimediali | #ControlloADistanza #DLgs81_08 #DVR #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624192,
+      "title": "Rischi in ottica di genere, online una nuova sezione del sito dedicata",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.rischi-in-ottica-di-genere--online-una-nuova-sezione-del-sito-dedicata.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Nella pagina approfondimenti e schede di supporto per agevolare i datori di lavoro e i valutatori nell’approccio a questa tematica | #DVR"
+    },
+    {
+      "id": 1794624191,
+      "title": "Insieme per la promozione della salute mentale negli ambienti di lavoro, all’Inail il lancio della Campagna europea 2026/2028",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.all-inail-il-lancio-della-campagna-europea-2026-2028.html",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "L’evento si è svolto l’11 novembre presso l’auditorium Antonio Maglio dell’Istituto, con la partecipazione dei vertici | #StressLavoroCorrelato"
+    },
+    {
+      "id": 1794624190,
+      "title": "Dati e statistiche",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/attivita-e-servizi/dati-e-statistiche.html",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Consulta i dati statistici elaborati dall'Inail in ambito infortuni sul lavoro e organizzati secondo diverse banche dati. | #DLgs81_08"
+    },
+    {
+      "id": 1794624189,
+      "title": "Centri protesici e riabilitativi",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/istituto/l-istituto/struttura-organizzativa/uffici-centrali/direzione-centrale-assistenza-protesica-e-riabilitativa/centri-protesici-e-riabilitativi.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Scopri le strutture specializzate nell’assistenza protesica e/o riabilitativa ai lavoratori con disabilità motoria. | #DLgs81_08"
+    },
+    {
+      "id": 1794624188,
+      "title": "Avviso di mobilità volontaria esterna n. 231 posti, area funzionari amministrativi: graduatorie definitive di merito",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.08.aviso-graduatorie-friuli-liguria-sardegna-231-posti.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Pubblicate le graduatorie finali di merito della Direzione Generale, di Vigorso di Budrio e delle regioni Abruzzo, Emilia Romagna, Friuli Venezia Giulia, Liguri... | #PSC_POS"
+    },
+    {
+      "id": 1794624187,
+      "title": "Avviso di mobilità volontaria esterna n. 231 posti, area funzionari amministrativi: pubblicazione calendario colloqui",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.06.avviso-231-funz-calendario-colloqui.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Pubblicati i calendari per i colloqui presso le sedi della Direzione Generale, Vigorso di Budrio, Umbria, Lazio, Toscana (rettificato), Abruzzo, Marche (rettifi... | #PSC_POS"
+    },
+    {
+      "id": 1794624186,
+      "title": "Bandi di concorso – copertura di n. 19 unità presso la Cte - I livello di professionalità: graduatorie",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-concorso-19-posti-cte-graduatorie.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Pubblicate le graduatorie finali di merito relative alle macroaree 1, 2, 3 e 4 nonchè alla regione Lazio. | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624185,
+      "title": "Eleggi il domicilio digitale su INAD e semplifica la comunicazione con la PA",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-domicilio-digitale-inad.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "È possibile sostituire la corrispondenza cartacea con il domicilio digitale per ricevere comunicazioni con valore legale da parte della pubblica amministrazione. | #PSC_POS"
+    },
+    {
+      "id": 1794624184,
+      "title": "Customer Satisfaction anno 2026",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-rilevazione-soddisfazione-utenti-26.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Dal 9 novembre al 4 dicembre 2026 è possibile compilare il questionario relativo alla Customer Satisfaction sui servizi Inail. | #PSC_POS"
+    },
+    {
+      "id": 1794624183,
+      "title": "Ricerca e Innovazione tecnologica",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/ricerca-e-tecnologia/it/come-fare-per/bandi-di-ricerca-in-collaborazione--bric-.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da INAIL: Ricerca e Innovazione tecnologica. | #DLgs81_08"
+    },
+    {
+      "id": 1794624182,
+      "title": "Prevenzione e sicurezza",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/prevenzione-e-sicurezza/it/prevenzione-e-sicurezza/prevenzione-per-la-salute-e-la-sicurezza-sul-lavoro.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da INAIL: Prevenzione e sicurezza. | #DLgs81_08"
+    },
+    {
+      "id": 1794624181,
+      "title": "Avviso pubblico formazione e informazione 2024 Inail mette a disposizione 24 milioni per finanziare progetti integrati di formazione e informazione a contenuto prevenzionale",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/prevenzione-e-sicurezza/it/prevenzione-e-sicurezza/finanziamenti-per-la-sicurezza/finanziamenti-ad-enti-ed-organismi/avviso-pubblico-formazione-e-informazione-2024.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Inail mette a disposizione 24 milioni per finanziare progetti integrati di formazione e informazione a contenuto prevenzionale | #PSC_POS #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624180,
+      "title": "Inail insieme, incontri con il territorio",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.10.inail-insieme-il-direttore-generale-marcello-fiori-ad-arezzo.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Il direttore generale incontra il personale, le istituzioni, gli stakeholder locali e le parti sociali | #DLgs81_08"
+    },
+    {
+      "id": 1794624179,
+      "title": "SI.IN.PRE.SA., un percorso che unisce L’iniziativa itinerante dell’Inail che toccherà tutte le regioni italiane con due stazioni mobili per offrire servizi a cittadini e imprese",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inailcomunica.it/progetto-siinpresa",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "L’iniziativa itinerante dell’Inail che toccherà tutte le regioni italiane con due stazioni mobili per offrire servizi a cittadini e imprese | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624178,
+      "title": "Borsa di studio ai superstiti Dal 24 giugno 2026 è attivo il servizio online per l’inoltro delle domande di borsa di studio ai superstiti",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.inail.it/portale/assicurazione/it/lassicurazione-inail/quali-sono-le-prestazioni-di-inail/prestazioni-economiche/borsa-di-studio-ai-superstiti.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Dal 24 giugno 2026 è attivo il servizio online per l’inoltro delle domande di borsa di studio ai superstiti | #DLgs81_08"
+    },
+    {
+      "id": 1794624177,
+      "title": "Salute e sicurezza…insieme! – IV edizione Fino al 31 marzo 2027 è possibile presentare gli elaborati per partecipare al concorso rivolto alle scuole secondarie di secondo grado",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.lavoro.gov.it/priorita/pagine/bando-di-concorso-salute-e-sicurezza-insieme",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "Fino al 31 marzo 2027 è possibile presentare gli elaborati per partecipare al concorso rivolto alle scuole secondarie di secondo grado | #PSC_POS #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624176,
+      "title": "Notizie in evidenza",
+      "source": "INAIL",
+      "date": "2026-11-16",
+      "official_link": "https://www.lavoro.gov.it/priorita/pagine/bando-di-concorso-salute-e-sicurezza-insieme",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Fino al 31 marzo 2027 è possibile presentare gli elaborati per partecipare al concorso rivolto alle scuole secondarie di secondo grado | #PSC_POS #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624175,
+      "title": "L.  29 ottobre 2026, n. 206 #Generale",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-14",
+      "official_link": "https://www.gazzettaufficiale.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Gazzetta Ufficiale - Sicurezza Generale: L.  29 ottobre 2026, n. 206 #Generale"
+    },
+    {
+      "id": 1794624171,
+      "title": "SICUREZZA PUBBLICA E CONTRASTO ALLA CRIMINALITA' MINORILE - DISPOSIZIONI URGENTI #Cantieristica",
+      "source": "Normattiva",
+      "date": "2026-11-14",
+      "official_link": "https://www.normattiva.it/",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Normattiva - Edilizia & Cantieri: SICUREZZA PUBBLICA E CONTRASTO ALLA CRIMINALITA' MINORILE - DISPOSIZIONI URGENTI #Cantieristica"
+    },
+    {
+      "id": 1794477807,
+      "title": "D.L.  11 novembre 2026, n. 205 #Generale",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-12",
+      "official_link": "https://www.gazzettaufficiale.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "D.L.  11 novembre 2026, n. 205 #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412799,
+      "title": "Decreto 5 agosto 2026, n. 198 #Generale",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-11",
+      "official_link": "https://www.gazzettaufficiale.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Decreto 5 agosto 2026, n. 198 #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412798,
+      "title": "D.L.  6 novembre 2026, n. 200 #Generale",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-11",
+      "official_link": "https://www.gazzettaufficiale.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "D.L.  6 novembre 2026, n. 200 #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412797,
+      "title": "L. 6 novembre 2026, n. 202 #Generale",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-11",
+      "official_link": "https://www.gazzettaufficiale.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "L. 6 novembre 2026, n. 202 #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412796,
+      "title": "L. 29 ottobre 2026, n. 201 #Generale",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-11",
+      "official_link": "https://www.gazzettaufficiale.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "L. 29 ottobre 2026, n. 201 #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412795,
+      "title": "L.  29 ottobre 2026, n. 203 #Generale",
+      "source": "Gazzetta Ufficiale",
+      "date": "2026-11-11",
+      "official_link": "https://www.gazzettaufficiale.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "L.  29 ottobre 2026, n. 203 #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412794,
+      "title": "FUNZIONALITA' PA ED ENTI TERRITORIALI - CONVERSIONE IN LEGGE #Generale",
+      "source": "Normattiva",
+      "date": "2026-11-11",
+      "official_link": "https://www.normattiva.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "FUNZIONALITA' PA ED ENTI TERRITORIALI - CONVERSIONE IN LEGGE #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412793,
+      "title": "ISTRUTTORIE AMBIENTALI, PROBLEMI CLIMATICI, ECONOMIA CIRCOLARE - DISPOSIZIONI URGENTI #Cantieristica",
+      "source": "Normattiva",
+      "date": "2026-11-11",
+      "official_link": "https://www.normattiva.it/",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "ISTRUTTORIE AMBIENTALI, PROBLEMI CLIMATICI, ECONOMIA CIRCOLARE - DISPOSIZIONI URGENTI #Cantieristica | #CantieriTemporanei #PSC_POS"
+    },
+    {
+      "id": 1794412792,
+      "title": "INTELLIGENZA ARTIFICIALE, AUTORITA' NAZIONALI E FORMAZIONE - ADEGUAMENTO UE #Corsi",
+      "source": "Normattiva",
+      "date": "2026-11-11",
+      "official_link": "https://www.normattiva.it/",
+      "category": "Formazione & Ruoli",
+      "importance": "High",
+      "summary": "INTELLIGENZA ARTIFICIALE, AUTORITA' NAZIONALI E FORMAZIONE - ADEGUAMENTO UE #Corsi | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794412791,
+      "title": "LEGGE ELETTORALE - MODIFICHE #Generale",
+      "source": "Normattiva",
+      "date": "2026-11-11",
+      "official_link": "https://www.normattiva.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "LEGGE ELETTORALE - MODIFICHE #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412790,
+      "title": "Open Data Normattiva #Generale",
+      "source": "Normattiva",
+      "date": "2026-11-11",
+      "official_link": "https://www.normattiva.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Open Data Normattiva #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412789,
+      "title": "Il Portale dell'INPS #Generale",
+      "source": "Ispettorato Lavoro",
+      "date": "2026-11-11",
+      "official_link": "https://www.inps.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Il Portale dell'INPS #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412788,
+      "title": "Il Portale del Ministero del Lavoro #Generale",
+      "source": "Ispettorato Lavoro",
+      "date": "2026-11-11",
+      "official_link": "https://www.lavoro.gov.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Il Portale del Ministero del Lavoro #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412787,
+      "title": "Servizi per i datori di lavoro o loro delegati #Generale",
+      "source": "Ispettorato Lavoro",
+      "date": "2026-11-11",
+      "official_link": "https://ispettorato.gov.it/servizi-e-modulistica/per-il-datore-di-lavoro/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Servizi per i datori di lavoro o loro delegati #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412786,
+      "title": "Servizi per i lavoratori o loro delegati #Generale",
+      "source": "Ispettorato Lavoro",
+      "date": "2026-11-11",
+      "official_link": "https://ispettorato.gov.it/servizi-e-modulistica/per-i-lavoratori/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Servizi per i lavoratori o loro delegati #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412785,
+      "title": "Avviso di mobilità volontaria esterna n. 231 posti, area funzionari amministrativi: pubblicazione calendario colloqui #Cantieristica",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.06.avviso-231-funz-calendario-colloqui.html",
+      "category": "Edilizia & Cantieri",
+      "importance": "Medium",
+      "summary": "Avviso di mobilità volontaria esterna n. 231 posti, area funzionari amministrativi: pubblicazione calendario colloqui #Cantieristica | #CantieriTemporanei #PSC_POS"
+    },
+    {
+      "id": 1794412784,
+      "title": "Bando di concorso per n. 448 posti nell'area dei funzionari, profilo ispettore di vigilanza: titoli di preferenza e di riserva #Cantieristica",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-presentazione-titoli-preferenza-448-posti.html",
+      "category": "Edilizia & Cantieri",
+      "importance": "Medium",
+      "summary": "Bando di concorso per n. 448 posti nell'area dei funzionari, profilo ispettore di vigilanza: titoli di preferenza e di riserva #Cantieristica | #CantieriTemporanei #PSC_POS #FormazioneSicurezza #SanzioniINL"
+    },
+    {
+      "id": 1794412783,
+      "title": "Bandi di concorso – copertura di n. 19 unità presso la Cte - I livello di professionalità: graduatorie #Corsi",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-concorso-19-posti-cte-graduatorie.html",
+      "category": "Formazione & Ruoli",
+      "importance": "Medium",
+      "summary": "Bandi di concorso – copertura di n. 19 unità presso la Cte - I livello di professionalità: graduatorie #Corsi | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794412782,
+      "title": "Eleggi il domicilio digitale su INAD e semplifica la comunicazione con la PA #Generale",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-domicilio-digitale-inad.html",
+      "category": "Sicurezza Generale",
+      "importance": "Medium",
+      "summary": "Eleggi il domicilio digitale su INAD e semplifica la comunicazione con la PA #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412781,
+      "title": "Customer Satisfaction anno 2026 #Generale",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-rilevazione-soddisfazione-utenti-26.html",
+      "category": "Sicurezza Generale",
+      "importance": "Medium",
+      "summary": "Customer Satisfaction anno 2026 #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412780,
+      "title": "Avviso pubblico formazione e informazione 2024 #Corsi",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.inail.it/portale/prevenzione-e-sicurezza/it/prevenzione-e-sicurezza/finanziamenti-per-la-sicurezza/finanziamenti-ad-enti-ed-organismi/avviso-pubblico-formazione-e-informazione-2024.html",
+      "category": "Formazione & Ruoli",
+      "importance": "Medium",
+      "summary": "Avviso pubblico formazione e informazione 2024 #Corsi | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794412779,
+      "title": "Bando Bric 2025 #Generale",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.inail.it/portale/ricerca-e-tecnologia/it/come-fare-per/bandi-di-ricerca-in-collaborazione--bric-/bando-bric-2025.html",
+      "category": "Sicurezza Generale",
+      "importance": "Medium",
+      "summary": "Bando Bric 2025 #Generale | #BandoISI"
+    },
+    {
+      "id": 1794412778,
+      "title": "SI.IN.PRE.SA., un percorso che unisce #Corsi",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.inailcomunica.it/progetto-siinpresa",
+      "category": "Formazione & Ruoli",
+      "importance": "Medium",
+      "summary": "SI.IN.PRE.SA., un percorso che unisce #Corsi | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794412777,
+      "title": "Borsa di studio ai superstiti #Generale",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.inail.it/portale/assicurazione/it/lassicurazione-inail/quali-sono-le-prestazioni-di-inail/prestazioni-economiche/borsa-di-studio-ai-superstiti.html",
+      "category": "Sicurezza Generale",
+      "importance": "Medium",
+      "summary": "Borsa di studio ai superstiti #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412776,
+      "title": "Salute e sicurezza…insieme! – IV edizione #Generale",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-11",
+      "official_link": "https://www.lavoro.gov.it/priorita/pagine/bando-di-concorso-salute-e-sicurezza-insieme",
+      "category": "Sicurezza Generale",
+      "importance": "Medium",
+      "summary": "Salute e sicurezza…insieme! – IV edizione #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412775,
+      "title": "Il Portale dell'INPS #Generale",
+      "source": "Ispettorato Lavoro",
+      "date": "2026-11-08",
+      "official_link": "https://www.inps.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Il Portale dell'INPS #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412774,
+      "title": "Il Portale del Ministero del Lavoro #Generale",
+      "source": "Ispettorato Lavoro",
+      "date": "2026-11-08",
+      "official_link": "https://www.lavoro.gov.it/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Il Portale del Ministero del Lavoro #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412773,
+      "title": "Servizi per i datori di lavoro o loro delegati #Generale",
+      "source": "Ispettorato Lavoro",
+      "date": "2026-11-08",
+      "official_link": "https://ispettorato.gov.it/servizi-e-modulistica/per-il-datore-di-lavoro/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Servizi per i datori di lavoro o loro delegati #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412772,
+      "title": "Servizi per i lavoratori o loro delegati #Generale",
+      "source": "Ispettorato Lavoro",
+      "date": "2026-11-08",
+      "official_link": "https://ispettorato.gov.it/servizi-e-modulistica/per-i-lavoratori/",
+      "category": "Sicurezza Generale",
+      "importance": "High",
+      "summary": "Servizi per i lavoratori o loro delegati #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412771,
+      "title": "Avviso di mobilità volontaria esterna n. 231 posti, area funzionari amministrativi: graduatorie definitive di merito #Cantieristica",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.08.aviso-graduatorie-friuli-liguria-sardegna-231-posti.html",
+      "category": "Edilizia & Cantieri",
+      "importance": "Medium",
+      "summary": "Avviso di mobilità volontaria esterna n. 231 posti, area funzionari amministrativi: graduatorie definitive di merito #Cantieristica | #CantieriTemporanei #PSC_POS"
+    },
+    {
+      "id": 1794412770,
+      "title": "Avviso di mobilità volontaria esterna n. 231 posti, area funzionari amministrativi: pubblicazione calendario colloqui #Cantieristica",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.06.avviso-231-funz-calendario-colloqui.html",
+      "category": "Edilizia & Cantieri",
+      "importance": "Medium",
+      "summary": "Avviso di mobilità volontaria esterna n. 231 posti, area funzionari amministrativi: pubblicazione calendario colloqui #Cantieristica | #CantieriTemporanei #PSC_POS"
+    },
+    {
+      "id": 1794412769,
+      "title": "Pagamento dei premi e accessori: modifica del tasso di interesse di rateazione e della misura delle sanzioni civili #Generale",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.09.avviso-circolare-n-42-del-11-settembre-2026.html",
+      "category": "Sicurezza Generale",
+      "importance": "Medium",
+      "summary": "Pagamento dei premi e accessori: modifica del tasso di interesse di rateazione e della misura delle sanzioni civili #Generale | #SanzioniINL"
+    },
+    {
+      "id": 1794412768,
+      "title": "Bando di concorso per n. 448 posti nell'area dei funzionari, profilo ispettore di vigilanza: titoli di preferenza e di riserva #Cantieristica",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-presentazione-titoli-preferenza-448-posti.html",
+      "category": "Edilizia & Cantieri",
+      "importance": "Medium",
+      "summary": "Bando di concorso per n. 448 posti nell'area dei funzionari, profilo ispettore di vigilanza: titoli di preferenza e di riserva #Cantieristica | #CantieriTemporanei #PSC_POS #FormazioneSicurezza #SanzioniINL"
+    },
+    {
+      "id": 1794412767,
+      "title": "Bandi di concorso – copertura di n. 19 unità presso la Cte - I livello di professionalità: graduatorie #Corsi",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-concorso-19-posti-cte-graduatorie.html",
+      "category": "Formazione & Ruoli",
+      "importance": "Medium",
+      "summary": "Bandi di concorso – copertura di n. 19 unità presso la Cte - I livello di professionalità: graduatorie #Corsi | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794412766,
+      "title": "Avviso pubblico formazione e informazione 2024 #Corsi",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.inail.it/portale/prevenzione-e-sicurezza/it/prevenzione-e-sicurezza/finanziamenti-per-la-sicurezza/finanziamenti-ad-enti-ed-organismi/avviso-pubblico-formazione-e-informazione-2024.html",
+      "category": "Formazione & Ruoli",
+      "importance": "Medium",
+      "summary": "Avviso pubblico formazione e informazione 2024 #Corsi | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794412765,
+      "title": "Bando Bric 2025 #Generale",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.inail.it/portale/ricerca-e-tecnologia/it/come-fare-per/bandi-di-ricerca-in-collaborazione--bric-/bando-bric-2025.html",
+      "category": "Sicurezza Generale",
+      "importance": "Medium",
+      "summary": "Bando Bric 2025 #Generale | #BandoISI"
+    },
+    {
+      "id": 1794412764,
+      "title": "SI.IN.PRE.SA., un percorso che unisce #Corsi",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.inailcomunica.it/progetto-siinpresa",
+      "category": "Formazione & Ruoli",
+      "importance": "Medium",
+      "summary": "SI.IN.PRE.SA., un percorso che unisce #Corsi | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794412763,
+      "title": "Borsa di studio ai superstiti #Generale",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.inail.it/portale/assicurazione/it/lassicurazione-inail/quali-sono-le-prestazioni-di-inail/prestazioni-economiche/borsa-di-studio-ai-superstiti.html",
+      "category": "Sicurezza Generale",
+      "importance": "Medium",
+      "summary": "Borsa di studio ai superstiti #Generale | #DLgs81_08"
+    },
+    {
+      "id": 1794412762,
+      "title": "Salute e sicurezza…insieme! – IV edizione #Generale",
+      "source": "INAIL Nazionale",
+      "date": "2026-11-08",
+      "official_link": "https://www.lavoro.gov.it/priorita/pagine/bando-di-concorso-salute-e-sicurezza-insieme",
+      "category": "Sicurezza Generale",
+      "importance": "Medium",
+      "summary": "Salute e sicurezza…insieme! – IV edizione #Generale | #DLgs81_08"
+    }
+  ],
+  "deadlines": [
+    {
+      "id": 1794499063,
+      "title": "Bando di concorso per n. 448 posti nell'area dei funzionari, profilo ispettore di vigilanza: titoli di preferenza e di riserva",
+      "due_date": "2026-11-16",
+      "notes": "Entro l'11 novembre 2026 devono essere inoltrati i titoli di preferenza e/o di riserva.",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-presentazione-titoli-preferenza-448-posti.html"
+    },
+    {
+      "id": 1794499062,
+      "title": "Avvisi e scadenze",
+      "due_date": "2026-11-16",
+      "notes": "Aggiornamento istituzionale da INAIL: Avvisi e scadenze.",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi.html"
+    },
+    {
+      "id": 1794499061,
+      "title": "Bando Bric 2025 Dall’Inail 14,4 milioni di euro per lo sviluppo di progetti di ricerca ad alto tasso di innovazione in collaborazione con il mondo accademico e scientifico",
+      "due_date": "2026-11-16",
+      "notes": "Dall’Inail 14,4 milioni di euro per lo sviluppo di progetti di ricerca ad alto tasso di innovazione in collaborazione con il mondo accademico e scientifico",
+      "official_link": "https://www.inail.it/portale/ricerca-e-tecnologia/it/come-fare-per/bandi-di-ricerca-in-collaborazione--bric-/bando-bric-2025.html"
+    },
+    {
+      "id": 1794499060,
+      "title": "Scadenza Rinnovo Cassette Primo Soccorso",
+      "due_date": "2026-11-25",
+      "notes": "Controllo integrità e validità dei presidi medici scaduti (DM 388/2003).",
+      "official_link": "https://gazzettaufficiale.it"
+    },
+    {
+      "id": 1794499058,
+      "title": "Invio Autoliquidazione INAIL 2026",
+      "due_date": "2026-11-30",
+      "notes": "Scadenza termine per calcolo saldo e premio di regolazione sul portale INAIL.",
+      "official_link": "https://inail.it"
+    },
+    {
+      "id": 1794499059,
+      "title": "Verifica Periodica Impianti di Messa a Terra",
+      "due_date": "2026-12-01",
+      "notes": "Controllo ispettivo biennale/quinquennale obbligatorio DPR 462/01 tramite portale CIVA.",
+      "official_link": "https://inail.it"
+    },
+    {
+      "id": 1794499057,
+      "title": "Aggiornamento DVR - Analisi dei Rischi Annuale",
+      "due_date": "2026-12-15",
+      "notes": "Verifica conformità e aggiornamento firme del RLS (D.Lgs. 81/08 art. 28-29).",
+      "official_link": "https://normattiva.it"
+    }
+  ]
+}
