@@ -189,18 +189,18 @@ def estrai_articoli_generici(soup, base_url, limite=25):
 # ==============================================================================
 
 def scrape_inail():
-    """1. INAIL - Homepage e News (usa www.inail.it e timeout 45s per server GitHub)."""
+    """1. INAIL - News e Bandi ISI (legge h2/h3 con link sul contenitore card + <p>)."""
     fonte = "INAIL"
     url = "https://inail.it"
     aggiunti = 0
     try:
-        resp = requests.get(url, headers=HEADERS_HTTP, timeout=45)
+        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, "https://inail.it", limite=30)
+        articoli = estrai_articoli_generici(soup, "https://inail.it", limite=25)
         for art in articoli:
-            tipo = "Scadenza" if any(k in art["titolo"].lower() for k in ["bando", "scadenza", "isi", "entro il"]) else "News"
+            tipo = "Scadenza" if any(k in art["titolo"].lower() for k in ["bando", "scadenza", "isi"]) else "News"
             if aggiungi_riga_locale(
                 titolo=art["titolo"],
                 fonte=fonte,
@@ -213,6 +213,7 @@ def scrape_inail():
     except Exception as e:
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_anfos():
     """2. ANFOS - Associazione Nazionale Formatori Sicurezza sul Lavoro."""
@@ -291,41 +292,24 @@ def scrape_ministero_lavoro():
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
-def scarica_senza_redirect_nudo(url, timeout=35):
-    """Segue i redirect passo-passo forzando sempre il prefisso 'www.'."""
-    session = requests.Session()
-    url_corrente = url
-    for _ in range(5):
-        resp = session.get(url_corrente, headers=HEADERS_HTTP, timeout=timeout, allow_redirects=False)
-        if resp.status_code in (301, 302, 303, 307, 308):
-            loc = resp.headers.get("Location", "")
-            if not loc:
-                break
-            url_corrente = urljoin(url_corrente, loc)
-            url_corrente = url_corrente.replace("://normattiva.it", "://www.normattiva.it")
-            url_corrente = url_corrente.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
-            continue
-        resp.raise_for_status()
-        return resp
-    resp.raise_for_status()
-    return resp
 
 def scrape_normattiva():
-    """5. Normattiva - Evita redirect su dominio senza www."""
+    """5. Normattiva - Atti in evidenza con link istituzionale statico pulito."""
     fonte = "Normattiva"
-    url_www = "https://normattiva.it"
+    url_statico = "https://www.normattiva.it"
     aggiunti = 0
     try:
-        resp = scarica_senza_redirect_nudo(url_www, timeout=35)
+        resp = requests.get(url_statico, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, url_www, limite=25)
+        articoli = estrai_articoli_generici(soup, url_statico, limite=25)
         for art in articoli:
             if aggiungi_riga_locale(
                 titolo=art["titolo"],
                 fonte=fonte,
                 data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=url_www,
+                link=url_statico,
                 categoria="Normativa Generale",
                 importanza="High",
                 tipo="News",
@@ -338,16 +322,17 @@ def scrape_normattiva():
 
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Evita redirect su dominio senza www."""
+    """6. Gazzetta Ufficiale - Ultimi atti con link istituzionale statico pulito."""
     fonte = "Gazzetta Ufficiale"
-    url_scrape = "https://gazzettaufficiale.it"
-    url_link = "https://gazzettaufficiale.it"
+    url_scrape = "https://www.gazzettaufficiale.it"
+    url_statico = "https://www.gazzettaufficiale.it"
     aggiunti = 0
     try:
-        resp = scarica_senza_redirect_nudo(url_scrape, timeout=35)
+        resp = requests.get(url_scrape, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, url_link, limite=25)
+        articoli = estrai_articoli_generici(soup, url_statico, limite=25)
 
         if not articoli:
             for item in soup.select(".risultato, .elenco_atti li, article")[:25]:
@@ -355,7 +340,7 @@ def scrape_gazzetta_ufficiale():
                 if len(testo) > 25:
                     articoli.append({
                         "titolo": testo[:180],
-                        "link": url_link,
+                        "link": url_statico,
                         "descrizione": testo
                     })
 
@@ -364,7 +349,7 @@ def scrape_gazzetta_ufficiale():
                 titolo=art["titolo"],
                 fonte=fonte,
                 data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=url_link,
+                link=url_statico,
                 categoria="Normativa Generale",
                 importanza="High",
                 tipo="News",
@@ -374,6 +359,7 @@ def scrape_gazzetta_ufficiale():
     except Exception as e:
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_garante_privacy():
     """7. Garante per la Protezione dei Dati Personali - Provvedimenti e News lavoro."""
@@ -400,6 +386,8 @@ def scrape_garante_privacy():
     except Exception as e:
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
+
 # ==============================================================================
 # 4. SINCRONIZZAZIONE DIRETTA SU POSTGRESQL GLIDEOS + BLOCCO MAIN
 # ==============================================================================
