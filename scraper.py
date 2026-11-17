@@ -140,11 +140,28 @@ def classifica_notizia(titolo, descrizione=""):
 
     return categoria, importanza
 
+PAROLE_CHIAVE_PERTINENZA = [
+    "sicurezza", "lavoro", "lavorator", "infortun", "salute", "prevenzione",
+    "cantiere", "cantieri", "ediliz", "patente", "decreto", "legge", "normativa",
+    "bando", "isi", "scadenza", "ispettorato", "vigilanza", "sanzion", "dvr",
+    "sorveglianza", "medico", "amianto", "chimic", "macchinar", "impiant",
+    "formazione", "addestramento", "privacy", "gdpr", "garante", "videosorveglianza",
+    "inail", "ministero", "gazzetta", "81/08", "81/2008", "rischio", "rischi",
+    "dpi", "appalt", "subappalt", "malattia professionale", "impresa", "aziend"
+]
+
+def e_pertinente(titolo, descrizione=""):
+    """Verifica che la notizia riguardi sicurezza, lavoro, normativa, salute o privacy."""
+    testo = f"{titolo} {descrizione}".lower()
+    return any(kw in testo for kw in PAROLE_CHIAVE_PERTINENZA)
 
 def aggiungi_riga_locale(titolo, fonte, data_str, link, categoria=None, importanza=None, tipo="News", descrizione=""):
     """Aggiunge una riga al CSV locale evitando duplicati interni e salvando la Descrizione con hashtag."""
     titolo_pulito = pulisci_testo(titolo)
     if not titolo_pulito or len(titolo_pulito) < 12:
+        return False
+    
+    if not e_pertinente(titolo_pulito, descrizione):
         return False
 
     chiave = titolo_pulito.lower()
@@ -371,24 +388,23 @@ def scrape_normattiva():
 
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Ultimi atti con link diretto o istituzionale pulito."""
+    """6. Gazzetta Ufficiale - Estrae il link diretto al singolo atto/notizia."""
     fonte = "Gazzetta Ufficiale"
-    url_scrape = "https://www.gazzettaufficiale.it"
-    url_statico = "https://www.gazzettaufficiale.it"
+    url_base = "https://gazzettaufficiale.it"
     aggiunti = 0
     try:
-        resp = requests.get(url_scrape, headers=HEADERS_HTTP, timeout=20)
+        resp = requests.get(url_base, headers=HEADERS_HTTP, timeout=20)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, url_statico, limite=25)
+        articoli = estrai_articoli_generici(soup, url_base, limite=25)
 
         if not articoli:
-            for a_tag in soup.find_all("a", string=re.compile(r"Leggi la notizia", re.I))[:25]:
+            for a_tag in soup.find_all("a", string=re.compile(r"Leggi la notizia|Dettaglio|Atto", re.I))[:25]:
                 contenitore = a_tag.parent
                 testo = pulisci_testo(contenitore.get_text(" ", strip=True)) if contenitore else ""
                 testo = re.sub(r"Leggi la notizia", "", testo, flags=re.I).strip()
-                href = urljoin(url_statico, a_tag["href"]) if a_tag.get("href") else url_statico
+                href = urljoin(url_base, a_tag["href"]) if a_tag.get("href") else url_base
                 if len(testo) > 20:
                     articoli.append({
                         "titolo": testo[:180],
@@ -396,22 +412,13 @@ def scrape_gazzetta_ufficiale():
                         "descrizione": testo
                     })
 
-        if not articoli:
-            for item in soup.select(".risultato, .elenco_atti li, article")[:25]:
-                testo = pulisci_testo(item.get_text(" ", strip=True))
-                if len(testo) > 25:
-                    articoli.append({
-                        "titolo": testo[:180],
-                        "link": url_statico,
-                        "descrizione": testo
-                    })
-
         for art in articoli:
+            link_diretto = art["link"] if art["link"].startswith("http") else url_base
             if aggiungi_riga_locale(
                 titolo=art["titolo"],
                 fonte=fonte,
                 data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=art["link"],
+                link=link_diretto,
                 categoria="Normativa Generale",
                 importanza="High",
                 tipo="News",
@@ -424,22 +431,24 @@ def scrape_gazzetta_ufficiale():
 
 
 def scrape_garante_privacy():
-    """7. Garante per la Protezione dei Dati Personali - Provvedimenti e News lavoro."""
+    """7. Garante Privacy - Comunicati e provvedimenti con link diretto all'articolo."""
     fonte = "Garante Privacy"
-    url = "https://garanteprivacy.it"
+    url_base = "https://garanteprivacy.it"
+    url_news = "https://garanteprivacy.it/home/comunicati"
     aggiunti = 0
     try:
-        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
+        resp = requests.get(url_news, headers=HEADERS_HTTP, timeout=20)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, "https://garanteprivacy.it", limite=25)
+        articoli = estrai_articoli_generici(soup, url_base, limite=25)
         for art in articoli:
+            link_diretto = art["link"] if art["link"].startswith("http") else url_news
             if aggiungi_riga_locale(
                 titolo=art["titolo"],
                 fonte=fonte,
                 data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=art["link"],
+                link=link_diretto,
                 categoria="Privacy & Lavoro",
                 tipo="News",
                 descrizione=art["descrizione"]
@@ -448,6 +457,7 @@ def scrape_garante_privacy():
     except Exception as e:
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 # ==============================================================================
 # 4. SINCRONIZZAZIONE DIRETTA SU POSTGRESQL GLIDEOS + BLOCCO MAIN
 # ==============================================================================
@@ -471,6 +481,7 @@ def spingi_dati_a_glide():
         conn = psycopg2.connect(db_url)
         cur = conn.cursor()
         print("[DB] Connessione a PostgreSQL GlideOS riuscita.")
+                cur.execute("DELETE FROM news WHERE LOWER(title) LIKE '%cioccolato%';")
 
         # 0. Manutenzione automatica righe già esistenti (date ISO + hashtag nel summary + link Normattiva)
         cur.execute("""
