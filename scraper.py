@@ -481,7 +481,7 @@ def spingi_dati_a_glide():
         conn = psycopg2.connect(db_url)
         cur = conn.cursor()
         print("[DB] Connessione a PostgreSQL GlideOS riuscita.")
-                cur.execute("DELETE FROM news WHERE LOWER(title) LIKE '%cioccolato%';")
+        cur.execute("DELETE FROM news WHERE LOWER(title) LIKE '%cioccolato%';")
 
         # 0. Manutenzione automatica righe già esistenti (date ISO + hashtag nel summary + link Normattiva)
         cur.execute("""
