@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-17 02:46",
+  "updated_at": "2026-11-17 16:05",
   "subcategories": {
     "Edilizia & Cantieri": [
       "#PatenteACrediti",
@@ -37,6 +37,16 @@
     ]
   },
   "news": [
+    {
+      "id": 1794624309,
+      "title": "Giovani, formazione e lavoro: il Ministero a ExpoTraining 2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-17",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/giovani-formazione-e-lavoro-il-ministero-expotraining-2026",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Il 18 e 19 novembre a Fiera Milano City – Allianz MiCo, due giornate dedicate all’orientamento, alle competenze e alle opportunità per costruire il futuro professionale dei giovani | #FormazioneSicurezza"
+    },
     {
       "id": 1794624308,
       "title": "Lavoro su piattaforme, recepita la Direttiva UE",
@@ -1096,16 +1106,6 @@
       "category": "Normativa Generale",
       "importance": "Medium",
       "summary": "ANFOS SERVIZI eroga corsi di formazione per i lavoratori e per i datori di lavoro anche in Aula Virtuale. In particolare vengono proposti i corsi obbligatori introdotti dal Dlgs 81/2008 Testo Unico Sicurezza e dai successivi Accordi Stato-Regioni: | #PSC_POS #DLgs81_08 #FormazioneSicurezza"
-    },
-    {
-      "id": 1794624202,
-      "title": "Percorsi di cioccolato",
-      "source": "INAIL",
-      "date": "2026-11-16",
-      "official_link": "https://www.inail.it/portale/it/inail-comunica/multimedia/video-gallery/video.2026.09.videogallery-percorsi-di-cioccolato.html",
-      "category": "Normativa Generale",
-      "importance": "Medium",
-      "summary": "Il cortometraggio dedicato al reinserimento sociale delle donne realizzato per la Mostra internazionale d’arte cinematografica di Venezia | #DLgs81_08"
     },
     {
       "id": 1794624201,
