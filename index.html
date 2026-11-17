@@ -138,27 +138,75 @@
       <div id="deadlines-list"></div>
     </section>
 
-    <!-- TAB 4: IMPOSTAZIONI -->
+           <!-- TAB 4: IMPOSTAZIONI -->
     <section id="view-settings" class="view">
-      <div class="section-title"><span>Preferenze Avvisi (GDPR)</span></div>
-      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">
-        Nessun account richiesto. Le tue preferenze restano salvate in modo anonimo su questo dispositivo.
-      </p>
-      <div class="setting-row">
-        <div class="setting-info"><h3>Normativa Generale</h3><p>D.Lgs. 81/08, DVR, Gazzetta Ufficiale</p></div>
-        <label class="switch"><input type="checkbox" data-pref="notify_general" checked><span class="slider"></span></label>
+      <div class="section-title" style="font-size:1.35rem; margin-bottom:14px;"><span>Impostazioni</span></div>
+
+      <div class="card" style="cursor:default; margin-bottom:20px;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+          <div style="display:flex; gap:12px; align-items:flex-start;">
+            <div style="width:40px; height:40px; border-radius:10px; background:var(--gold-soft); border:1px solid rgba(224,168,30,0.35); display:flex; align-items:center; justify-content:center; font-size:1.15rem; flex-shrink:0;">🔔</div>
+            <div>
+              <h3 style="font-size:1rem; font-weight:700; color:#fff; margin-bottom:6px;">Notifiche su questo dispositivo</h3>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.4;">
+                Nessun login, nessuna email. Un identificativo anonimo salvato sul dispositivo collega le tue preferenze.
+              </p>
+              <div style="margin-top:10px;">
+                <span id="notif-status-badge" style="display:inline-block; padding:4px 10px; border-radius:8px; font-size:0.75rem; font-weight:700; background:rgba(16,185,129,0.18); color:#34d399;">
+                  Notifiche attive
+                </span>
+              </div>
+            </div>
+          </div>
+          <label class="switch" style="margin-top:2px;">
+            <input type="checkbox" id="master-notif-switch">
+            <span class="slider"></span>
+          </label>
+        </div>
       </div>
-      <div class="setting-row">
-        <div class="setting-info"><h3>Salute & Medicina</h3><p>Sorveglianza sanitaria, medico competente</p></div>
-        <label class="switch"><input type="checkbox" data-pref="notify_health" checked><span class="slider"></span></label>
+
+      <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.06em; color:var(--muted); margin-bottom:10px; text-transform:uppercase;">
+        MACRO-AREE
       </div>
-      <div class="setting-row">
-        <div class="setting-info"><h3>Edilizia & Cantieri</h3><p>Patente a crediti, ponteggi, PSC/POS</p></div>
-        <label class="switch"><input type="checkbox" data-pref="notify_construction" checked><span class="slider"></span></label>
+      <div id="macro-switches-box" style="background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:20px;">
+        <div style="padding:14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <span style="font-size:0.92rem; font-weight:600;">Notifiche Generali e Normative</span>
+          <label class="switch"><input type="checkbox" data-pref="notify_general" checked><span class="slider"></span></label>
+        </div>
+        <div style="padding:14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <span style="font-size:0.92rem; font-weight:600;">Salute e Sorveglianza Sanitaria</span>
+          <label class="switch"><input type="checkbox" data-pref="notify_health" checked><span class="slider"></span></label>
+        </div>
+        <div style="padding:14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <span style="font-size:0.92rem; font-weight:600;">Cantieri ed Edilizia</span>
+          <label class="switch"><input type="checkbox" data-pref="notify_construction"><span class="slider"></span></label>
+        </div>
+        <div style="padding:14px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <span style="font-size:0.92rem; font-weight:600;">Industria, Impianti e Macchine</span>
+          <label class="switch"><input type="checkbox" data-pref="notify_industry"><span class="slider"></span></label>
+        </div>
       </div>
-      <div class="setting-row">
-        <div class="setting-info"><h3>Industria & Impianti</h3><p>Macchinari, ATEX, rischio chimico</p></div>
-        <label class="switch"><input type="checkbox" data-pref="notify_industry"><span class="slider"></span></label>
+
+      <div class="card" style="cursor:default;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <span style="width:24px; height:24px; border-radius:50%; border:1.5px solid var(--gold); color:var(--gold); display:inline-flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800;">i</span>
+          <h3 style="font-size:1rem; font-weight:700; color:#fff;">Come funzionano</h3>
+        </div>
+        <p style="font-size:0.83rem; color:var(--muted); line-height:1.4; margin-bottom:14px;">
+          Riceverai aggiornamenti automatici solo per le macro-aree che hai attivato.
+        </p>
+        <div style="border-top:1px solid var(--border); padding:10px 0; display:flex; justify-content:space-between; gap:12px; font-size:0.83rem;">
+          <span style="color:var(--muted);">Dati personali</span>
+          <strong style="color:#fff; text-align:right;">Nessuna raccolta</strong>
+        </div>
+        <div style="border-top:1px solid var(--border); padding:10px 0; display:flex; justify-content:space-between; gap:12px; font-size:0.83rem;">
+          <span style="color:var(--muted);">Identificativo</span>
+          <strong style="color:#fff; text-align:right;">Anonimo, generato sul dispositivo<br><span id="device-anon-id" style="font-size:0.72rem; color:var(--gold); font-weight:500;"></span></strong>
+        </div>
+        <div style="border-top:1px solid var(--border); padding-top:10px; display:flex; justify-content:space-between; gap:12px; font-size:0.83rem;">
+          <span style="color:var(--muted);">Conformità</span>
+          <strong style="color:#fff; text-align:right;">🛡️ GDPR</strong>
+        </div>
       </div>
     </section>
   </div>
@@ -288,7 +336,51 @@
       document.getElementById("btn-top").style.display = window.scrollY > 350 ? "block" : "none";
     });
 
-    document.querySelectorAll("input[data-pref]").forEach(chk => {
+    let anonId = localStorage.getItem("opera_sicura_device_id");
+    if (!anonId) {
+      anonId = "OS-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+      localStorage.setItem("opera_sicura_device_id", anonId);
+    }
+    document.getElementById("device-anon-id").textContent = `ID: ${anonId}`;
+
+    const masterSwitch = document.getElementById("master-notif-switch");
+    const statusBadge = document.getElementById("notif-status-badge");
+    const macroInputs = document.querySelectorAll("input[data-pref]");
+    const macroBox = document.getElementById("macro-switches-box");
+
+    function aggiornaStatoNotificheUI(attive) {
+      masterSwitch.checked = attive;
+      localStorage.setItem("opera_sicura_notif_enabled", attive);
+      if (attive) {
+        statusBadge.textContent = "Notifiche attive";
+        statusBadge.style.background = "rgba(16,185,129,0.18)";
+        statusBadge.style.color = "#34d399";
+        macroBox.style.opacity = "1";
+        macroInputs.forEach(i => i.disabled = false);
+      } else {
+        statusBadge.textContent = "Notifiche disattivate";
+        statusBadge.style.background = "rgba(156,163,175,0.16)";
+        statusBadge.style.color = "#9ca3af";
+        macroBox.style.opacity = "0.5";
+        macroInputs.forEach(i => i.disabled = true);
+      }
+    }
+
+    const savedMaster = localStorage.getItem("opera_sicura_notif_enabled");
+    aggiornaStatoNotificheUI(savedMaster === null ? true : savedMaster === "true");
+
+    masterSwitch.addEventListener("change", async () => {
+      if (masterSwitch.checked) {
+        if ("Notification" in window && Notification.permission === "default") {
+          try { await Notification.requestPermission(); } catch (e) {}
+        }
+        aggiornaStatoNotificheUI(true);
+      } else {
+        aggiornaStatoNotificheUI(false);
+      }
+    });
+
+    macroInputs.forEach(chk => {
       const saved = localStorage.getItem(chk.dataset.pref);
       if (saved !== null) chk.checked = (saved === "true");
       chk.addEventListener("change", () => localStorage.setItem(chk.dataset.pref, chk.checked));
