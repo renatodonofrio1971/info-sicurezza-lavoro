@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-18 12:33",
+  "updated_at": "2026-11-18 15:21",
   "subcategories": {
     "Edilizia & Cantieri": [
       "#PatenteACrediti",
@@ -37,6 +37,626 @@
     ]
   },
   "news": [
+    {
+      "id": 1794624374,
+      "title": "Briciole di pane",
+      "source": "Garante Privacy",
+      "date": "2026-11-18",
+      "official_link": "https://www.garanteprivacy.it",
+      "category": "Privacy & Lavoro",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da Garante Privacy: Briciole di pane. | #GDPRLavoro #BandoISI"
+    },
+    {
+      "id": 1794624373,
+      "title": "Scuola-Lavoro, un fondo per l’indennizzo dell’infortunio mortale",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/priorita/pagine/scuola-lavoro-fondo-per-indennizzo-infortunio-mortale",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "​A passo spedito verso un Fondo per l'indennizzo dell'infortunio mortale durante lo svolgimento delle attività formative. Ad annunciarlo il Ministro del Lavoro e delle Politiche Sociali, Marina Calderone, durante la conferenza stampa di presentazione del bando Isi 2022 di questa mattina nella sede… | #BandoISI"
+    },
+    {
+      "id": 1794624372,
+      "title": "Decreto ministeriale n. 114 del 7 settembre 2023",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/normative/pagine/decreto-ministeriale-n-114-del-7-settembre-2023",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Fondo di sostegno per le famiglie delle vittime di gravi infortuni sul lavoro. Integrazione anno 2023 | #DLgs81_08"
+    },
+    {
+      "id": 1794624371,
+      "title": "Rifinanziato il Fondo di sostegno per le famiglie delle vittime di gravi infortuni sul lavoro",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/notizie/pagine/rifinanziato-il-fondo-di-sostegno-le-famiglie-delle-vittime-di-gravi-infortuni-sul",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Adottato il decreto del Ministro del Lavoro e delle Politiche Sociali 7 settembre 2023, n. | #DLgs81_08"
+    },
+    {
+      "id": 1794624370,
+      "title": "Decreto ministeriale n. 114 del 5 luglio 2024",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/normative/pagine/decreto-ministeriale-n.-114-del-5-luglio-2024",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Rivalutazione delle prestazioni economiche per infortunio sul lavoro e malattia professionale per i settori industria e navigazione con decorrenza 1° luglio 2024, sulla base della deliberazione del Consiglio di amministrazione INAIL del 29 maggio 2024, n. 20 | #MalattieProfessionali"
+    },
+    {
+      "id": 1794624369,
+      "title": "Il Ministero del Lavoro e delle Politiche Sociali e l’Ispettorato Nazionale del Lavoro alla 34^ edizione di Ambiente Lavoro",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/notizie/pagine/il-ministero-del-lavoro-e-delle-politiche-sociali-e-l-ispettorato-nazionale-del-lavoro-alla-34-edizione-di-ambiente-lavoro",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Dal 19 al 21 novembre 2024, il Ministero del Lavoro e delle Politiche Sociali, insieme all’Ispettorato Nazionale del Lavoro (INL), prenderà parte alla 34^ edizione di Ambiente Lavoro, l’evento dedicato alla salute e sicurezza nei luoghi di lavoro, che si svolgerà presso il quartiere fieristico di… | #SanzioniINL"
+    },
+    {
+      "id": 1794624368,
+      "title": "Rafforzato il sostegno alle famiglie di vittime di infortuni mortali sul lavoro",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/stampa-e-media/comunicati/pagine/rafforzato-il-sostegno-alle-famiglie-di-vittime-di-infortuni",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Le risorse del Fondo di sostegno alle famiglie delle vittime di gravi infortuni sul lavoro per l’esercizio finanziario 2025 superano i 12 milioni di euro. Con il Decreto ministeriale 28 maggio 2025, n. | #DLgs81_08"
+    },
+    {
+      "id": 1794624367,
+      "title": "Decreto ministeriale n. 58 dell'11 maggio 2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/normative/pagine/decreto-ministeriale-58-del-11052026",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Rivalutazione delle prestazioni economiche per infortunio sul lavoro e malattia professionale per i settori industria e navigazione con decorrenza 1° luglio 2026, di cui alla deliberazione del Consiglio di amministrazione dell’INAIL del 9 aprile 2026, n. 41 | #MalattieProfessionali"
+    },
+    {
+      "id": 1794624366,
+      "title": "Il Ministro Calderone chiede una Giornata europea per le vittime degli incidenti sul lavoro: \"La tutela dei lavoratori è pilastro fondamentale dell’Europa\"",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/stampa-e-media/comunicati/pagine/ministro-calderone-chiede-giornata-europea-vittime-lavoro",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Il Ministro del Lavoro e delle Politiche Sociali Marina Calderone ha chiesto oggi l’istituzione di una Giornata europea in memoria delle vittime degli incidenti sul lavoro e la protezione e la dignità dei lavoratori, durante la riunione del Consiglio EPSCO, a Lussemburgo. | #PSC_POS"
+    },
+    {
+      "id": 1794624365,
+      "title": "Rafforzato ancora il sostegno alle famiglie delle vittime di infortuni mortali sul lavoro",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/stampa-e-media/comunicati/pagine/rafforzato-ancora-il-sostegno-alle-famiglie-delle-vittime-di-infortuni-mortali-sul-lavoro",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Le risorse del Fondo di sostegno alle famiglie delle vittime di gravi infortuni sul lavoro per l’esercizio finanziario 2026 superano i 40 milioni di euro. Con il decreto del Ministro del Lavoro e delle Politiche Sociali n. | #DLgs81_08"
+    },
+    {
+      "id": 1794624364,
+      "title": "Risultati della ricerca per l'argomento: \"Infortuni sul lavoro\"",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/stampa-e-media/comunicati/pagine/rafforzato-ancora-il-sostegno-alle-famiglie-delle-vittime-di-infortuni-mortali-sul-lavoro",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Le risorse del Fondo di sostegno alle famiglie delle vittime di gravi infortuni sul lavoro per l’esercizio finanziario 2026 superano i 40 milioni di euro. Con il decreto del Ministro del Lavoro e delle Politiche Sociali n. | #DLgs81_08"
+    },
+    {
+      "id": 1794624363,
+      "title": "Interpello ai sensi dell'articolo 12 del d.lgs. n. 81/2008 e successive modificazioni. Formazione dei preposti in materia di salute e sicurezza sul lavoro - aggiornamento biennale o quinquennale - richiesta indicazioni",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-ai-sensi-dell-articolo-12-del-d-lgs-n-81-2008-e-successive-modificazioni-formazione-dei-preposti-in-materia-di-salute-e-sicurezza-sul-lavoro",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "La Commissione, nel condividere quanto riportato nella “Tesi B” dall’istante, ritiene che, sulla base della citata normativa, le novità introdotte dal comma 7-ter dell’articolo 37 del decreto legislativo del 9 aprile 2008, n. | #PSC_POS #DLgs81_08 #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624362,
+      "title": "Interpello ai sensi dell'articolo 12 del D.lgs. n. 81/2008 e successive modificazioni. Quesito sull’aggiornamento dei preposti. Seduta della Commissione del 21 novembre 2024",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-ai-sensi-art-12-del-D-lgs-81-2008-e-smi-seduta-del-21112024",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Commissione ribadisce quanto già esplicitato nell’interpello n. 6 del 24 ottobre 2024 e pertanto, ritiene che, sulla base della citata normativa, le novità introdotte dal comma 7-ter dell’articolo 37 del decreto legislativo del 9 aprile 2008, n. | #PSC_POS #DLgs81_08"
+    },
+    {
+      "id": 1794624361,
+      "title": "Quesito in materia di formazione (art. 37 comma 2 del D.Lgs. 81/08) relativa al numero di partecipanti ai corsi rivolti agli studenti universitari che rientrano nella definizione di \"lavoratori equiparati\"",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/quesito-materia-di-formazione-art-37-comma-2-del-D-lgs-81-08",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "La Commissione (...) ritiene di non poter formulare un riscontro in ordine alla valenza dei contenuti della formazione e della metodologia di insegnamento proposti, ai fini dell’assolvimento dell’obbligo formativo in questione | #PSC_POS #DLgs81_08 #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624360,
+      "title": "Interpello n. 1 del 18 settembre 2025",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-1-del-18092025",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Interpello ai sensi dell'articolo 12 del d.lgs. n. 81/2008 e successive modificazioni “percorsi formativi in materia di sicurezza per i docenti delle scuole di ogni ordine e grado e delle Università”. Seduta della Commissione del 18 settembre 2025 | #DLgs81_08 #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624359,
+      "title": "Interpello n. 1 / 2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-1-del-16-aprile-2026",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Interpello ai sensi dell'articolo 12 del Decreto legislativo n. 81/2008, in merito alle “norme che regolano la formazione obbligatoria per l’aggiornamento della figura del Responsabile della Prevenzione e Protezione negli ambienti di lavoro e dispone alcune modifiche per l’attività di Coordinatore… | #DLgs81_08 #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624358,
+      "title": "Interpello n. 2 / 2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-2-2026",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "Interpello ai sensi dell'articolo 12 del D.lgs. n. 81/2008 e successive modificazioni, in merito a: “Compatibilità ruolo di Rappresentante dei Lavoratori per la Sicurezza ex artt. 47 e segg. del D.lgs. 81/2008 e ruolo di Ufficiale di Polizia Giudiziaria dell’Organo di Vigilanza in salute e… | #DLgs81_08 #SanzioniINL"
+    },
+    {
+      "id": 1794624357,
+      "title": "Interpello n. 3/2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-n-3-2026",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Interpello ai sensi dell'articolo 12 del D.lgs. n. 81/2008 e successive modificazioni, in merito all’“Applicazione della normativa in materia di videoterminalisti ai sensi del D.Lgs. n. 81/2008 per gli agenti di stazione ANM METROPOLITANA DI NAPOLI.” Seduta della Commissione del 24 settembre 2026 | #DLgs81_08"
+    },
+    {
+      "id": 1794624356,
+      "title": "Interpello n. 4/2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-n-4-2026",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Interpello ai sensi dell'articolo 12 del D.lgs. n. 81/2008 e successive modificazioni, in merito a: “Compatibilità tra le funzioni di Rappresentante dei Lavoratori per la Sicurezza (RLS) e Coordinatore per la Sicurezza in fase di Progettazione (CSP)”. Seduta della Commissione del 24 settembre 2026 | #DLgs81_08"
+    },
+    {
+      "id": 1794624355,
+      "title": "Interpello n. 5/2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-n-5-del-22102026",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Interpello ai sensi dell'articolo 12 del D.lgs. n. 81/2008 e successive modificazioni. Seduta della Commissione del 22 ottobre 2026 | #DLgs81_08"
+    },
+    {
+      "id": 1794624354,
+      "title": "Risultati della ricerca per l'argomento: \"Salute e sicurezza sul lavoro\"",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-n-5-del-22102026",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Interpello ai sensi dell'articolo 12 del D.lgs. n. 81/2008 e successive modificazioni. Seduta della Commissione del 22 ottobre 2026 | #DLgs81_08"
+    },
+    {
+      "id": 1794624353,
+      "title": "Evento - Giornata della salute e sicurezza sul lavoro",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/notizie/pagine/evento-giornata-della-salute-e-sicurezza-sul-lavoro",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Domani, a partire dalle 9.30, presso l’Auditorium Antonio Maglio dell’Inail (Piazzale Giulio Pastore 6, Roma) si terrà la giornata dedicata alle strategie più innovative per la prevenzione e la sicurezza nei luoghi di lavoro. Le conclusioni sono affidate al Ministro del Lavoro e delle Politiche… | #DLgs81_08"
+    },
+    {
+      "id": 1794624352,
+      "title": "Giornata della salute e sicurezza sul lavoro",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/notizie/pagine/giornata-della-salute-e-sicurezza-sul-lavoro-2025",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Martedì 21 ottobre scorso, presso l’Auditorium Antonio Maglio dell’Inail (Piazzale Giulio Pastore 6, Roma) si è svolta la giornata dedicata alle strategie più innovative per la prevenzione e la sicurezza nei luoghi di lavoro. | #DLgs81_08 #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624351,
+      "title": "Interpello n. 2 del 20 novembre 2025",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/interpelli/pagine/interpello-2-del-20-novembre-2025",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Richiesta di parere in merito all'applicazione del Titolo - II LUOGO DI LAVORO nell'esercizio della campagna antincendio boschivo della Regione Siciliana | #DLgs81_08"
+    },
+    {
+      "id": 1794624350,
+      "title": "Decreto direttoriale n. 4 del 26 gennaio 2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/normative/pagine/DD-4-del-26-gennaio-2026",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "68° Elenco dei soggetti abilitati per l’effettuazione delle verifiche periodiche delle attrezzature di lavoro | #DLgs81_08"
+    },
+    {
+      "id": 1794624349,
+      "title": "Decreto ministeriale n. 64 del 14 maggio 2026",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/documenti-e-norme/normative/pagine/decreto-ministeriale-64-del-14052026",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Decreto del Ministro del Lavoro e delle Politiche Sociali del 14 maggio 2026, n. 64, concernente “Sostituzione nella composizione della Commissione scientifica per l’elaborazione e la revisione periodica dell’elenco e delle tabelle delle malattie professionali”, presso l’INAIL, ai sensi dell'… | #PSC_POS #MalattieProfessionali"
+    },
+    {
+      "id": 1794624348,
+      "title": "Sicurezza sul lavoro, le comunicazioni del Ministro in Parlamento",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/notizie/pagine/sicurezza-sul-lavoro-le-comunicazioni-del-ministro-parlamento",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Il Ministro del Lavoro e delle Politiche Sociali Marina Calderone ha illustrato alla Camera dei Deputati la Relazione annuale sullo stato della sicurezza nei luoghi di lavoro, tracciando un quadro che conferma la svolta impressa nel 2025 alle politiche in materia. | #DLgs81_08"
+    },
+    {
+      "id": 1794624347,
+      "title": "Stati generali Sicurezza sul lavoro, il Ministro Calderone: “Impegno continuo e costante”",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/stampa-e-media/comunicati/pagine/stati-generali-sicurezza-sul-lavoro-il-ministro-calderone-impegno",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Si sono aperti nella Sala della Regina della Camera dei Deputati i lavori della terza edizione degli Stati Generali della Sicurezza sul Lavoro, promossi dalla Presidente della Commissione parlamentare d’inchiesta sulle condizioni di lavoro in Italia, Chiara Gribaudo, in collaborazione con la… | #DLgs81_08"
+    },
+    {
+      "id": 1794624346,
+      "title": "Risultati della ricerca per l'argomento: \"Sicurezza sul lavoro\"",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.lavoro.gov.it/stampa-e-media/comunicati/pagine/stati-generali-sicurezza-sul-lavoro-il-ministro-calderone-impegno",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Si sono aperti nella Sala della Regina della Camera dei Deputati i lavori della terza edizione degli Stati Generali della Sicurezza sul Lavoro, promossi dalla Presidente della Commissione parlamentare d’inchiesta sulle condizioni di lavoro in Italia, Chiara Gribaudo, in collaborazione con la… | #DLgs81_08"
+    },
+    {
+      "id": 1794624345,
+      "title": "ITL Potenza-Matera: controlli straordinari nel settore della ristorazione. Verificati 34 lavoratori",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.ispettorato.gov.it/2026/11/18/itl-potenza-matera-controlli-straordinari-nel-settore-della-ristorazione-verificati-34-lavoratori/",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "L'attività ispettiva ha interessato quattro comuni e consentito di accertare diverse irregolarità nei rapporti di lavoro | #DLgs81_08"
+    },
+    {
+      "id": 1794624344,
+      "title": "Progetto ALT Caporalato T.R.E. – IAM Reggio Calabria: Irregolari 18 lavoratori in agricoltura e nel commercio",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.ispettorato.gov.it/2026/11/17/progetto-alt-caporalato-t-r-e-iam-reggio-calabria-irregolari-18-lavoratori-in-agricoltura-e-nel-commercio/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da Ispettorato Nazionale del Lavoro: Progetto ALT Caporalato T.R.E. – IAM Reggio Calabria: Irregolari 18 lavoratori in agricoltura e nel commercio. | #SanzioniINL"
+    },
+    {
+      "id": 1794624343,
+      "title": "INL presente all’EIMA – Esposizione Internazionale di Macchine per l’Agricoltura e il Giardinaggio di Bologna",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://www.ispettorato.gov.it/2026/11/16/inl-alleima-di-bologna/",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Intervento sulla “tutela dei lavoratori e contrasto al dumping nel settore agricolo\" | #PSC_POS"
+    },
+    {
+      "id": 1794624342,
+      "title": "Lavoro da remoto, normativa post Covid, sicurezza, Eu-Osha",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/notizie-lavoro-tecnologia/notizie-lavoro-studenti/lavoro-da-remoto-normativa-post-covid-sicurezza-eu-osha.htm",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Lavoro a distanza. Questo il tema di tre nuove pubblicazioni Eu-Osha che vanno ad affrontare alcuni degli argomenti della campagna… | #PSC_POS"
+    },
+    {
+      "id": 1794624341,
+      "title": "Domande per il Fondo vittime amianto porti 2021 e 2022, info e date Inail",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/approfondimenti/amianto-lotta/circolare-inail-fondo-amianto-portuali-43-2-dicembre-2022.htm",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "Pubblicate da Inail con la circolare n. 43 del 2 dicembre 2022 istruzioni per le domande per l’accesso al Fondo… | #Amianto"
+    },
+    {
+      "id": 1794624340,
+      "title": "Dal 20 al 22 ottobre alla Camera gli Stati Generali della Sicurezza sul Lavoro",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/eventi/convegni/stati-generali-sicurezza-lavoro-camera-2026.htm",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Si terrà a Roma da martedì 20 a giovedì 22 ottobre, nella Sala della Regina di Montecitorio, la terza edizione… | #DLgs81_08"
+    },
+    {
+      "id": 1794624339,
+      "title": "Bando Isi Inail 2025, elenchi cronologici provvisori No Click Day",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/formazione/bandi/elenchi-no-click-day-inail-bando-isi-2025.htm",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Bando Isi Inail 2025. Sono stati pubblicati da Inail il 3 giugno gli elenchi cronologici provvisori No Click Day del… | #BandoISI"
+    },
+    {
+      "id": 1794624338,
+      "title": "Inl, patente a crediti, comunicazione nuovi requisiti per ulteriori crediti",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/sicurezza-sul-lavoro/brevi/nota-inl-2-novembre-2026-patente-crediti.htm",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da ANFOS - Quotidiano Sicurezza: Inl, patente a crediti, comunicazione nuovi requisiti per ulteriori crediti. | #PatenteACrediti"
+    },
+    {
+      "id": 1794624337,
+      "title": "Formazione sicurezza, sospensione lavoro nero, turismo, circolare Inl",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/normativa/leggi/circolare-inl-2377-ottobre-2026.htm",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da ANFOS - Quotidiano Sicurezza: Formazione sicurezza, sospensione lavoro nero, turismo, circolare Inl. | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624336,
+      "title": "Modifiche Direttiva UE esposizione agenti cancerogeni, mutageni",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/normativa/leggi/direttiva-2450-2026-ue.htm",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Aggiornamento istituzionale da ANFOS - Quotidiano Sicurezza: Modifiche Direttiva UE esposizione agenti cancerogeni, mutageni. | #PSC_POS"
+    },
+    {
+      "id": 1794624335,
+      "title": "Crediti aggiuntivi patente a crediti, circolare Inl n.2469 6 novembre 2026",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/normativa/leggi/circolare-2469-6-novembre-2026.htm",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da ANFOS - Quotidiano Sicurezza: Crediti aggiuntivi patente a crediti, circolare Inl n.2469 6 novembre 2026. | #PatenteACrediti"
+    },
+    {
+      "id": 1794624334,
+      "title": "Interpello sicurezza sul lavoro n.5/2026",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/normativa/leggi/interpello-sicurezza-5-ottobre-2026.htm",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da ANFOS - Quotidiano Sicurezza: Interpello sicurezza sul lavoro n.5/2026. | #DLgs81_08"
+    },
+    {
+      "id": 1794624333,
+      "title": "News sulla sicurezza sul lavoro e salute, gli aggiornamenti e gli approfondimenti dal blog di ANFOS.",
+      "source": "ANFOS - Quotidiano Sicurezza",
+      "date": "2026-11-18",
+      "official_link": "https://www.quotidianosicurezza.it/?feed=rss2",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Aggiornamento istituzionale da ANFOS - Quotidiano Sicurezza: News sulla sicurezza sul lavoro e salute, gli aggiornamenti e gli approfondimenti dal blog di ANFOS.. | #DLgs81_08"
+    },
+    {
+      "id": 1794624332,
+      "title": "Patente a crediti, la nota INL sui crediti ulteriori: fissi e mobili",
+      "source": "ANFOS",
+      "date": "2026-11-18",
+      "official_link": "https://www.anfos.it/patente-a-crediti-nota-inl-crediti-ulteriori/",
+      "category": "Edilizia & Cantieri",
+      "importance": "High",
+      "summary": "Con la nota n. 2469 del 6 novembre 2026 l'Ispettorato nazionale del lavoro ha fornito le indicazioni per il riconoscimento dei crediti ulteriori della patente a… | #PatenteACrediti #SanzioniINL"
+    },
+    {
+      "id": 1794624331,
+      "title": "Cereulide nelle formule per lattanti: approvato un criterio di sicurezza permanente",
+      "source": "ANFOS",
+      "date": "2026-11-18",
+      "official_link": "https://www.anfos.it/cereulide-formule-lattanti-criterio-sicurezza/",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Il 6 novembre 2026 gli Stati membri hanno approvato la proposta della Commissione europea di introdurre un criterio permanente di sicurezza alimentare per la cereulide nelle… | #PSC_POS"
+    },
+    {
+      "id": 1794624330,
+      "title": "Voci di ANFOS · Il podcast",
+      "source": "ANFOS",
+      "date": "2026-11-18",
+      "official_link": "https://www.anfos.it/voci-di-anfos-il-podcast-sulla-sicurezza-sul-lavoro/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Puntate brevi sulla sicurezza sul lavoro, da ascoltare quando vuoi. | #DLgs81_08"
+    },
+    {
+      "id": 1794624329,
+      "title": "Sicurezza sul lavoro",
+      "source": "ANFOS",
+      "date": "2026-11-18",
+      "official_link": "https://www.anfos.it/sicurezza/",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Le schede su obblighi, figure, rischi e valutazione dei rischi, aggiornate alla normativa in vigore. | #DLgs81_08 #DVR"
+    },
+    {
+      "id": 1794624328,
+      "title": "Accordo Stato-Regioni 2025",
+      "source": "ANFOS",
+      "date": "2026-11-18",
+      "official_link": "https://www.anfos.it/nuovo-accordo-unico-stato-regioni-sulla-formazione-alla-sicurezza-17-04-2025/",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "La guida al nuovo accordo sulla formazione: durate, aggiornamenti ed e-learning per ogni figura della sicurezza. | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624327,
+      "title": "“A che ora torni?”: la sicurezza nei cantieri sale sul palco con chi la vive ogni giorno",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.a-che-ora-torni-la-sicurezza-nei-cantieri-sale-sul-palco-con-chi-la-vive-ogni-giorno.html",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "In scena il progetto teatrale, patrocinato da Inail Lombardia, per raccontare il dramma delle morti sul lavoro attraverso l’esperienza diretta | #CantieriTemporanei"
+    },
+    {
+      "id": 1794624326,
+      "title": "Tour della legalità, Inail Marche e Prefettura di Ancona insieme per la settima tappa",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.tour-della-legalit--inail-marche-e-prefettura-di-ancona-insieme-per-la-settima-tappa.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "L’iniziativa è stata dedicata alla sicurezza stradale e alla prevenzione degli incidenti | #DLgs81_08"
+    },
+    {
+      "id": 1794624325,
+      "title": "Tutela dei lavoratori, firmato a Torino un nuovo protocollo d’intesa",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/news/notizia.2026.11.tutela-dei-lavoratori--firmato-a-torino-un-nuovo-protocollo-d-intesa.html",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "L’accordo è stato sottoscritto tra Inail Piemonte e gli Istituti di patronato per migliorare la qualità dei servizi per infortunio o malattia professionale | #MalattieProfessionali"
+    },
+    {
+      "id": 1794624324,
+      "title": "La tossicità dello sviluppo del feto - Il ruolo dell'esposizione occupazionale maschile ad agenti chimici",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale/catalogo-generale-dettaglio.2026.10.pubbl-tossicita-sviluppo-feto.html",
+      "category": "Industria & Impianti",
+      "importance": "Medium",
+      "summary": "La tossicità dello sviluppo comprende gli eventi avversi per la prole dovuti all’esposizione dei genitori prima del concepimento o durante le fasi prenatali e p... | #PSC_POS #RischioChimico"
+    },
+    {
+      "id": 1794624323,
+      "title": "Infor.MO, Fattori di rischio e modalità infortunistiche nelle attività manutentive",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale/catalogo-generale-dettaglio.2026.10.pubbl-informo-fattori-di-rischip-modalita-infortunistiche-attivita-manutentive.html",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "La scheda analizza gli infortuni mortali e gravi avvenuti nel settore manifatturiero durante le attività di manutenzione, registrati nel sistema di sorveglianza... | #DVR"
+    },
+    {
+      "id": 1794624322,
+      "title": "Silice cristallina respirabile nei cantieri - Dal materiale alla prevenzione dell’esposizione",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale/catalogo-generale-dettaglio.2026.10.pubbl-silice-cristallina-respirabile-nei-cantieri.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Il rischio da silice cristallina respirabile nei cantieri viene inquadrato collegando la natura dei materiali alle lavorazioni, alla produzione e dispersione de... | #CantieriTemporanei #PSC_POS #DLgs81_08 #DVR"
+    },
+    {
+      "id": 1794624321,
+      "title": "Strumenti digitali e metodologie esperienziali per la prevenzione nel lavoro agile",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale/catalogo-generale-dettaglio.2026.11.pubblicazioni-strumenti-digitali-metodologia.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Il fact sheet presenta un modulo sviluppato dal DIT per la formazione esperienziale sui rischi del lavoro agile, basato sull'integrazione di simulazione digital... | #ControlloADistanza #DLgs81_08 #DVR #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624320,
+      "title": "Prevenzione incendi negli edifici di civile abitazione - La Regola Tecnica Verticale v. 14 del Codice di prevenzione incendi",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale/catalogo-generale-dettaglio.2026.11.pubbl-prevenzione-incendi-negli-edifici-di-civile-abitazione-v-14.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Nella presente pubblicazione viene affrontata la ristrutturazione di un edificio a torre, attualmente destinato ad uffici, da riconvertire ad uso residenziale, ... | #DLgs81_08"
+    },
+    {
+      "id": 1794624319,
+      "title": "Il ruolo del medico competente nella promozione della salute riproduttiva",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale/catalogo-generale-dettaglio.2026.11.pubbl-il-ruolo-del-medico.html",
+      "category": "Salute & Medicina",
+      "importance": "Medium",
+      "summary": "La salute riproduttiva rappresenta una componente fondamentale del benessere individuale e collettivo. | #MedicoCompetente"
+    },
+    {
+      "id": 1794624318,
+      "title": "Indicazioni operative per la prevenzione del rischio da agenti biologici nei lavoratori dei laboratori di ricerca",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale/catalogo-generale-dettaglio.2026.11.pubbl-indicazioni-operative-prevenzione-rischio-agent-biologici-2026.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Il manuale “Indicazioni operative per la prevenzione del rischio da agenti biologici nei lavoratori dei laboratori di ricerca” nasce come guida pratica per cont... | #DLgs81_08 #DVR"
+    },
+    {
+      "id": 1794624317,
+      "title": "Accordo tra Inail Dr liguria, Autorità di Sistema Portuale del Mar Ligure Occidentale e ATS Liguria ASL3",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/atti-e-documenti/protocolli-accordi-e-convenzioni/protocolli-e-accordi/protocollo-e-accordo.2026.10.prac-accordo-inail-liguria-asl3-sistema-portuale.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Accordo per lo sviluppo di interventi diretti a rafforzare il sistema della prevenzione e sicurezza nell’ambito del porto di Genova. | #DLgs81_08"
+    },
+    {
+      "id": 1794624316,
+      "title": "Protocollo d'intesa tra Inail Dr Sicilia e l'Autorità di Sistema Portuale dello Stretto",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/atti-e-documenti/protocolli-accordi-e-convenzioni/protocolli-e-accordi/protocollo-e-accordo.2026.10.prac-inail-adsp-stretto-messina.html",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Protocollo d'intesa per la programmazione di iniziative congiunte finalizzate alla promozione della cultura della salute e sicurezza sul lavoro in ambito portuale. | #DLgs81_08"
+    },
+    {
+      "id": 1794624315,
+      "title": "Protocollo d'intesa tra Inail Dr Sicilia e l’Autorità di Sistema Portuale del Mare di Sicilia Orientale",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/atti-e-documenti/protocolli-accordi-e-convenzioni/protocolli-e-accordi/protocollo-e-accordo.2026.10.prot-int-dr-sic-autorita-portuale-mare-orientale-ott-2026.html",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Protocollo d'intesa per la programmazione di iniziative congiunte finalizzate alla promozione della cultura della salute e sicurezza sul lavoro in ambito portuale. | #DLgs81_08"
+    },
+    {
+      "id": 1794624314,
+      "title": "Protocollo d'intesa tra Inail Dr Lombardia e Assimpredil Ance - Associazione delle imprese edili e complementari delle province di Milano, Lodi, Monza e Brianza",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/atti-e-documenti/protocolli-accordi-e-convenzioni/protocolli-e-accordi/protocollo-e-accordo.2026.10.prac-protocollo-inail-lombardia-assimpredil-ance.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Protocollo d'intesa per la realizzazione di iniziative di promozione e informazione per lavoratori e datori di lavoro delle imprese del settore edile. | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624313,
+      "title": "Accordo attuativo tra Inail Direzione regionale Puglia, ANCI Puglia, CPT Puglia centrale e altri",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/atti-e-documenti/protocolli-accordi-e-convenzioni/protocolli-e-accordi/protocollo-e-accordo.2026.10.prac-accordo-collaborazione-puglia-infortunistico.html",
+      "category": "Normativa Generale",
+      "importance": "High",
+      "summary": "Accordo per la realizzazione di iniziative informative tese ad incidere sul fenomeno infortunistico, in particolare rispetto agli eventi gravi e mortali nel settore delle costruzioni. | #DLgs81_08"
+    },
     {
       "id": 1794624312,
       "title": "Reti pedonabili, pubblicata la norma Uni 11808-5",
@@ -539,6 +1159,13 @@
       "due_date": "2026-11-16",
       "notes": "Dall’Inail 14,4 milioni di euro per lo sviluppo di progetti di ricerca ad alto tasso di innovazione in collaborazione con il mondo accademico e scientifico",
       "official_link": "https://www.inail.it/portale/ricerca-e-tecnologia/it/come-fare-per/bandi-di-ricerca-in-collaborazione--bric-/bando-bric-2025.html"
+    },
+    {
+      "id": 1794499064,
+      "title": "Sostanze tossiche per la riproduzione: diagramma decisionale per la valutazione e gestione del rischio per la salute riproduttiva",
+      "due_date": "2026-11-18",
+      "notes": "Il fact sheet propone una procedura per la valutazione del rischio di esposizione a sostanze tossiche per la riproduzione non cancerogene e non mutagene, chiare... | #PSC_POS #DVR",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale/catalogo-generale-dettaglio.2026.10.pubblicazioni-catalogo-fact-sheet-sostanze-tossiche-riproduzione.html"
     },
     {
       "id": 1794499060,
