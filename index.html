@@ -255,22 +255,32 @@
 
     function createCardHTML(item, isDeadline = false) {
       const link = item.official_link || "https://normattiva.it";
-      const dateStr = formatDateIt(isDeadline ? item.due_date : item.date);
+      const rawDate = isDeadline ? item.due_date : item.date;
+      const dateStr = formatDateIt(rawDate);
+      const todayIso = new Date().toISOString().slice(0, 10);
+      const isExpired = isDeadline && rawDate && rawDate < todayIso;
+
       const source = isDeadline ? "Scadenza Ufficiale" : (item.source || "Fonte Ufficiale");
       const desc = isDeadline ? (item.notes || "") : (item.summary || "");
+      const expiredBadge = isExpired
+        ? `<span style="background:rgba(239,68,68,0.2); color:#f87171; border:1px solid rgba(239,68,68,0.45); padding:2px 7px; border-radius:6px; font-weight:800; font-size:0.7rem; letter-spacing:0.03em;">SCADUTA</span>`
+        : "";
       const impBadge = (!isDeadline && item.importance === "High") ? `<span class="imp-high">● Urgente</span>` : "";
       const catLine = (!isDeadline && item.category) ? `<div class="card-cat">${item.category}</div>` : "";
+      const cardStyle = isExpired ? `style="border-color:rgba(239,68,68,0.45);"` : "";
+
       return `
-        <a class="card" href="${link}" target="_blank" rel="noopener noreferrer">
+        <a class="card" ${cardStyle} href="${link}" target="_blank" rel="noopener noreferrer">
           <div class="card-meta">
             <span class="source-pill">${source}</span>
-            <span>${impBadge} ${dateStr}</span>
+            <span style="display:inline-flex; align-items:center; gap:6px;">${expiredBadge} ${impBadge} ${dateStr}</span>
           </div>
           <div class="card-title">${item.title}</div>
           <div class="card-desc">${desc}</div>
           ${catLine}
         </a>`;
     }
+
 
     function renderAll() {
       const today = new Date().toISOString().slice(0, 10);
