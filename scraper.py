@@ -386,9 +386,8 @@ def scrape_normattiva():
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
-
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Estrae il link diretto al singolo atto/notizia."""
+    """6. Gazzetta Ufficiale - Usa sempre www.gazzettaufficiale.it e estrae i link diretti."""
     fonte = "Gazzetta Ufficiale"
     url_base = "https://gazzettaufficiale.it"
     aggiunti = 0
@@ -429,21 +428,19 @@ def scrape_gazzetta_ufficiale():
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
-
 def scrape_garante_privacy():
-    """7. Garante Privacy - Comunicati e provvedimenti con link diretto all'articolo."""
+    """7. Garante Privacy - Usa la homepage ufficiale funzionante con link diretti."""
     fonte = "Garante Privacy"
-    url_base = "https://garanteprivacy.it"
-    url_news = "https://garanteprivacy.it/home/comunicati"
+    url_base = "https://www.garanteprivacy.it"
     aggiunti = 0
     try:
-        resp = requests.get(url_news, headers=HEADERS_HTTP, timeout=20)
+        resp = requests.get(url_base, headers=HEADERS_HTTP, timeout=20)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
         articoli = estrai_articoli_generici(soup, url_base, limite=25)
         for art in articoli:
-            link_diretto = art["link"] if art["link"].startswith("http") else url_news
+            link_diretto = art["link"] if art["link"].startswith("http") else url_base
             if aggiungi_riga_locale(
                 titolo=art["titolo"],
                 fonte=fonte,
@@ -457,6 +454,7 @@ def scrape_garante_privacy():
     except Exception as e:
         print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 # ==============================================================================
 # 4. SINCRONIZZAZIONE DIRETTA SU POSTGRESQL GLIDEOS + BLOCCO MAIN
