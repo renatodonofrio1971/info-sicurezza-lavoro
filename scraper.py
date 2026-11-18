@@ -387,12 +387,24 @@ def scrape_normattiva():
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Usa sempre www.gazzettaufficiale.it e estrae i link diretti."""
+    """6. Gazzetta Ufficiale - Blocca i redirect su dominio senza www."""
     fonte = "Gazzetta Ufficiale"
     url_base = "https://gazzettaufficiale.it"
     aggiunti = 0
     try:
-        resp = requests.get(url_base, headers=HEADERS_HTTP, timeout=20)
+        session = requests.Session()
+        url_corrente = url_base
+        resp = None
+        for _ in range(5):
+            resp = session.get(url_corrente, headers=HEADERS_HTTP, timeout=20, allow_redirects=False)
+            if resp.status_code in (301, 302, 303, 307, 308):
+                loc = resp.headers.get("Location", "")
+                if not loc:
+                    break
+                url_corrente = urljoin(url_corrente, loc).replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
+                continue
+            break
+
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
@@ -404,6 +416,7 @@ def scrape_gazzetta_ufficiale():
                 testo = pulisci_testo(contenitore.get_text(" ", strip=True)) if contenitore else ""
                 testo = re.sub(r"Leggi la notizia", "", testo, flags=re.I).strip()
                 href = urljoin(url_base, a_tag["href"]) if a_tag.get("href") else url_base
+                href = href.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
                 if len(testo) > 20:
                     articoli.append({
                         "titolo": testo[:180],
@@ -412,7 +425,7 @@ def scrape_gazzetta_ufficiale():
                     })
 
         for art in articoli:
-            link_diretto = art["link"] if art["link"].startswith("http") else url_base
+            link_diretto = art["link"].replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it") if art["link"].startswith("http") else url_base
             if aggiungi_riga_locale(
                 titolo=art["titolo"],
                 fonte=fonte,
