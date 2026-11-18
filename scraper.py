@@ -387,54 +387,47 @@ def scrape_normattiva():
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Legge il feed RSS con fallback automatico su html.parser."""
+    """6. Gazzetta Ufficiale - Legge gli ultimi atti e decreti sulla sicurezza e normativa."""
     fonte = "Gazzetta Ufficiale"
-    urls_rss = [
-        "https://gazzettaufficiale.it",
-        "https://google.com"
-    ]
+    url_rss = "https://google.com"
     aggiunti = 0
-    for url_rss in urls_rss:
-        try:
-            resp = requests.get(url_rss, headers=HEADERS_HTTP, timeout=20)
-            resp.raise_for_status()
-            soup = BeautifulSoup(resp.content, "html.parser")
-            items = soup.find_all("item")[:25]
-            if not items:
-                continue
+    try:
+        resp = requests.get(url_rss, headers=HEADERS_HTTP, timeout=20)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.content, "html.parser")
+        items = soup.find_all("item")[:25]
 
-            for item in items:
-                title_tag = item.find("title")
-                titolo = pulisci_testo(title_tag.get_text()) if title_tag else ""
+        for item in items:
+            title_tag = item.find("title")
+            titolo = pulisci_testo(title_tag.get_text()) if title_tag else ""
+            # Rimuove il suffisso " - Gazzetta Ufficiale" aggiunto da Google News
+            titolo = re.sub(r"\s*-\s*Gazzetta Ufficiale.*$", "", titolo, flags=re.I).strip()
 
-                # Con html.parser il testo dopo <link> può stare nel nodo successivo
-                link_tag = item.find("link")
-                link_raw = ""
-                if link_tag:
-                    link_raw = pulisci_testo(link_tag.get_text()) or (pulisci_testo(link_tag.next_sibling) if isinstance(link_tag.next_sibling, str) else "")
-                link = link_raw if link_raw.startswith("http") else "https://www.gazzettaufficiale.it"
-                link = link.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
+            link_tag = item.find("link")
+            link_raw = ""
+            if link_tag:
+                link_raw = pulisci_testo(link_tag.get_text()) or (pulisci_testo(link_tag.next_sibling) if isinstance(link_tag.next_sibling, str) else "")
+            link = link_raw if link_raw.startswith("http") else "https://www.gazzettaufficiale.it"
 
-                desc_tag = item.find("description")
-                desc_raw = desc_tag.get_text() if desc_tag else ""
-                desc = pulisci_testo(BeautifulSoup(desc_raw, "html.parser").get_text())
+            desc_tag = item.find("description")
+            desc_raw = desc_tag.get_text() if desc_tag else ""
+            desc = pulisci_testo(BeautifulSoup(desc_raw, "html.parser").get_text())
+            if not desc or len(desc) < 15:
+                desc = f"Atto pubblicato in Gazzetta Ufficiale della Repubblica Italiana: {titolo}."
 
-                if aggiungi_riga_locale(
-                    titolo=titolo,
-                    fonte=fonte,
-                    data_str=datetime.now().strftime("%Y-%m-%d"),
-                    link=link,
-                    categoria="Normativa Generale",
-                    importanza="High",
-                    tipo="News",
-                    descrizione=desc
-                ):
-                    aggiunti += 1
-
-            if aggiunti > 0 or items:
-                break
-        except Exception as e:
-            print(f"[INFO {fonte}] Tentativo su {url_rss} non riuscito: {e}")
+            if aggiungi_riga_locale(
+                titolo=titolo,
+                fonte=fonte,
+                data_str=datetime.now().strftime("%Y-%m-%d"),
+                link=link,
+                categoria="Normativa Generale",
+                importanza="High",
+                tipo="News",
+                descrizione=desc
+            ):
+                aggiunti += 1
+    except Exception as e:
+        print(f"[ERRORE {fonte}] {e}")
 
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
