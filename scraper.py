@@ -387,59 +387,48 @@ def scrape_normattiva():
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Blocca i redirect su dominio senza www."""
+    """6. Gazzetta Ufficiale - Legge il feed RSS ufficiale Serie Generale con fallback."""
     fonte = "Gazzetta Ufficiale"
-    url_base = "https://gazzettaufficiale.it"
+    urls_rss = [
+        "https://gazzettaufficiale.it",
+        "https://google.com"
+    ]
     aggiunti = 0
-    try:
-        session = requests.Session()
-        url_corrente = url_base
-        resp = None
-        for _ in range(5):
-            resp = session.get(url_corrente, headers=HEADERS_HTTP, timeout=20, allow_redirects=False)
-            if resp.status_code in (301, 302, 303, 307, 308):
-                loc = resp.headers.get("Location", "")
-                if not loc:
-                    break
-                url_corrente = urljoin(url_corrente, loc).replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
+    for url_rss in urls_rss:
+        try:
+            resp = requests.get(url_rss, headers=HEADERS_HTTP, timeout=20)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.content, "xml")
+            items = soup.find_all("item")[:25]
+            if not items:
                 continue
-            break
 
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
+            for item in items:
+                titolo = pulisci_testo(item.title.get_text()) if item.title else ""
+                link = pulisci_testo(item.link.get_text()) if item.link else "https://gazzettaufficiale.it"
+                link = link.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
+                desc_raw = item.description.get_text() if item.description else ""
+                desc = pulisci_testo(BeautifulSoup(desc_raw, "html.parser").get_text())
 
-        articoli = estrai_articoli_generici(soup, url_base, limite=25)
+                if aggiungi_riga_locale(
+                    titolo=titolo,
+                    fonte=fonte,
+                    data_str=datetime.now().strftime("%Y-%m-%d"),
+                    link=link,
+                    categoria="Normativa Generale",
+                    importanza="High",
+                    tipo="News",
+                    descrizione=desc
+                ):
+                    aggiunti += 1
 
-        if not articoli:
-            for a_tag in soup.find_all("a", string=re.compile(r"Leggi la notizia|Dettaglio|Atto", re.I))[:25]:
-                contenitore = a_tag.parent
-                testo = pulisci_testo(contenitore.get_text(" ", strip=True)) if contenitore else ""
-                testo = re.sub(r"Leggi la notizia", "", testo, flags=re.I).strip()
-                href = urljoin(url_base, a_tag["href"]) if a_tag.get("href") else url_base
-                href = href.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
-                if len(testo) > 20:
-                    articoli.append({
-                        "titolo": testo[:180],
-                        "link": href,
-                        "descrizione": testo
-                    })
+            if aggiunti > 0 or items:
+                break
+        except Exception as e:
+            print(f"[INFO {fonte}] Tentativo su {url_rss} non riuscito: {e}")
 
-        for art in articoli:
-            link_diretto = art["link"].replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it") if art["link"].startswith("http") else url_base
-            if aggiungi_riga_locale(
-                titolo=art["titolo"],
-                fonte=fonte,
-                data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=link_diretto,
-                categoria="Normativa Generale",
-                importanza="High",
-                tipo="News",
-                descrizione=art["descrizione"]
-            ):
-                aggiunti += 1
-    except Exception as e:
-        print(f"[ERRORE {fonte}] {e}")
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+
 
 def scrape_garante_privacy():
     """7. Garante Privacy - Usa la homepage ufficiale funzionante con link diretti."""
