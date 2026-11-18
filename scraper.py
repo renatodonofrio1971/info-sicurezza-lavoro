@@ -387,7 +387,7 @@ def scrape_normattiva():
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Legge il feed RSS ufficiale Serie Generale con fallback."""
+    """6. Gazzetta Ufficiale - Legge il feed RSS con fallback automatico su html.parser."""
     fonte = "Gazzetta Ufficiale"
     urls_rss = [
         "https://gazzettaufficiale.it",
@@ -398,16 +398,25 @@ def scrape_gazzetta_ufficiale():
         try:
             resp = requests.get(url_rss, headers=HEADERS_HTTP, timeout=20)
             resp.raise_for_status()
-            soup = BeautifulSoup(resp.content, "xml")
+            soup = BeautifulSoup(resp.content, "html.parser")
             items = soup.find_all("item")[:25]
             if not items:
                 continue
 
             for item in items:
-                titolo = pulisci_testo(item.title.get_text()) if item.title else ""
-                link = pulisci_testo(item.link.get_text()) if item.link else "https://gazzettaufficiale.it"
+                title_tag = item.find("title")
+                titolo = pulisci_testo(title_tag.get_text()) if title_tag else ""
+
+                # Con html.parser il testo dopo <link> può stare nel nodo successivo
+                link_tag = item.find("link")
+                link_raw = ""
+                if link_tag:
+                    link_raw = pulisci_testo(link_tag.get_text()) or (pulisci_testo(link_tag.next_sibling) if isinstance(link_tag.next_sibling, str) else "")
+                link = link_raw if link_raw.startswith("http") else "https://www.gazzettaufficiale.it"
                 link = link.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
-                desc_raw = item.description.get_text() if item.description else ""
+
+                desc_tag = item.find("description")
+                desc_raw = desc_tag.get_text() if desc_tag else ""
                 desc = pulisci_testo(BeautifulSoup(desc_raw, "html.parser").get_text())
 
                 if aggiungi_riga_locale(
@@ -428,7 +437,6 @@ def scrape_gazzetta_ufficiale():
             print(f"[INFO {fonte}] Tentativo su {url_rss} non riuscito: {e}")
 
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
-
 
 def scrape_garante_privacy():
     """7. Garante Privacy - Usa la homepage ufficiale funzionante con link diretti."""
