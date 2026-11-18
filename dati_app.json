@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-18 02:45",
+  "updated_at": "2026-11-18 08:35",
   "subcategories": {
     "Edilizia & Cantieri": [
       "#PatenteACrediti",
@@ -37,6 +37,26 @@
     ]
   },
   "news": [
+    {
+      "id": 1794624311,
+      "title": "Formazione e competenze leve strategiche della crescita",
+      "source": "Ministero del Lavoro",
+      "date": "2026-11-18",
+      "official_link": "https://lavoro.gov.it/notizie/pagine/formazione-e-competenze-leve-strategiche-della-crescita",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Il Ministro Calderone all'evento Fondimpresa dedicato alle linee programmatiche 2027 del Fondo | #FormazioneSicurezza"
+    },
+    {
+      "id": 1794624310,
+      "title": "Avviso di preinformazione: fornitura componentistica protesica e ortesica per i Centri protesi Inail",
+      "source": "INAIL",
+      "date": "2026-11-18",
+      "official_link": "https://www.inail.it/portale/it/inail-comunica/avvisi/avviso.2026.11.avviso-preinformazione-fornitura-centri-protesi.html",
+      "category": "Normativa Generale",
+      "importance": "Medium",
+      "summary": "Pubblicato sul sito di Consip l'avviso di preinformazione per la fornitura di componentistica protesica e ortesica destinata ai centri protesi Inail. | #FormazioneSicurezza"
+    },
     {
       "id": 1794624309,
       "title": "Giovani, formazione e lavoro: il Ministero a ExpoTraining 2026",
