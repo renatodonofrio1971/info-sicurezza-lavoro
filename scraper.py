@@ -267,109 +267,154 @@ def estrai_articoli_generici(soup, base_url, limite=25):
 # ==============================================================================
 
 def scrape_inail():
-    """1. INAIL - News e Bandi ISI (legge h2/h3 con link sul contenitore card + <p>)."""
+    """1. INAIL - Scansiona le 4 sezioni tematiche scelte (Protocolli, Catalogo, Valutazione Rischio, News)."""
     fonte = "INAIL"
-    url = "https://inail.it"
+    url_base = "https://www.inail.it"
+    urls_inail = [
+        "https://www.inail.it/portale/it/atti-e-documenti/protocolli-accordi-e-convenzioni/protocolli-e-accordi.html",
+        "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale.html",
+        "https://www.inail.it/portale/prevenzione-e-sicurezza/it/prevenzione-e-sicurezza/prevenzione-per-la-salute-e-la-sicurezza-sul-lavoro/strumenti-per-la-valutazione-del-rischio.html",
+        "https://www.inail.it/portale/it/inail-comunica/news.html"
+    ]
     aggiunti = 0
-    try:
-        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, "https://inail.it", limite=25)
-        for art in articoli:
-            tipo = "Scadenza" if any(k in art["titolo"].lower() for k in ["bando", "scadenza", "isi"]) else "News"
-            if aggiungi_riga_locale(
-                titolo=art["titolo"],
-                fonte=fonte,
-                data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=art["link"],
-                tipo=tipo,
-                descrizione=art["descrizione"]
-            ):
-                aggiunti += 1
-    except Exception as e:
-        print(f"[ERRORE {fonte}] {e}")
-    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+    for url in urls_inail:
+        try:
+            resp = requests.get(url, headers=HEADERS_HTTP, timeout=25)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "html.parser")
 
+            # A. Estrazione standard card (h2/h3 + p) per News, Catalogo e Protocolli
+            articoli = estrai_articoli_generici(soup, url_base, limite=25)
+
+            # B. Estrazione dedicata alla tabella "Strumenti per la valutazione del rischio"
+            if "strumenti-per-la-valutazione-del-rischio" in url:
+                for tr in soup.select("table tbody tr")[:25]:
+                    celle = tr.find_all("td")
+                    if len(celle) >= 3:
+                        titolo_strum = pulisci_testo(celle.get_text(" ", strip=True))
+                        a_tag = celle.find("a", href=True)
+                        link_strum = urljoin(url_base, a_tag["href"]) if a_tag else url
+                        rischio = pulisci_testo(celle.get_text(" ", strip=True))
+                        ateco = pulisci_testo(celle.get_text(" ", strip=True))
+                        tipo_strum = pulisci_testo(celle.get_text(" ", strip=True)) if len(celle) >= 4 else "Strumento INAIL"
+                        desc_strum = f"{tipo_strum} INAIL per {rischio} (Settore: {ateco})."
+                        articoli.append({
+                            "titolo": titolo_strum,
+                            "link": link_strum,
+                            "descrizione": desc_strum
+                        })
+
+            for art in articoli:
+                tipo = "Scadenza" if any(k in art["titolo"].lower() for k in ["bando", "scadenza", "isi"]) else "News"
+                if aggiungi_riga_locale(
+                    titolo=art["titolo"],
+                    fonte=fonte,
+                    data_str=datetime.now().strftime("%Y-%m-%d"),
+                    link=art["link"],
+                    tipo=tipo,
+                    descrizione=art["descrizione"]
+                ):
+                    aggiunti += 1
+        except Exception as e:
+            print(f"[ERRORE {fonte} su {url}] {e}")
+
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci dalle 4 sezioni.")
 
 def scrape_anfos():
-    """2. ANFOS - Associazione Nazionale Formatori Sicurezza sul Lavoro."""
-    fonte = "ANFOS"
-    url = "https://anfos.it"
+    """2. ANFOS - Scansiona sia anfos.it/notizie sia quotidianosicurezza.it."""
+    sorgenti_anfos = [
+        ("ANFOS", "https://www.anfos.it/notizie/", "https://www.anfos.it"),
+        ("ANFOS - Quotidiano Sicurezza", "https://www.quotidianosicurezza.it/", "https://www.quotidianosicurezza.it")
+    ]
     aggiunti = 0
-    try:
-        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, "https://anfos.it", limite=25)
-        for art in articoli:
-            if aggiungi_riga_locale(
-                titolo=art["titolo"],
-                fonte=fonte,
-                data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=art["link"],
-                tipo="News",
-                descrizione=art["descrizione"]
-            ):
-                aggiunti += 1
-    except Exception as e:
-        print(f"[ERRORE {fonte}] {e}")
-    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+    for nome_fonte, url_pagina, url_base in sorgenti_anfos:
+        try:
+            resp = requests.get(url_pagina, headers=HEADERS_HTTP, timeout=25)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "html.parser")
 
+            articoli = estrai_articoli_generici(soup, url_base, limite=25)
+            for art in articoli:
+                if aggiungi_riga_locale(
+                    titolo=art["titolo"],
+                    fonte=nome_fonte,
+                    data_str=datetime.now().strftime("%Y-%m-%d"),
+                    link=art["link"],
+                    tipo="News",
+                    descrizione=art["descrizione"]
+                ):
+                    aggiunti += 1
+        except Exception as e:
+            print(f"[ERRORE {nome_fonte}] {e}")
+
+    print(f"[ANFOS & Quotidiano Sicurezza] Estratte {aggiunti} nuove voci.")
 
 def scrape_inl():
-    """3. INL - Ispettorato Nazionale del Lavoro (card con h2/h3 e link nel padre)."""
+    """3. INL - Scansiona le due sezioni ufficiali News INL e News dalle sedi."""
     fonte = "Ispettorato Nazionale del Lavoro"
-    url = "https://ispettorato.gov.it"
+    url_base = "https://www.ispettorato.gov.it"
+    urls_inl = [
+        "https://www.ispettorato.gov.it/comunicazione/comunicati/news-inl/",
+        "https://www.ispettorato.gov.it/comunicazione/comunicati/news-dalle-sedi/"
+    ]
     aggiunti = 0
-    try:
-        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, "https://ispettorato.gov.it", limite=25)
-        for art in articoli:
-            if aggiungi_riga_locale(
-                titolo=art["titolo"],
-                fonte=fonte,
-                data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=art["link"],
-                tipo="News",
-                descrizione=art["descrizione"]
-            ):
-                aggiunti += 1
-    except Exception as e:
-        print(f"[ERRORE {fonte}] {e}")
-    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+    for url in urls_inl:
+        try:
+            resp = requests.get(url, headers=HEADERS_HTTP, timeout=25)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "html.parser")
 
+            articoli = estrai_articoli_generici(soup, url_base, limite=25)
+            for art in articoli:
+                if aggiungi_riga_locale(
+                    titolo=art["titolo"],
+                    fonte=fonte,
+                    data_str=datetime.now().strftime("%Y-%m-%d"),
+                    link=art["link"],
+                    tipo="News",
+                    descrizione=art["descrizione"]
+                ):
+                    aggiunti += 1
+        except Exception as e:
+            print(f"[ERRORE {fonte} su {url}] {e}")
+
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci dalle 2 sezioni.")
 
 def scrape_ministero_lavoro():
-    """4. Ministero del Lavoro e delle Politiche Sociali."""
+    """4. Ministero del Lavoro - Scansiona le 3 tassonomie verticali su Sicurezza, Interpelli e Infortuni."""
     fonte = "Ministero del Lavoro"
-    url = "https://lavoro.gov.it"
+    url_base = "https://www.lavoro.gov.it"
+    urls_ministero = [
+        "https://www.lavoro.gov.it/taxonomy/term/92",   # Sicurezza sul lavoro
+        "https://www.lavoro.gov.it/taxonomy/term/26",   # Interpelli Salute e Sicurezza D.Lgs. 81/08
+        "https://www.lavoro.gov.it/taxonomy/term/129"   # Infortuni sul lavoro
+    ]
     aggiunti = 0
-    try:
-        resp = requests.get(url, headers=HEADERS_HTTP, timeout=20)
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, "https://lavoro.gov.it", limite=25)
-        for art in articoli:
-            if aggiungi_riga_locale(
-                titolo=art["titolo"],
-                fonte=fonte,
-                data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=art["link"],
-                tipo="News",
-                descrizione=art["descrizione"]
-            ):
-                aggiunti += 1
-    except Exception as e:
-        print(f"[ERRORE {fonte}] {e}")
-    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+    for url in urls_ministero:
+        try:
+            resp = requests.get(url, headers=HEADERS_HTTP, timeout=25)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "html.parser")
 
+            articoli = estrai_articoli_generici(soup, url_base, limite=25)
+            for art in articoli:
+                if aggiungi_riga_locale(
+                    titolo=art["titolo"],
+                    fonte=fonte,
+                    data_str=datetime.now().strftime("%Y-%m-%d"),
+                    link=art["link"],
+                    tipo="News",
+                    descrizione=art["descrizione"]
+                ):
+                    aggiunti += 1
+        except Exception as e:
+            print(f"[ERRORE {fonte} su {url}] {e}")
+
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci dalle 3 sezioni tematiche.")
 
 def scrape_normattiva():
     """5. Normattiva - Estrae il link diretto al singolo provvedimento (es. uri-res/N2Ls)."""
@@ -445,32 +490,49 @@ def scrape_gazzetta_ufficiale():
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
 def scrape_garante_privacy():
-    """7. Garante Privacy - Usa la homepage ufficiale funzionante con link diretti."""
+    """7. Garante Privacy - Scansiona le sezioni ufficiali /news e /comunicati-stampa con link diretti."""
     fonte = "Garante Privacy"
     url_base = "https://www.garanteprivacy.it"
+    urls_garante = [
+        "https://www.garanteprivacy.it/news",
+        "https://www.garanteprivacy.it/comunicati-stampa"
+    ]
     aggiunti = 0
-    try:
-        resp = requests.get(url_base, headers=HEADERS_HTTP, timeout=20)
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
 
-        articoli = estrai_articoli_generici(soup, url_base, limite=25)
-        for art in articoli:
-            link_diretto = art["link"] if art["link"].startswith("http") else url_base
-            if aggiungi_riga_locale(
-                titolo=art["titolo"],
-                fonte=fonte,
-                data_str=datetime.now().strftime("%Y-%m-%d"),
-                link=link_diretto,
-                categoria="Privacy & Lavoro",
-                tipo="News",
-                descrizione=art["descrizione"]
-            ):
-                aggiunti += 1
-    except Exception as e:
-        print(f"[ERRORE {fonte}] {e}")
-    print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
+    for url in urls_garante:
+        try:
+            resp = requests.get(url, headers=HEADERS_HTTP, timeout=25)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "html.parser")
 
+            articoli = estrai_articoli_generici(soup, url_base, limite=25)
+
+            # Estrae anche i link diretti presenti nelle liste di News e Ultimi comunicati stampa
+            for a_tag in soup.find_all("a", href=True):
+                href = urljoin(url_base, a_tag["href"])
+                titolo = pulisci_testo(a_tag.get_text(" ", strip=True))
+                if len(titolo) >= 25 and ("/web/guest/" in href or "/home/docweb/" in href):
+                    articoli.append({
+                        "titolo": titolo,
+                        "link": href,
+                        "descrizione": f"Comunicazione ufficiale Garante Privacy: {titolo}."
+                    })
+
+            for art in articoli:
+                if aggiungi_riga_locale(
+                    titolo=art["titolo"],
+                    fonte=fonte,
+                    data_str=datetime.now().strftime("%Y-%m-%d"),
+                    link=art["link"],
+                    categoria="Privacy & Lavoro",
+                    tipo="News",
+                    descrizione=art["descrizione"]
+                ):
+                    aggiunti += 1
+        except Exception as e:
+            print(f"[ERRORE {fonte} su {url}] {e}")
+
+    print(f"[{fonte}] Estratte {aggiunti} nuove voci dalle 2 sezioni.")
 
 # ==============================================================================
 # 4. SINCRONIZZAZIONE DIRETTA SU POSTGRESQL GLIDEOS + BLOCCO MAIN
