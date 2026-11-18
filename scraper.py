@@ -269,12 +269,12 @@ def estrai_articoli_generici(soup, base_url, limite=25):
 def scrape_inail():
     """1. INAIL - Scansiona le 4 sezioni tematiche scelte (Protocolli, Catalogo, Valutazione Rischio, News)."""
     fonte = "INAIL"
-    url_base = "https://www.inail.it"
+    url_base = "https://inail.it"
     urls_inail = [
-        "https://www.inail.it/portale/it/atti-e-documenti/protocolli-accordi-e-convenzioni/protocolli-e-accordi.html",
-        "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale.html",
-        "https://www.inail.it/portale/prevenzione-e-sicurezza/it/prevenzione-e-sicurezza/prevenzione-per-la-salute-e-la-sicurezza-sul-lavoro/strumenti-per-la-valutazione-del-rischio.html",
-        "https://www.inail.it/portale/it/inail-comunica/news.html"
+        "https://inail.it/portale/it/atti-e-documenti/protocolli-accordi-e-convenzioni/protocolli-e-accordi.html",
+        "https://inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale.html",
+        "https://inail.it/portale/prevenzione-e-sicurezza/it/prevenzione-e-sicurezza/prevenzione-per-la-salute-e-la-sicurezza-sul-lavoro/strumenti-per-la-valutazione-del-rischio.html",
+        "https://inail.it/portale/it/inail-comunica/news.html"
     ]
     aggiunti = 0
 
@@ -292,12 +292,12 @@ def scrape_inail():
                 for tr in soup.select("table tbody tr")[:25]:
                     celle = tr.find_all("td")
                     if len(celle) >= 3:
-                        titolo_strum = pulisci_testo(celle.get_text(" ", strip=True))
-                        a_tag = celle.find("a", href=True)
+                        titolo_strum = pulisci_testo(celle[0].get_text(" ", strip=True))
+                        a_tag = celle[0].find("a", href=True)
                         link_strum = urljoin(url_base, a_tag["href"]) if a_tag else url
-                        rischio = pulisci_testo(celle.get_text(" ", strip=True))
-                        ateco = pulisci_testo(celle.get_text(" ", strip=True))
-                        tipo_strum = pulisci_testo(celle.get_text(" ", strip=True)) if len(celle) >= 4 else "Strumento INAIL"
+                        rischio = pulisci_testo(celle[1].get_text(" ", strip=True))
+                        ateco = pulisci_testo(celle[2].get_text(" ", strip=True))
+                        tipo_strum = pulisci_testo(celle[3].get_text(" ", strip=True)) if len(celle) >= 4 else "Strumento INAIL"
                         desc_strum = f"{tipo_strum} INAIL per {rischio} (Settore: {ateco})."
                         articoli.append({
                             "titolo": titolo_strum,
