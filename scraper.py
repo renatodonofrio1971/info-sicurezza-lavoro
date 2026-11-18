@@ -567,7 +567,15 @@ def spingi_dati_a_glide():
         if ids_da_rimuovere:
             cur.execute("DELETE FROM news WHERE id = ANY(%s);", (ids_da_rimuovere,))
             print(f"[DB] Rimosse {len(ids_da_rimuovere)} notizie non strettamente inerenti alla sicurezza sul lavoro.")
-
+        
+        # Elimina automaticamente le scadenze passate da più di 15 giorni
+        cur.execute("""
+            DELETE FROM deadlines
+            WHERE due_date ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+              AND TO_DATE(due_date, 'YYYY-MM-DD') < CURRENT_DATE - INTERVAL '15 days';
+        """)
+        if cur.rowcount > 0:
+            print(f"[DB] Rimosse {cur.rowcount} scadenze passate da oltre 15 giorni.")
 
         # 0. Manutenzione automatica righe già esistenti (date ISO + hashtag nel summary + link Normattiva)
         cur.execute("""
