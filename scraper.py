@@ -140,20 +140,33 @@ def classifica_notizia(titolo, descrizione=""):
 
     return categoria, importanza
 
-PAROLE_CHIAVE_PERTINENZA = [
-    "sicurezza", "lavoro", "lavorator", "infortun", "salute", "prevenzione",
-    "cantiere", "cantieri", "ediliz", "patente", "decreto", "legge", "normativa",
-    "bando", "isi", "scadenza", "ispettorato", "vigilanza", "sanzion", "dvr",
-    "sorveglianza", "medico", "amianto", "chimic", "macchinar", "impiant",
-    "formazione", "addestramento", "privacy", "gdpr", "garante", "videosorveglianza",
-    "inail", "ministero", "gazzetta", "81/08", "81/2008", "rischio", "rischi",
-    "dpi", "appalt", "subappalt", "malattia professionale", "impresa", "aziend"
+PAROLE_SICUREZZA_STRETTE = [
+    "sicurezza sul lavoro", "salute e sicurezza", "81/08", "81/2008", "testo unico sicurezza",
+    "infortun", "malattia professionale", "malattie professionali", "prevenzione",
+    "dvr", "valutazione dei rischi", "duvri", "psc", "pos",
+    "cantiere", "cantieri", "patente a crediti", "pontegg", "lavori in quota", "caduta dall'alto",
+    "sorveglianza sanitaria", "medico competente", "primo soccorso", "antincendio", "emergenza",
+    "dpi", "dispositivi di protezione", "rspp", "aspp", "rls", "preposto", "preposti",
+    "amianto", "rischio chimico", "rischio biologico", "rischio elettrico", "atex", "rumore", "vibrazioni",
+    "direttiva macchine", "attrezzature di lavoro", "verifiche periodiche",
+    "bando isi", "bandi isi", "bric", "incentivi alle imprese per la sicurezza",
+    "formazione sicurezza", "addestramento", "accordo stato-regioni", "accordo stato regioni",
+    "videosorveglianza", "controllo a distanza", "dati biometrici", "lavoratori"
 ]
 
+PAROLE_ESCLUSE = [
+    "cioccolato", "cinema", "mostra fotografica", "concerto", "teatro", "sport",
+    "pensioni", "assegno di inclusione", "naspi", "disoccupazione", "tirocini extracurriculari",
+    "flussi", "click day immigrati", "reddito di cittadinanza", "bonus mamme"
+]
+
+
 def e_pertinente(titolo, descrizione=""):
-    """Verifica che la notizia riguardi sicurezza, lavoro, normativa, salute o privacy."""
+    """Accetta SOLO notizie strettamente inerenti a sicurezza, salute, cantieri e tutela sul lavoro."""
     testo = f"{titolo} {descrizione}".lower()
-    return any(kw in testo for kw in PAROLE_CHIAVE_PERTINENZA)
+    if any(bad in testo for bad in PAROLE_ESCLUSE):
+        return False
+    return any(kw in testo for kw in PAROLE_SICUREZZA_STRETTE)
 
 def aggiungi_riga_locale(titolo, fonte, data_str, link, categoria=None, importanza=None, tipo="News", descrizione=""):
     """Aggiunge una riga al CSV locale evitando duplicati interni e salvando la Descrizione con hashtag."""
@@ -482,7 +495,17 @@ def spingi_dati_a_glide():
         conn = psycopg2.connect(db_url)
         cur = conn.cursor()
         print("[DB] Connessione a PostgreSQL GlideOS riuscita.")
-        cur.execute("DELETE FROM news WHERE LOWER(title) LIKE '%cioccolato%';")
+
+        # Pulizia automatica delle vecchie notizie fuori tema già presenti in PostgreSQL
+        cur.execute("SELECT id, title, COALESCE(summary, '') FROM news;")
+        ids_da_rimuovere = [
+            r_id for r_id, r_title, r_summary in cur.fetchall()
+            if not e_pertinente(r_title or "", r_summary or "")
+        ]
+        if ids_da_rimuovere:
+            cur.execute("DELETE FROM news WHERE id = ANY(%s);", (ids_da_rimuovere,))
+            print(f"[DB] Rimosse {len(ids_da_rimuovere)} notizie non strettamente inerenti alla sicurezza sul lavoro.")
+
 
         # 0. Manutenzione automatica righe già esistenti (date ISO + hashtag nel summary + link Normattiva)
         cur.execute("""
