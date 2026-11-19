@@ -445,59 +445,47 @@ def scrape_normattiva():
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
 def scrape_gazzetta_ufficiale():
-    """6. Gazzetta Ufficiale - Estrae i singoli atti dalla sezione Notizie con link diretto 'Leggi la notizia'."""
+    """6. Gazzetta Ufficiale - Legge gli ultimi atti e decreti sulla sicurezza e normativa."""
     fonte = "Gazzetta Ufficiale"
-    url_base = "https://www.gazzettaufficiale.it"
+    url_rss = "https://google.com"
     aggiunti = 0
     try:
-        resp = requests.get(url_base + "/", headers=HEADERS_HTTP, timeout=20)
+        resp = requests.get(url_rss, headers=HEADERS_HTTP, timeout=20)
         resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
+        soup = BeautifulSoup(resp.content, "html.parser")
+        items = soup.find_all("item")[:25]
 
-        # Cattura tutte le voci della sezione "Notizie" che hanno il link diretto "Leggi la notizia"
-        for a_tag in soup.find_all("a", string=re.compile(r"Leggi la notizia", re.I))[:30]:
-            contenitore = a_tag.parent
-            testo_completo = pulisci_testo(contenitore.get_text(" ", strip=True)) if contenitore else ""
-            # Rimuove la data iniziale (es. 14/11/2026) e la scritta finale "Leggi la notizia"
-            titolo = re.sub(r"^\d{2}/\d{2}/\d{4}\s*", "", testo_completo)
-            titolo = re.sub(r"\s*Leggi la notizia.*$", "", titolo, flags=re.I).strip()
+        for item in items:
+            title_tag = item.find("title")
+            titolo = pulisci_testo(title_tag.get_text()) if title_tag else ""
+            # Rimuove il suffisso " - Gazzetta Ufficiale" aggiunto da Google News
+            titolo = re.sub(r"\s*-\s*Gazzetta Ufficiale.*$", "", titolo, flags=re.I).strip()
 
-            href = urljoin(url_base, a_tag["href"]) if a_tag.get("href") else url_base
-            href = href.replace("://gazzettaufficiale.it", "://www.gazzettaufficiale.it")
+            link_tag = item.find("link")
+            link_raw = ""
+            if link_tag:
+                link_raw = pulisci_testo(link_tag.get_text()) or (pulisci_testo(link_tag.next_sibling) if isinstance(link_tag.next_sibling, str) else "")
+            link = link_raw if link_raw.startswith("http") else "https://www.gazzettaufficiale.it"
 
-            if len(titolo) >= 15:
-                if aggiungi_riga_locale(
-                    titolo=titolo,
-                    fonte=fonte,
-                    data_str=datetime.now().strftime("%Y-%m-%d"),
-                    link=href,
-                    categoria="Normativa Generale",
-                    importanza="High",
-                    tipo="News",
-                    descrizione=f"Pubblicato in Gazzetta Ufficiale della Repubblica Italiana: {titolo}."
-                ):
-                    aggiunti += 1
+            desc_tag = item.find("description")
+            desc_raw = desc_tag.get_text() if desc_tag else ""
+            desc = pulisci_testo(BeautifulSoup(desc_raw, "html.parser").get_text())
+            if not desc or len(desc) < 15:
+                desc = f"Atto pubblicato in Gazzetta Ufficiale della Repubblica Italiana: {titolo}."
 
+            if aggiungi_riga_locale(
+                titolo=titolo,
+                fonte=fonte,
+                data_str=datetime.now().strftime("%Y-%m-%d"),
+                link=link,
+                categoria="Normativa Generale",
+                importanza="High",
+                tipo="News",
+                descrizione=desc
+            ):
+                aggiunti += 1
     except Exception as e:
-        print(f"[INFO {fonte}] Tentativo diretto non riuscito ({e}), uso fallback Normattiva.")
-        try:
-            resp_fb = requests.get("https://normattiva.it", headers=HEADERS_HTTP, timeout=20)
-            resp_fb.raise_for_status()
-            soup_fb = BeautifulSoup(resp_fb.text, "html.parser")
-            for art in estrai_articoli_generici(soup_fb, "https://normattiva.it", limite=25):
-                if aggiungi_riga_locale(
-                    titolo=art["titolo"],
-                    fonte=fonte,
-                    data_str=datetime.now().strftime("%Y-%m-%d"),
-                    link=art["link"],
-                    categoria="Normativa Generale",
-                    importanza="High",
-                    tipo="News",
-                    descrizione=art["descrizione"]
-                ):
-                    aggiunti += 1
-        except Exception as e2:
-            print(f"[INFO {fonte}] Nessun nuovo atto rilevato: {e2}")
+        print(f"[ERRORE {fonte}] {e}")
 
     print(f"[{fonte}] Estratte {aggiunti} nuove voci.")
 
