@@ -228,8 +228,8 @@
           Condividi Opera Sicura
         </button>
         <div id="ios-install-hint" style="display:none; margin-top:10px; padding:10px; border-radius:10px; background:rgba(255,255,255,0.04); font-size:0.78rem; color:var(--muted); line-height:1.45;">
-          <strong style="color:var(--gold);">Su iPhone / Safari:</strong> tocca l'icona <strong>Condividi</strong> (quadrato con freccia in basso) e scegli <strong>"Aggiungi alla schermata Home"</strong>.<br>
-          <strong style="color:var(--gold);">Su Android / Browser:</strong> tocca il menu del browser (<strong>⋮</strong> in alto oppure <strong>☰</strong> in basso) e scegli <strong>"Installa app"</strong> o <strong>"Aggiungi a schermata Home"</strong>.
+          <strong style="color:var(--gold);">Su Android (Google Chrome):</strong> apri il sito su <strong>Chrome</strong>, tocca i <strong>3 puntini ⋮</strong> in alto a destra e scegli <strong>"Installa app"</strong>.<br>
+          <strong style="color:var(--gold);">Su iPhone / Safari:</strong> tocca l'icona <strong>Condividi</strong> (quadrato con freccia in basso) e scegli <strong>"Aggiungi alla schermata Home"</strong>.
         </div>
       </div>
     </section>
@@ -419,6 +419,11 @@
       if (saved !== null) chk.checked = (saved === "true");
       chk.addEventListener("change", () => localStorage.setItem(chk.dataset.pref, chk.checked));
     });
+
+      if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+
     let deferredPrompt = null;
     const btnInstall = document.getElementById("btn-install-app");
     const iosHint = document.getElementById("ios-install-hint");
