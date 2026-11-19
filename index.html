@@ -141,7 +141,7 @@
       <div id="deadlines-list"></div>
     </section>
 
-           <!-- TAB 4: IMPOSTAZIONI -->
+          <!-- TAB 4: IMPOSTAZIONI -->
     <section id="view-settings" class="view">
       <div class="section-title" style="font-size:1.35rem; margin-bottom:14px;"><span>Impostazioni</span></div>
 
@@ -190,7 +190,7 @@
         </div>
       </div>
 
-      <div class="card" style="cursor:default;">
+      <div class="card" style="cursor:default; margin-bottom:20px;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
           <span style="width:24px; height:24px; border-radius:50%; border:1.5px solid var(--gold); color:var(--gold); display:inline-flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800;">i</span>
           <h3 style="font-size:1rem; font-weight:700; color:#fff;">Come funzionano</h3>
@@ -211,8 +211,7 @@
           <strong style="color:#fff; text-align:right;">🛡️ GDPR</strong>
         </div>
       </div>
-    </section>
-          <!-- Pulsante Installazione App sul Telefono -->
+
       <div class="card" style="cursor:default; margin-bottom:20px; border-color:rgba(224,168,30,0.45);">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
           <img src="./logo.png" alt="Opera Sicura" style="width:42px; height:42px; border-radius:10px; object-fit:cover; border:1px solid var(--gold);" />
@@ -227,16 +226,17 @@
         <button id="btn-share-app" class="btn-more" style="margin-top:8px;">
           Condividi Opera Sicura
         </button>
-
-
         <div id="ios-install-hint" style="display:none; margin-top:10px; padding:10px; border-radius:10px; background:rgba(255,255,255,0.04); font-size:0.78rem; color:var(--muted); line-height:1.45;">
           <strong style="color:var(--gold);">Su iPhone / Safari:</strong> tocca l'icona <strong>Condividi</strong> (quadrato con freccia in basso) e scegli <strong>"Aggiungi alla schermata Home"</strong>.<br>
-          <strong style="color:var(--gold);">Su Android / Chrome:</strong> tocca i <strong>3 puntini ⋮</strong> in alto a destra e scegli <strong>"Installa app"</strong>.
+          <strong style="color:var(--gold);">Su Android / Browser:</strong> tocca il menu del browser (<strong>⋮</strong> in alto oppure <strong>☰</strong> in basso) e scegli <strong>"Installa app"</strong> o <strong>"Aggiungi a schermata Home"</strong>.
         </div>
       </div>
+    </section>
   </div>
 
-  <button id="btn-top" class="btn-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Torna in cima</button>
+    .btn-top { position: fixed; right: 16px; bottom: 84px; background: #e0a81e; color: #111111; border: none; border-radius: 999px; padding: 11px 18px; font-weight: 800; font-size: 0.84rem; letter-spacing: 0.01em; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); cursor: pointer; display: none; z-index: 90; transition: transform 0.15s ease; }
+    .btn-top:active { transform: scale(0.96); }
+
 
   <nav class="tab-bar">
     <button class="tab-btn active" data-target="view-home"><span class="tab-icon">🏠</span><span>Panoramica</span></button>
