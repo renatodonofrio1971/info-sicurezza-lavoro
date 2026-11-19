@@ -224,6 +224,10 @@
         <button id="btn-install-app" class="btn-more" style="background:var(--gold); color:#111; margin-top:0;">
           📲 Installa App sul Telefono
         </button>
+        <button id="btn-share-app" class="btn-more" style="margin-top:8px;">
+          📤 Condividi Opera Sicura
+        </button>
+
         <div id="ios-install-hint" style="display:none; margin-top:10px; padding:10px; border-radius:10px; background:rgba(255,255,255,0.04); font-size:0.78rem; color:var(--muted); line-height:1.45;">
           <strong style="color:var(--gold);">Su iPhone / Safari:</strong> tocca l'icona <strong>Condividi</strong> (quadrato con freccia in basso) e scegli <strong>"Aggiungi alla schermata Home"</strong>.<br>
           <strong style="color:var(--gold);">Su Android / Chrome:</strong> tocca i <strong>3 puntini ⋮</strong> in alto a destra e scegli <strong>"Installa app"</strong>.
@@ -431,6 +435,23 @@
         deferredPrompt = null;
       } else {
         iosHint.style.display = iosHint.style.display === "none" ? "block" : "none";
+      }
+    });
+
+    const btnShare = document.getElementById("btn-share-app");
+    btnShare.addEventListener("click", async () => {
+      const shareData = {
+        title: "Opera Sicura",
+        text: "Normative e scadenze sulla sicurezza sul lavoro sempre aggiornate:",
+        url: window.location.origin + window.location.pathname
+      };
+      if (navigator.share) {
+        try { await navigator.share(shareData); } catch (e) {}
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        const origText = btnShare.textContent;
+        btnShare.textContent = "✅ Link copiato negli appunti!";
+        setTimeout(() => { btnShare.textContent = origText; }, 2500);
       }
     });
 
