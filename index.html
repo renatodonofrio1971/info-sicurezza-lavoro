@@ -68,7 +68,7 @@
 
     /* Load more & Scroll to top */
     .btn-more { width: 100%; background: var(--card); border: 1px solid var(--gold); color: var(--gold); padding: 12px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 6px; }
-    .btn-top { position: fixed; right: 16px; bottom: 82px; background: var(--gold); color: #111; border: none; border-radius: 999px; padding: 10px 14px; font-weight: 800; font-size: 0.82rem; box-shadow: 0 6px 18px rgba(0,0,0,0.45); cursor: pointer; display: none; z-index: 50; }
+    .<button id="btn-top" class="btn-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">Torna su</button>
 
     /* Settings Switches */
     .setting-row { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -222,11 +222,12 @@
           </div>
         </div>
         <button id="btn-install-app" class="btn-more" style="background:var(--gold); color:#111; margin-top:0;">
-          📲 Installa App sul Telefono
+          Installa App sul Telefono
         </button>
         <button id="btn-share-app" class="btn-more" style="margin-top:8px;">
-          📤 Condividi Opera Sicura
+          Condividi Opera Sicura
         </button>
+
 
         <div id="ios-install-hint" style="display:none; margin-top:10px; padding:10px; border-radius:10px; background:rgba(255,255,255,0.04); font-size:0.78rem; color:var(--muted); line-height:1.45;">
           <strong style="color:var(--gold);">Su iPhone / Safari:</strong> tocca l'icona <strong>Condividi</strong> (quadrato con freccia in basso) e scegli <strong>"Aggiungi alla schermata Home"</strong>.<br>
