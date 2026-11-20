@@ -650,13 +650,18 @@ def spingi_dati_a_glide():
                 chiave = titolo.lower()
                 fonte = pulisci_testo(row.get("Fonte", "")) or "Fonte Istituzionale"
                 data_val = pulisci_testo(row.get("Data", "")) or oggi_str
-                link = pulisci_testo(row.get("Link", "")) or "https://www.normattiva.it"
+                link = pulisci_testo(row.get("Link", "")) or "https://normattiva.it"
                 categoria = pulisci_testo(row.get("Categoria", "")) or "Normativa Generale"
                 importanza = pulisci_testo(row.get("Importanza", "")) or "Medium"
                 tipo = pulisci_testo(row.get("Tipo", "")) or "News"
                 descrizione = pulisci_testo(row.get("Descrizione", "")) or f"Aggiornamento da {fonte}: {titolo}."
 
                 if tipo.lower() == "scadenza":
+                    # Filtro qualità: blocca titoli generici e verifica pertinenza sicurezza sul lavoro
+                    titoli_generici = {"avvisi e scadenze", "bandi e concorsi", "news", "notizie"}
+                    if chiave in titoli_generici or not e_pertinente(titolo, descrizione):
+                        continue
+
                     if chiave not in scadenze_esistenti:
                         scadenze_esistenti.add(chiave)
                         nuove_scadenze.append((
@@ -682,6 +687,13 @@ def spingi_dati_a_glide():
                         ))
                         next_news_id += 1
 
+        # Pulizia automatica da 'deadlines' di eventuali concorsi o voci generiche già presenti
+        cur.execute("""
+            DELETE FROM deadlines 
+            WHERE LOWER(TRIM(title)) IN ('avvisi e scadenze', 'bandi e concorsi')
+               OR title ILIKE '%bando di concorso%';
+        """)
+
         # 3. Inserimento massivo su 'news'
         if nuove_news:
             execute_values(
@@ -695,6 +707,20 @@ def spingi_dati_a_glide():
             print(f"[DB] Inserite {len(nuove_news)} nuove notizie in 'news' (con summary).")
         else:
             print("[DB] Nessuna nuova notizia da inserire in 'news'.")
+
+        # 4. Inserimento massivo su 'deadlines'
+        if nuove_scadenze:
+            execute_values(
+                cur,
+                """
+                INSERT INTO deadlines (id, title, due_date, notes, official_link)
+                VALUES %s;
+                """,
+                nuove_scadenze
+            )
+            print(f"[DB] Inserite {len(nuove_scadenze)} nuove scadenze in 'deadlines'.")
+        else:
+            print("[DB] Nessuna nuova scadenza da inserire in 'deadlines'.")
 
         # 4. Inserimento massivo su 'deadlines'
         if nuove_scadenze:
