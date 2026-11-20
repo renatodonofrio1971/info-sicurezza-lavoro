@@ -721,21 +721,7 @@ def spingi_dati_a_glide():
             print(f"[DB] Inserite {len(nuove_scadenze)} nuove scadenze in 'deadlines'.")
         else:
             print("[DB] Nessuna nuova scadenza da inserire in 'deadlines'.")
-
-        # 4. Inserimento massivo su 'deadlines'
-        if nuove_scadenze:
-            execute_values(
-                cur,
-                """
-                INSERT INTO deadlines (id, title, due_date, notes, official_link)
-                VALUES %s;
-                """,
-                nuove_scadenze
-            )
-            print(f"[DB] Inserite {len(nuove_scadenze)} nuove scadenze in 'deadlines'.")
-        else:
-            print("[DB] Nessuna nuova scadenza da inserire in 'deadlines'.")
-
+     
         # 5. Controllo utenti anonimi iscritti alle notifiche Push (GDPR)
         cur.execute("""
             SELECT COUNT(*)
@@ -747,6 +733,7 @@ def spingi_dati_a_glide():
         """)
         utenti_attivi = cur.fetchone()[0]
         print(f"[PUSH GDPR] Dispositivi anonimi con notifiche attive: {utenti_attivi}.")
+        
         # 6. Esportazione archivio completo in 'dati_app.json' per la Web App / PWA gratuita
         cur.execute("""
             SELECT id, title, source, date, official_link, category, importance, summary
@@ -793,19 +780,7 @@ def spingi_dati_a_glide():
             json.dump(payload_app, f_json, ensure_ascii=False, indent=2)
         print(f"[PWA] Esportato 'dati_app.json' ({len(tutte_news)} news, {len(tutte_scadenze)} scadenze).")
 
-        try:
-            cur.execute("""
-                UPDATE deadlines 
-                SET url = %s 
-                WHERE title ILIKE %s;
-            """, (
-                "https://inail.it",
-                "%Messa a Terra%"
-            ))
-        except Exception as e:
-            conn.rollback()
-            print(f"[DB] Nota aggiornamento link messa a terra: {e}")
-
+        
         conn.commit()
         cur.close()
         print("[DB] Sincronizzazione PostgreSQL completata con successo!")
