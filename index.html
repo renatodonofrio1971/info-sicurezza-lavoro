@@ -109,19 +109,20 @@
       </div>
 
       <div class="kpi-grid">
-        <div class="kpi-card kpi-danger" onclick="document.querySelector('[data-target=\'view-deadlines\'], [onclick*=\'view-deadlines\']')?.click(); window.scrollTo({top:0, behavior:'smooth'});">
+        <div class="kpi-card kpi-danger" style="cursor:pointer;" onclick="document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.getElementById('view-deadlines').classList.add('active'); document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active', i===2)); window.scrollTo({top:0, behavior:'smooth'});">
           <div class="kpi-num" id="kpi-expired">0</div>
           <div class="kpi-label">Scadute</div>
         </div>
-        <div class="kpi-card kpi-warn" onclick="document.querySelector('[data-target=\'view-deadlines\'], [onclick*=\'view-deadlines\']')?.click(); window.scrollTo({top:0, behavior:'smooth'});">
+        <div class="kpi-card kpi-warn" style="cursor:pointer;" onclick="document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.getElementById('view-deadlines').classList.add('active'); document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active', i===2)); window.scrollTo({top:0, behavior:'smooth'});">
           <div class="kpi-num" id="kpi-soon">0</div>
           <div class="kpi-label">In scadenza<br>(30 gg)</div>
         </div>
-        <div class="kpi-card kpi-gold" onclick="document.querySelector('[data-target=\'view-news\'], [onclick*=\'view-news\']')?.click(); window.scrollTo({top:0, behavior:'smooth'});">
+        <div class="kpi-card kpi-gold" style="cursor:pointer;" onclick="document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.getElementById('view-news').classList.add('active'); document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active', i===1)); window.scrollTo({top:0, behavior:'smooth'});">
           <div class="kpi-num" id="kpi-high">0</div>
           <div class="kpi-label">News importanti</div>
         </div>
       </div>
+
 
       <div class="section-title">
         <span>Ultime notizie urgenti</span>
