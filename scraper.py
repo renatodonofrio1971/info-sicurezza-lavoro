@@ -767,9 +767,18 @@ def spingi_dati_a_glide():
             json.dump(payload_app, f_json, ensure_ascii=False, indent=2)
         print(f"[PWA] Esportato 'dati_app.json' ({len(tutte_news)} news, {len(tutte_scadenze)} scadenze).")
 
-        conn.commit()
-        cur.close()
-        print("[DB] Sincronizzazione PostgreSQL completata con successo!")
+        try:
+            cur.execute("""
+                UPDATE deadlines 
+                SET url = %s 
+                WHERE title ILIKE %s;
+            """, (
+                "https://inail.it",
+                "%Messa a Terra%"
+            ))
+        except Exception as e:
+            conn.rollback()
+            print(f"[DB] Nota aggiornamento link messa a terra: {e}")
 
         conn.commit()
         cur.close()
