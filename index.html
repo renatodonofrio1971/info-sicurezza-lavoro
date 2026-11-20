@@ -82,6 +82,10 @@
     input:checked + .slider { background: var(--gold); }
     input:checked + .slider:before { transform: translateX(20px); background: #111; }
 
+    /* KPI Clickable Feedback */
+    .kpi-card { cursor: pointer; transition: transform 0.15s ease, filter 0.15s ease; }
+    .kpi-card:active { transform: scale(0.96); filter: brightness(1.1); }
+
     /* Bottom Navigation */
     .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(24, 27, 34, 0.96); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 4px 12px; z-index: 100; }
     .tab-btn { background: none; border: none; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.72rem; cursor: pointer; }
@@ -105,15 +109,15 @@
       </div>
 
       <div class="kpi-grid">
-        <div class="kpi-card kpi-danger">
+        <div class="kpi-card kpi-danger" onclick="document.querySelector('[data-target=\'view-deadlines\'], [onclick*=\'view-deadlines\']')?.click(); window.scrollTo({top:0, behavior:'smooth'});">
           <div class="kpi-num" id="kpi-expired">0</div>
           <div class="kpi-label">Scadute</div>
         </div>
-        <div class="kpi-card kpi-warn">
+        <div class="kpi-card kpi-warn" onclick="document.querySelector('[data-target=\'view-deadlines\'], [onclick*=\'view-deadlines\']')?.click(); window.scrollTo({top:0, behavior:'smooth'});">
           <div class="kpi-num" id="kpi-soon">0</div>
           <div class="kpi-label">In scadenza<br>(30 gg)</div>
         </div>
-        <div class="kpi-card kpi-gold">
+        <div class="kpi-card kpi-gold" onclick="document.querySelector('[data-target=\'view-news\'], [onclick*=\'view-news\']')?.click(); window.scrollTo({top:0, behavior:'smooth'});">
           <div class="kpi-num" id="kpi-high">0</div>
           <div class="kpi-label">News importanti</div>
         </div>
