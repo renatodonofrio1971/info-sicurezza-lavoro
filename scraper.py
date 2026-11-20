@@ -534,6 +534,71 @@ def scrape_garante_privacy():
 
     print(f"[{fonte}] Estratte {aggiunti} nuove voci dalle 2 sezioni.")
 
+def scrape_cassazione():
+    """8. Corte di Cassazione & IV Sezione Penale - Scansiona Ultime dalla Corte, IV Sezione Penale e Giurisprudenza Penale."""
+    fonte = "Corte di Cassazione"
+    url_base = "https://www.cortedicassazione.it"
+    urls_cassazione = [
+        "https://www.cortedicassazione.it/it/ultime_dalla_corte.page",
+        "https://www.cortedicassazione.it/it/quarta_sezione_penale.page",
+        "https://www.cortedicassazione.it/it/giurisprudenza_penale.page"
+    ]
+    aggiunti = 0
+
+    for url in urls_cassazione:
+        try:
+            resp = requests.get(url, headers=HEADERS_HTTP, timeout=25)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "html.parser")
+
+            # A. Estrazione standard card/titoli (h2/h3 + p)
+            articoli = estrai_articoli_generici(soup, url_base, limite=30)
+
+            # B. Estrazione dedicata alle massime/sentenze con link diretto "Vai al documento" o dettaglio
+            for item in soup.select("div.risultato, div.item, article, li"):
+                testo_blocco = pulisci_testo(item.get_text(" ", strip=True))
+                if len(testo_blocco) < 40 or not any(k in testo_blocco.lower() for k in ["sentenza", "ordinanza", "sezione", "infortun", "sicurezza", "lavoro", "81/2008", "81/08"]):
+                    continue
+
+                a_tag = item.find("a", href=True)
+                if not a_tag:
+                    continue
+
+                href = a_tag["href"]
+                if href.startswith("#") or "javascript:" in href.lower():
+                    continue
+
+                link_sent = urljoin(url_base, href)
+                titolo_raw = pulisci_testo(a_tag.get_text(" ", strip=True))
+                if titolo_raw.lower() in {"vai al documento", "leggi di più", "dettaglio", "scarica"} or len(titolo_raw) < 15:
+                    titolo_raw = testo_blocco[:140] + ("..." if len(testo_blocco) > 140 else "")
+
+                sezione_tag = " [IV Sez. Penale]" if "quarta_sezione" in url or "quarta sezione" in testo_blocco.lower() else ""
+                titolo_finale = f"Cassazione{sezione_tag}: {titolo_raw}" if not titolo_raw.lower().startswith("cassazione") else titolo_raw
+
+                articoli.append({
+                    "titolo": titolo_finale,
+                    "link": link_sent,
+                    "descrizione": testo_blocco[:450]
+                })
+
+            for art in articoli:
+                # La funzione aggiungi_riga_locale applica già e_pertinente(), filtri, macro-aree e hashtag
+                if aggiungi_riga_locale(
+                    titolo=art["titolo"],
+                    fonte=fonte,
+                    data_str=datetime.now().strftime("%Y-%m-%d"),
+                    link=art["link"],
+                    tipo="News",
+                    descrizione=art["descrizione"]
+                ):
+                    aggiunti += 1
+        except Exception as e:
+            print(f"[ERRORE {fonte} su {url}] {e}")
+
+    print(f"[{fonte} & IV Sez. Penale] Estratte {aggiunti} nuove voci dalle 3 sezioni.")
+
+
 # ==============================================================================
 # 4. SINCRONIZZAZIONE DIRETTA SU POSTGRESQL GLIDEOS + BLOCCO MAIN
 # ==============================================================================
@@ -796,7 +861,7 @@ def spingi_dati_a_glide():
 
 if __name__ == "__main__":
     inizializza_database_locale()
-    print("🚀 --- AVVIO SUPER-MOTORE MULTI-FONTE ESTESO (7 FONTI) --- 🚀\n")
+    print("🚀 --- AVVIO SUPER-MOTORE MULTI-FONTE ESTESO (8 FONTI) --- 🚀\n")
     scrape_inail()
     print("-" * 50)
     scrape_anfos()
@@ -810,6 +875,8 @@ if __name__ == "__main__":
     scrape_gazzetta_ufficiale()
     print("-" * 50)
     scrape_garante_privacy()
+    scrape_cassazione()
+    print("-" * 50)
     print("\n🎉 SUPER ARCHIVIO GENERATO CON SUCCESSO LOCALE!")
     print("-" * 50)
     spingi_dati_a_glide()
