@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-20 09:44",
+  "updated_at": "2026-11-20 10:38",
   "subcategories": {
     "Edilizia & Cantieri": [
       "#PatenteACrediti",
@@ -37,6 +37,16 @@
     ]
   },
   "news": [
+    {
+      "id": 1794624382,
+      "title": "INL: concorso per 300 ispettori vigilanza tecnica salute e sicurezza",
+      "source": "Ispettorato Nazionale del Lavoro",
+      "date": "2026-11-20",
+      "official_link": "https://www.ispettorato.gov.it/2026/11/20/inl-concorso-per-300-ispettori-vigilanza-tecnica-salute-e-sicurezza/",
+      "category": "Salute & Medicina",
+      "importance": "High",
+      "summary": "Scadenza invio candidature: 19 Dicembre 2026 | #FormazioneSicurezza #SanzioniINL"
+    },
     {
       "id": 1794624381,
       "title": "\"OBBLIGO DI COMPOSTABILITA' DEGLI IMBALLAGGI - CONVERSIONE IN LEGGE\"",
@@ -1146,13 +1156,6 @@
       "due_date": "2026-11-18",
       "notes": "Il fact sheet propone una procedura per la valutazione del rischio di esposizione a sostanze tossiche per la riproduzione non cancerogene e non mutagene, chiare... | #PSC_POS #DVR",
       "official_link": "https://www.inail.it/portale/it/inail-comunica/pubblicazioni/catalogo-generale/catalogo-generale-dettaglio.2026.10.pubblicazioni-catalogo-fact-sheet-sostanze-tossiche-riproduzione.html"
-    },
-    {
-      "id": 1794499058,
-      "title": "Invio Autoliquidazione INAIL 2026",
-      "due_date": "2026-11-30",
-      "notes": "Scadenza termine per calcolo saldo e premio di regolazione sul portale INAIL.",
-      "official_link": "https://inail.it"
     },
     {
       "id": 1794499059,
