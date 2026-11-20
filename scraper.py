@@ -140,33 +140,85 @@ def classifica_notizia(titolo, descrizione=""):
 
     return categoria, importanza
 
+SIGLE_SICUREZZA_ESATTE = [
+    "dvr", "duvri", "psc", "pos", "pimus", "dpi", "rspp", "aspp", "rls",
+    "atex", "ple", "pes", "pav", "pei"
+]
+
 PAROLE_SICUREZZA_STRETTE = [
-    "sicurezza sul lavoro", "salute e sicurezza", "81/08", "81/2008", "testo unico sicurezza",
-    "infortun", "malattia professionale", "malattie professionali", "prevenzione",
-    "dvr", "valutazione dei rischi", "duvri", "psc", "pos",
-    "cantiere", "cantieri", "patente a crediti", "pontegg", "lavori in quota", "caduta dall'alto",
-    "sorveglianza sanitaria", "medico competente", "primo soccorso", "antincendio", "emergenza",
-    "dpi", "dispositivi di protezione", "rspp", "aspp", "rls", "preposto", "preposti",
-    "amianto", "rischio chimico", "rischio biologico", "rischio elettrico", "atex", "rumore", "vibrazioni",
-    "direttiva macchine", "attrezzature di lavoro", "verifiche periodiche",
+    # Normativa & Figure della Sicurezza
+    "sicurezza sul lavoro", "salute e sicurezza", "sicurezza nei luoghi di lavoro", "igiene del lavoro",
+    "81/08", "81/2008", "testo unico sicurezza", "d.lgs. 231/2001", "231/2001",
+    "dpr 177/2011", "d.p.r. 177/2011", "norme antinfortunistiche", "normativa antinfortunistica",
+    "prevenzione infortuni", "infortunio sul lavoro", "infortuni sul lavoro", "infortunio lavorativo",
+    "malattia professionale", "malattie professionali", "sorveglianza sanitaria",
+    "medico competente", "datore di lavoro", "preposto", "preposti", "preposto di fatto",
+    "lavoratore autonomo", "responsabile dei lavori", "coordinatore per la sicurezza",
+    "coordinatore per la progettazione", "coordinatore per l'esecuzione",
+    "delega di funzioni", "subdelega", "posizione di garanzia",
+    "culpa in vigilando", "culpa in eligendo", "comportamento abnorme", "rischio eccentrico",
+    "valutazione dei rischi", "documento di valutazione dei rischi",
+    "piano operativo di sicurezza", "fascicolo dell'opera", "notifica preliminare",
+    "idoneità tecnico-professionale", "impresa affidataria", "impresa esecutrice", "rischio interferenziale",
+    "dispositivi di protezione", "attrezzature di lavoro", "verifiche periodiche",
+    # Formazione, Incentivi & Privacy sul Lavoro
+    "formazione sicurezza", "informazione e formazione", "addestramento",
+    "accordo stato-regioni", "accordo stato regioni", "patente a crediti",
     "bando isi", "bandi isi", "bric", "incentivi alle imprese per la sicurezza",
-    "formazione sicurezza", "addestramento", "accordo stato-regioni", "accordo stato regioni",
-    "videosorveglianza", "controllo a distanza", "dati biometrici", "lavoratori"
+    "videosorveglianza", "controllo a distanza", "dati biometrici",
+    # Cantieri & Lavori in Quota
+    "cantieri temporanei o mobili", "cantiere edile", "caduta dall'alto", "lavori in quota",
+    "ponteggi", "impalcature", "parapetti", "tavole fermapiede", "linee vita",
+    "cinture di sicurezza", "imbracatura", "sbancamento", "seppellimento",
+    "coperture non portanti", "sfondamento", "lucernari",
+    # Macchine & Impianti Elettrici
+    "direttiva macchine", "piattaforme elevabili", "marcatura ce", "organi in movimento",
+    "segregazione", "protezioni fisse", "dispositivi di interblocco",
+    "barriere fotoelettriche", "pulsante di emergenza", "rimozione protezioni",
+    "noleggiatore", "concedente in uso", "vizio palese", "vizio occulto",
+    "rischio elettrico", "impianto elettrico", "folgorazione", "elettrocuzione",
+    "messa a terra", "interruttore differenziale", "lavori sotto tensione",
+    "distanza di sicurezza", "linee elettriche aeree",
+    # Amianto, Chimico, Biologico, Spazi Confinati & Rischi Specifici
+    "amianto", "asbesto", "mesotelioma pleurico", "asbestosi", "fibre di amianto",
+    "esposizione ad amianto", "agenti cancerogeni", "agenti mutageni",
+    "bonifica amianto", "registro esposti", "lungolatenza", "effetto acceleratore",
+    "dose-risposta", "legge scientifica di copertura",
+    "rischio chimico", "agenti chimici", "sostanze pericolose", "schede di sicurezza",
+    "rischio biologico", "agenti biologici", "atmosfere esplosive",
+    "antincendio", "primo soccorso", "piano di emergenza", "vie di esodo",
+    "ambienti confinati", "spazi confinati", "silos", "cisterne", "asfissia", "esalazioni tossiche",
+    "movimentazione manuale dei carichi", "carrelli elevatori", "muletti",
+    "ribaltamento", "viabilità aziendale", "segnaletica di sicurezza",
+    "ipoacusia", "radiazioni ionizzanti", "radiazioni ottiche artificiali",
+    "microclima", "stress lavoro-correlato", "lavoro notturno", "videoterminali",
+    "sicurezza ferroviaria", "manovre ferroviarie", "passaggio a livello",
+    "trattore agricolo", "roll-bar", "cinture di sicurezza trattore",
+    "presa di forza", "albero cardanico", "lavoro portuale", "movimentazione container"
 ]
 
 PAROLE_ESCLUSE = [
     "cioccolato", "cinema", "mostra fotografica", "concerto", "teatro", "sport",
     "pensioni", "assegno di inclusione", "naspi", "disoccupazione", "tirocini extracurriculari",
-    "flussi", "click day immigrati", "reddito di cittadinanza", "bonus mamme"
+    "flussi", "click day immigrati", "reddito di cittadinanza", "bonus mamme",
+    "superbonus", "credito di imposta", "credito d'imposta", "tributar",
+    "arresto in flagranza", "misura cautelare", "rito abbreviato",
+    "stupefacenti", "maltrattamenti", "furto", "rapina", "truffa",
+    "diffamazione", "estorsione", "peculato", "abuso d'ufficio",
+    "estradizione", "mandato di arresto", "guida in stato di ebbrezza",
+    "immigrazione", "falliment", "bando di concorso", "dirigenti: i posti disponibili"
 ]
 
-
 def e_pertinente(titolo, descrizione=""):
-    """Accetta SOLO notizie strettamente inerenti a sicurezza, salute, cantieri e tutela sul lavoro."""
+    """Accetta SOLO notizie e sentenze strettamente inerenti a sicurezza, salute, cantieri e tutela sul lavoro."""
+    import re
     testo = f"{titolo} {descrizione}".lower()
     if any(bad in testo for bad in PAROLE_ESCLUSE):
         return False
+    if any(re.search(rf"\b{sigla}\b", testo) for sigla in SIGLE_SICUREZZA_ESATTE):
+        return True
     return any(kw in testo for kw in PAROLE_SICUREZZA_STRETTE)
+
 
 def aggiungi_riga_locale(titolo, fonte, data_str, link, categoria=None, importanza=None, tipo="News", descrizione=""):
     """Aggiunge una riga al CSV locale evitando duplicati interni e salvando la Descrizione con hashtag."""
@@ -534,39 +586,8 @@ def scrape_garante_privacy():
 
     print(f"[{fonte}] Estratte {aggiunti} nuove voci dalle 2 sezioni.")
 
-def e_pertinente_cassazione(titolo, descrizione=""):
-    """Filtro ultra-stretto specifico per la giurisprudenza della Cassazione su sicurezza e infortuni sul lavoro."""
-    testo = f"{titolo} {descrizione}".lower()
-    
-    # Blocca subito materie estranee tipiche della Cassazione Penale/Tributaria
-    esclusioni_cassazione = [
-        "superbonus", "credito di imposta", "credito d'imposta", "tributar",
-        "arresto in flagranza", "misura cautelare", "rito abbreviato",
-        "stupefacenti", "maltrattamenti", "furto", "rapina", "truffa",
-        "diffamazione", "estorsione", "peculato", "abuso d'ufficio",
-        "estradizione", "mandato di arresto", "codice della strada",
-        "guida in stato di ebbrezza", "immigrazione", "falliment"
-    ]
-    if any(bad in testo for bad in esclusioni_cassazione):
-        return False
-
-    # Accetta SOLO se contiene almeno un riferimento esplicito a infortuni, D.Lgs. 81/08 o sicurezza sul lavoro
-    parole_chiave_cassazione = [
-        "infortunio sul lavoro", "infortuni sul lavoro", "infortunio lavorativo",
-        "malattia professionale", "malattie professionali",
-        "sicurezza sul lavoro", "sicurezza nei luoghi di lavoro", "igiene del lavoro",
-        "81/2008", "81/08", "testo unico sicurezza",
-        "datore di lavoro", "preposto", "rspp", "coordinatore per la sicurezza",
-        "documento di valutazione dei rischi", "piano operativo di sicurezza",
-        "cantiere edile", "caduta dall'alto", "dispositivi di protezione individuale",
-        "omicidio colposo", "lesioni personali colpose", "violazione delle norme antinfortunistiche",
-        "normativa antinfortunistica", "prevenzione infortuni"
-    ]
-    return any(kw in testo for kw in parole_chiave_cassazione)
-
-
 def scrape_cassazione():
-    """8. Corte di Cassazione & IV Sezione Penale - Solo sentenze su infortuni, D.Lgs. 81/08 e sicurezza sul lavoro."""
+    """8. Corte di Cassazione & IV Sezione Penale - Scansiona Ultime dalla Corte, IV Sezione Penale e Giurisprudenza Penale."""
     fonte = "Corte di Cassazione"
     url_base = "https://cortedicassazione.it"
     urls_cassazione = [
@@ -612,10 +633,6 @@ def scrape_cassazione():
                 })
 
             for art in articoli:
-                # Controllo stretto specifico per Cassazione PRIMA di salvare
-                if not e_pertinente_cassazione(art["titolo"], art["descrizione"]):
-                    continue
-
                 if aggiungi_riga_locale(
                     titolo=art["titolo"],
                     fonte=fonte,
@@ -629,7 +646,6 @@ def scrape_cassazione():
             print(f"[ERRORE {fonte} su {url}] {e}")
 
     print(f"[{fonte} & IV Sez. Penale] Estratte {aggiunti} nuove voci pertinenti dalle 3 sezioni.")
-
 
 # ==============================================================================
 # 4. SINCRONIZZAZIONE DIRETTA SU POSTGRESQL GLIDEOS + BLOCCO MAIN
