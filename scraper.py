@@ -534,14 +534,45 @@ def scrape_garante_privacy():
 
     print(f"[{fonte}] Estratte {aggiunti} nuove voci dalle 2 sezioni.")
 
+def e_pertinente_cassazione(titolo, descrizione=""):
+    """Filtro ultra-stretto specifico per la giurisprudenza della Cassazione su sicurezza e infortuni sul lavoro."""
+    testo = f"{titolo} {descrizione}".lower()
+    
+    # Blocca subito materie estranee tipiche della Cassazione Penale/Tributaria
+    esclusioni_cassazione = [
+        "superbonus", "credito di imposta", "credito d'imposta", "tributar",
+        "arresto in flagranza", "misura cautelare", "rito abbreviato",
+        "stupefacenti", "maltrattamenti", "furto", "rapina", "truffa",
+        "diffamazione", "estorsione", "peculato", "abuso d'ufficio",
+        "estradizione", "mandato di arresto", "codice della strada",
+        "guida in stato di ebbrezza", "immigrazione", "falliment"
+    ]
+    if any(bad in testo for bad in esclusioni_cassazione):
+        return False
+
+    # Accetta SOLO se contiene almeno un riferimento esplicito a infortuni, D.Lgs. 81/08 o sicurezza sul lavoro
+    parole_chiave_cassazione = [
+        "infortunio sul lavoro", "infortuni sul lavoro", "infortunio lavorativo",
+        "malattia professionale", "malattie professionali",
+        "sicurezza sul lavoro", "sicurezza nei luoghi di lavoro", "igiene del lavoro",
+        "81/2008", "81/08", "testo unico sicurezza",
+        "datore di lavoro", "preposto", "rspp", "coordinatore per la sicurezza",
+        "documento di valutazione dei rischi", "piano operativo di sicurezza",
+        "cantiere edile", "caduta dall'alto", "dispositivi di protezione individuale",
+        "omicidio colposo", "lesioni personali colpose", "violazione delle norme antinfortunistiche",
+        "normativa antinfortunistica", "prevenzione infortuni"
+    ]
+    return any(kw in testo for kw in parole_chiave_cassazione)
+
+
 def scrape_cassazione():
-    """8. Corte di Cassazione & IV Sezione Penale - Scansiona Ultime dalla Corte, IV Sezione Penale e Giurisprudenza Penale."""
+    """8. Corte di Cassazione & IV Sezione Penale - Solo sentenze su infortuni, D.Lgs. 81/08 e sicurezza sul lavoro."""
     fonte = "Corte di Cassazione"
-    url_base = "https://www.cortedicassazione.it"
+    url_base = "https://cortedicassazione.it"
     urls_cassazione = [
-        "https://www.cortedicassazione.it/it/ultime_dalla_corte.page",
-        "https://www.cortedicassazione.it/it/quarta_sezione_penale.page",
-        "https://www.cortedicassazione.it/it/giurisprudenza_penale.page"
+        "https://cortedicassazione.it/it/ultime_dalla_corte.page",
+        "https://cortedicassazione.it/it/quarta_sezione_penale.page",
+        "https://cortedicassazione.it/it/giurisprudenza_penale.page"
     ]
     aggiunti = 0
 
@@ -551,13 +582,11 @@ def scrape_cassazione():
             resp.raise_for_status()
             soup = BeautifulSoup(resp.text, "html.parser")
 
-            # A. Estrazione standard card/titoli (h2/h3 + p)
             articoli = estrai_articoli_generici(soup, url_base, limite=30)
 
-            # B. Estrazione dedicata alle massime/sentenze con link diretto "Vai al documento" o dettaglio
             for item in soup.select("div.risultato, div.item, article, li"):
                 testo_blocco = pulisci_testo(item.get_text(" ", strip=True))
-                if len(testo_blocco) < 40 or not any(k in testo_blocco.lower() for k in ["sentenza", "ordinanza", "sezione", "infortun", "sicurezza", "lavoro", "81/2008", "81/08"]):
+                if len(testo_blocco) < 40:
                     continue
 
                 a_tag = item.find("a", href=True)
@@ -583,7 +612,10 @@ def scrape_cassazione():
                 })
 
             for art in articoli:
-                # La funzione aggiungi_riga_locale applica già e_pertinente(), filtri, macro-aree e hashtag
+                # Controllo stretto specifico per Cassazione PRIMA di salvare
+                if not e_pertinente_cassazione(art["titolo"], art["descrizione"]):
+                    continue
+
                 if aggiungi_riga_locale(
                     titolo=art["titolo"],
                     fonte=fonte,
@@ -596,7 +628,7 @@ def scrape_cassazione():
         except Exception as e:
             print(f"[ERRORE {fonte} su {url}] {e}")
 
-    print(f"[{fonte} & IV Sez. Penale] Estratte {aggiunti} nuove voci dalle 3 sezioni.")
+    print(f"[{fonte} & IV Sez. Penale] Estratte {aggiunti} nuove voci pertinenti dalle 3 sezioni.")
 
 
 # ==============================================================================
