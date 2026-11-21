@@ -488,6 +488,234 @@
       .then(r => r.json())
       .then(data => { APP_DATA = data; renderAll(); })
       .catch(() => { document.getElementById("last-update").textContent = "In attesa di dati_app.json"; });
+
+        const ARCHIVIO_NORMATIVE = [
+      {
+        id: "generale",
+        titolo: "1. Quadro generale, vigilanza e appalti",
+        icona: "🏛️",
+        norme: [
+          {
+            titolo: "D.Lgs. 9 aprile 2008, n. 81 (e correttivo D.Lgs. 106/2009)",
+            sottotitolo: "Testo Unico sulla salute e sicurezza sul lavoro (testo vigente in multivigenza).",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.L. 21 ottobre 2021, n. 146 (conv. L. 215/2021)",
+            sottotitolo: "Riforma della vigilanza INL, obblighi del preposto e sospensione dell'attività imprenditoriale.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.L. 2 marzo 2024, n. 19 (conv. L. 56/2024)",
+            sottotitolo: "Introduzione della patente a crediti nei cantieri temporanei o mobili e rafforzamento controlli.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.M. 18 settembre 2024, n. 132",
+            sottotitolo: "Regolamento attuativo per il rilascio e la gestione della patente a crediti nei cantieri.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.L. 31 ottobre 2025, n. 159 (conv. L. 198/2025)",
+            sottotitolo: "Misure urgenti per la tutela della salute e sicurezza nei luoghi di lavoro e rafforzamento dei controlli.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.Lgs. 31 marzo 2023, n. 36",
+            sottotitolo: "Codice dei contratti pubblici: costi della sicurezza negli appalti e subappalti.",
+            url: "https://normattiva.it"
+          }
+        ]
+      },
+      {
+        id: "incendi",
+        titolo: "2. Prevenzione incendi ed emergenze",
+        icona: "🧯",
+        norme: [
+          {
+            titolo: "D.M. 15 luglio 2003, n. 388",
+            sottotitolo: "Regolamento recante disposizioni sul pronto soccorso aziendale.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.P.R. 1 agosto 2011, n. 151",
+            sottotitolo: "Disciplina dei procedimenti relativi alla prevenzione incendi (attività soggette a controllo VV.F.).",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.M. 3 agosto 2015",
+            sottotitolo: "Codice di prevenzione incendi: norme tecniche di prevenzione incendi.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.M. 1° settembre 2021 (Decreto Controlli)",
+            sottotitolo: "Criteri generali per il controllo e la manutenzione degli impianti, attrezzature e presidi antincendio.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.M. 2 settembre 2021 (Decreto GSA)",
+            sottotitolo: "Gestione della sicurezza antincendio in esercizio ed emergenza e formazione degli addetti.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.M. 3 settembre 2021 (Decreto Minicodice)",
+            sottotitolo: "Criteri generali di progettazione, realizzazione ed esercizio della sicurezza antincendio per luoghi a basso rischio.",
+            url: "https://normattiva.it"
+          }
+        ]
+      },
+      {
+        id: "macchine",
+        titolo: "3. Macchine, attrezzature, impianti e DPI",
+        icona: "⚙️",
+        norme: [
+          {
+            titolo: "D.P.R. 22 ottobre 2001, n. 462",
+            sottotitolo: "Verifiche periodiche degli impianti di messa a terra e dispositivi contro le scariche atmosferiche.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.M. 22 gennaio 2008, n. 37",
+            sottotitolo: "Regolamento concernente la sicurezza degli impianti all'interno degli edifici.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.Lgs. 27 gennaio 2010, n. 17",
+            sottotitolo: "Attuazione della Direttiva Macchine (2006/42/CE).",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.M. 11 aprile 2011",
+            sottotitolo: "Modalità di effettuazione delle verifiche periodiche delle attrezzature di lavoro (Allegato VII D.Lgs. 81/08).",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.Lgs. 19 febbraio 2019, n. 17 (e D.Lgs. 475/1992)",
+            sottotitolo: "Adeguamento della normativa nazionale al Regolamento UE sui Dispositivi di Protezione Individuale (DPI).",
+            url: "https://normattiva.it"
+          }
+        ]
+      },
+      {
+        id: "ambienti",
+        titolo: "4. Ambienti di lavoro e settori particolari",
+        icona: "🚧",
+        norme: [
+          {
+            titolo: "D.P.R. 14 settembre 2011, n. 177",
+            sottotitolo: "Qualificazione delle imprese e lavoratori autonomi in ambienti sospetti di inquinamento o confinati.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.M. 22 gennaio 2019",
+            sottotitolo: "Criteri di sicurezza per la segnaletica stradale nelle attività lavorative in presenza di traffico veicolare.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.Lgs. 27 luglio 1999, n. 271 e n. 272",
+            sottotitolo: "Sicurezza del lavoro a bordo delle navi mercantili/da pesca e nelle operazioni e servizi portuali.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.Lgs. 25 novembre 1996, n. 624",
+            sottotitolo: "Sicurezza e salute dei lavoratori nelle industrie estrattive per trivellazione e a cielo aperto/sotterraneo.",
+            url: "https://normattiva.it"
+          }
+        ]
+      },
+      {
+        id: "rischi",
+        titolo: "5. Rischi fisici, chimici e radioprotezione",
+        icona: "☢️",
+        norme: [
+          {
+            titolo: "D.Lgs. 31 luglio 2020, n. 101 (e D.Lgs. 203/2022)",
+            sottotitolo: "Protezione contro i pericoli derivanti dall'esposizione alle radiazioni ionizzanti (incluso rischio radon).",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "L. 27 marzo 1992, n. 257 (e D.M. 6 settembre 1994)",
+            sottotitolo: "Norme relative alla cessazione dell'impiego dell'amianto e metodologie tecniche di bonifica.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.Lgs. 4 settembre 2024, n. 135",
+            sottotitolo: "Protezione dei lavoratori contro i rischi da agenti cancerogeni, mutageni o tossici per la riproduzione.",
+            url: "https://normattiva.it"
+          }
+        ]
+      },
+      {
+        id: "tutela",
+        titolo: "6. Tutela assicurativa, categorie protette e lavoro agile",
+        icona: "🛡️",
+        norme: [
+          {
+            titolo: "D.P.R. 30 giugno 1965, n. 1124 (e D.Lgs. 38/2000)",
+            sottotitolo: "Testo Unico dell'assicurazione obbligatoria INAIL contro infortuni sul lavoro e malattie professionali.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "D.Lgs. 26 marzo 2001, n. 151",
+            sottotitolo: "Testo Unico sulla tutela e sostegno della maternità e paternità (rischi per gestanti e puerpere).",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "L. 17 ottobre 1967, n. 977",
+            sottotitolo: "Tutela del lavoro dei bambini e degli adolescenti.",
+            url: "https://normattiva.it"
+          },
+          {
+            titolo: "L. 22 maggio 2017, n. 81 (artt. 18-23)",
+            sottotitolo: "Disciplina del lavoro agile (smart working) e relativi obblighi informativi sulla sicurezza.",
+            url: "https://normattiva.it"
+          }
+        ]
+      }
+    ];
+    function renderCategorieNorme() {
+      const box = document.getElementById("norms-categories-view");
+      if (!box) return;
+      box.innerHTML = ARCHIVIO_NORMATIVE.map(cat => `
+        <button type="button" class="norm-cat-btn" onclick="apriCategoriaNorme('${cat.id}')">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:1.35rem;">${cat.icona}</span>
+            <div>
+              <div style="font-size:0.95rem; font-weight:700; color:#fff;">${cat.titolo}</div>
+              <div style="font-size:0.78rem; color:var(--muted); margin-top:2px;">${cat.norme.length} provvedimenti statali</div>
+            </div>
+          </div>
+          <span style="color:var(--gold); font-weight:800; font-size:1.1rem;">›</span>
+        </button>
+      `).join("");
+    }
+
+    function apriCategoriaNorme(catId) {
+      const cat = ARCHIVIO_NORMATIVE.find(c => c.id === catId);
+      if (!cat) return;
+      document.getElementById("norms-categories-view").style.display = "none";
+      document.getElementById("norms-list-view").style.display = "block";
+      document.getElementById("norms-cat-header").textContent = `${cat.icona} ${cat.titolo}`;
+      document.getElementById("norms-items-container").innerHTML = cat.norme.map(n => `
+        <a href="${n.url}" target="_blank" rel="noopener noreferrer" class="card" style="display:block; text-decoration:none; color:inherit; margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+            <h3 style="font-size:0.96rem; font-weight:700; color:#fff; margin-bottom:6px; line-height:1.35;">${n.titolo}</h3>
+            <span style="font-size:0.72rem; font-weight:700; color:var(--gold); background:var(--gold-soft); padding:3px 8px; border-radius:6px; flex-shrink:0;">Normattiva ↗</span>
+          </div>
+          <p style="font-size:0.83rem; color:var(--muted); line-height:1.45; margin:0;">${n.sottotitolo}</p>
+        </a>
+      `).join("");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function chiudiCategoriaNorme() {
+      document.getElementById("norms-list-view").style.display = "none";
+      document.getElementById("norms-categories-view").style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    renderCategorieNorme();
+
   </script>
 </body>
 </html>
