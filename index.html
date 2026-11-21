@@ -245,12 +245,14 @@
 
       <button id="btn-top" class="btn-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">Torna su</button>
 
-  <nav class="tab-bar">
+   <nav class="tab-bar">
     <button class="tab-btn active" data-target="view-home"><span class="tab-icon">🏠</span><span>Panoramica</span></button>
     <button class="tab-btn" data-target="view-news"><span class="tab-icon">📰</span><span>News</span></button>
+    <button class="tab-btn" data-target="view-norms"><span class="tab-icon">⚖️</span><span>Normative</span></button>
     <button class="tab-btn" data-target="view-deadlines"><span class="tab-icon">📅</span><span>Scadenze</span></button>
     <button class="tab-btn" data-target="view-settings"><span class="tab-icon">⚙️</span><span>Impostazioni</span></button>
   </nav>
+
   <script>
     let APP_DATA = { news: [], deadlines: [], subcategories: {} };
     let selectedMacro = "Tutte";
